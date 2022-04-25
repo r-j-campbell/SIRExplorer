@@ -10,10 +10,10 @@ from design import layouts, widgets
 from Instruments import Imager, IFU
 from canvas_functions import show_IFU, click_IFU, show_imager, change_frame
 
-class SolarExplorer(QWidget):
+class SIRExplorer(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Solar Explorer: PyQt version")
+        self.setWindowTitle("SIR Explorer: PyQt version")
         self.desktop = QApplication.desktop()
         self.screenRect = self.desktop.screenGeometry()
         self.appheight = self.screenRect.height()
@@ -160,7 +160,7 @@ class SolarExplorer(QWidget):
 
 def main():
     app=QApplication(sys.argv)
-    window=SolarExplorer()
+    window=SIRExplorer()
     sys.exit(app.exec_())
 if __name__ == '__main__':
     main()
