@@ -20,9 +20,9 @@ def layouts(self):
     self.tab1 = QWidget()
     self.tab2 = QWidget()
     self.tab3 = QWidget()
-    self.tabs.addTab(self.tab1,"Folder search")
-    self.tabs.addTab(self.tab2,"File search")
-    self.tabs.addTab(self.tab3,"Optional")
+    self.tabs.addTab(self.tab1,"File manager")
+    self.tabs.addTab(self.tab2,"Options")
+    self.tabs.addTab(self.tab3,"Options")
     self.tabLayout = QVBoxLayout()
     self.left_layout.addWidget(self.tabs)
     self.tabLayout.addWidget(self.btn_folder_search)
@@ -32,6 +32,8 @@ def layouts(self):
     self.tabLayout.addWidget(self.macro2_checkbutton)
     self.tabLayout.addWidget(self.chi2_checkbutton)
     self.tabLayout.addWidget(self.binary_checkbutton)
+
+    self.tabLayout.addWidget(self.autofill_btn)
 
     self.tabLayout.addWidget(self.model1_btn)
     self.tabLayout.addWidget(self.select_model1)

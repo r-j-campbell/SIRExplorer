@@ -68,7 +68,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.model1_file_list:
             self.model1_file_list.append(value)
-            print(self.model1_file_list)
             self.select_model1.addItem(value)
         else:
             msg = QMessageBox()
@@ -80,7 +79,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.syn_prof_file_list:
             self.syn_prof_file_list.append(value)
-            print(self.syn_prof_file_list)
             self.select_syn_prof.addItem(value)
         else:
             msg = QMessageBox()
@@ -92,7 +90,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.obs_prof_file_list:
             self.obs_prof_file_list.append(value)
-            print(self.obs_prof_file_list)
             self.select_obs_prof.addItem(value)
         else:
             msg = QMessageBox()
@@ -104,7 +101,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.model2_file_list:
             self.model2_file_list.append(value)
-            print(self.model2_file_list)
             self.select_model2.addItem(value)
         else:
             msg = QMessageBox()
@@ -116,7 +112,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.mac1_file_list:
             self.mac1_file_list.append(value)
-            print(self.mac1_file_list)
             self.select_mac1.addItem(value)
         else:
             msg = QMessageBox()
@@ -128,7 +123,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.mac2_file_list:
             self.mac2_file_list.append(value)
-            print(self.mac2_file_list)
             self.select_mac2.addItem(value)
         else:
             msg = QMessageBox()
@@ -140,7 +134,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.chi2_file_list:
             self.chi2_file_list.append(value)
-            print(self.chi2_file_list)
             self.select_chi2.addItem(value)
         else:
             msg = QMessageBox()
@@ -152,7 +145,6 @@ class SIRExplorer(QWidget):
         value = str(url[0])
         if value not in self.binary_file_list:
             self.binary_file_list.append(value)
-            print(self.binary_file_list)
             self.select_binary.addItem(value)
         else:
             msg = QMessageBox()
@@ -163,10 +155,8 @@ class SIRExplorer(QWidget):
     def get_folder(self):
         value = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
         #url = QFileDialog.getOpenFileName(self,"Select a dataset","","All Files(*);;*fits")
-        print(value)
         if value not in self.folder_list:
             self.folder_list.append(value)
-            print(self.folder_list)
             self.select_folder.addItem(value)
         else:
             msg = QMessageBox()
@@ -175,59 +165,82 @@ class SIRExplorer(QWidget):
             msg.exec()
 
     def autofill(self):
-        print("autofill")
-        auto_model_file = str(self.select_folder.get())+"/inv_res_mod_SIRE.fits"
-        if auto_model_file not in self.model_file_list:
-            self.model_file_list.append(auto_model_file)
-            self.select_model_files["values"] = self.model_file_list
-            self.select_model.set(auto_model_file)
+        value = str(self.select_folder.currentText())+"/mod1.fits"
+        if value not in self.model1_file_list:
+            self.model1_file_list.append(value)
+            self.select_model1.addItem(value)
+        index = self.select_model1.findText(value)
+        if index >= 0:
+            self.select_model1.setCurrentIndex(index)
+        del value
 
-        auto_obs_file = str(self.select_folder.get())+"/observed_prof_SIRE.fits"
-        if auto_obs_file not in self.obs_prof_file_list:
-            self.obs_prof_file_list.append(auto_obs_file)
-            self.select_obs_prof_files["values"] = self.obs_prof_file_list
-            self.selected_obs_prof.set(auto_obs_file)
+        value = str(self.select_folder.currentText())+"/obs_prof.fits"
+        if value not in self.obs_prof_file_list:
+            self.obs_prof_file_list.append(value)
+            self.select_obs_prof.addItem(value)
+        index = self.select_obs_prof.findText(value)
+        if index >= 0:
+            self.select_obs_prof.setCurrentIndex(index)
+        del value
 
-        auto_syn_file = str(self.selected_folder.get())+"/inv_res_prof_SIRE.fits"
-        if auto_syn_file not in self.syn_prof_file_list:
-            self.syn_prof_file_list.append(auto_syn_file)
-            self.select_syn_prof_files["values"] = self.syn_prof_file_list
-            self.selected_syn_prof.set(auto_syn_file)
+        value = str(self.select_folder.currentText())+"/syn_prof.fits"
+        if value not in self.syn_prof_file_list:
+            self.syn_prof_file_list.append(value)
+            self.select_syn_prof.addItem(value)
+        index = self.select_syn_prof.findText(value)
+        if index >= 0:
+            self.select_syn_prof.setCurrentIndex(index)
+        del value
 
-        if self.two_models_var.get() == 1:
-            auto_model_two_file = str(self.selected_folder.get())+"/inv_res_sec_mods_SIRE.fits"
-            if auto_model_two_file not in self.secondary_model_file_list:
-                self.secondary_model_file_list.append(auto_model_two_file)
-                self.select_secondary_model_files["values"] = self.secondary_model_file_list
-                self.selected_secondary_model.set(auto_model_two_file)
+        if self.two_models_checkbutton.isChecked():
+            value = str(self.select_folder.currentText())+"/mod2.fits"
+            if value not in self.model2_file_list:
+                self.model2_file_list.append(value)
+                self.select_model2.addItem(value)
+            index = self.select_model2.findText(value)
+            if index >= 0:
+                self.select_model2.setCurrentIndex(index)
+            del value
 
-        if self.macroturb1_var.get() == 1:
-            auto_macroturb1_file = str(self.selected_folder.get())+"/inv_res_macro_mod_SIRE.fits"
-            if auto_macroturb1_file not in self.mac1_file_list:
-                self.mac1_file_list.append(auto_macroturb1_file)
-                self.select_mac1_files["values"] = self.mac1_file_list
-                self.selected_mac1.set(auto_macroturb1_file)
+        if self.macro1_checkbutton.isChecked():
+            value = str(self.select_folder.currentText())+"/mac1.fits"
+            if value not in self.mac1_file_list:
+                self.mac1_file_list.append(value)
+                self.select_mac1.addItem(value)
+            index = self.select_mac1.findText(value)
+            if index >= 0:
+                self.select_mac1.setCurrentIndex(index)
+            del value
 
-        if self.macroturb2_var.get() == 1:
-            auto_macroturb2_file = str(self.selected_folder.get())+"/inv_res_sec_macro_mod_SIRE.fits"
-            if auto_macroturb2_file not in self.mac2_file_list:
-                self.mac2_file_list.append(auto_macroturb2_file)
-                self.select_mac2_files["values"] = self.mac2_file_list
-                self.selected_mac2.set(auto_macroturb2_file)
+        if self.macro2_checkbutton.isChecked():
+            value = str(self.select_folder.currentText())+"/mac2.fits"
+            if value not in self.mac2_file_list:
+                self.mac2_file_list.append(value)
+                self.select_mac2.addItem(value)
+            index = self.select_mac2.findText(value)
+            if index >= 0:
+                self.select_mac2.setCurrentIndex(index)
+            del value
 
-        if self.chi2_var.get() == 1:
-            auto_chi2_file = str(self.selected_folder.get())+"/chi2.fits"
-            if auto_chi2_file not in self.chi2_file_list:
-                self.chi2_file_list.append(auto_chi2_file)
-                self.select_chi2_files["values"] = self.chi2_file_list
-                self.selected_chi2.set(auto_chi2_file)
+        if self.chi2_checkbutton.isChecked():
+            value = str(self.select_folder.currentText())+"/chi2.fits"
+            if value not in self.chi2_file_list:
+                self.chi2_file_list.append(value)
+                self.select_chi2.addItem(value)
+            index = self.select_chi2.findText(value)
+            if index >= 0:
+                self.select_chi2.setCurrentIndex(index)
+            del value
 
-        if self.binary_var.get() == 1:
-            auto_binary_file = str(self.selected_folder.get())+"/binary.fits"
-            if auto_binary_file not in self.binary_file_list:
-                self.binary_file_list.append(auto_binary_file)
-                self.select_binary_files["values"] = self.binary_file_list
-                self.selected_binary.set(auto_binary_file)
+        if self.binary_checkbutton.isChecked():
+            value = str(self.select_folder.currentText())+"/binary.fits"
+            if value not in self.binary_file_list:
+                self.binary_file_list.append(value)
+                self.select_binary.addItem(value)
+            index = self.select_binary.findText(value)
+            if index >= 0:
+                self.select_binary.setCurrentIndex(index)
+            del value
 
 
     def get_all_values(self,nested_dictionary,i,match): #searches nested dictionary for datasets that are already loaded
