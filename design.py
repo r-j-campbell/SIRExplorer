@@ -27,9 +27,9 @@ def layouts(self):
     self.left_layout.addWidget(self.tabs)
     self.tabLayout.addWidget(self.btn_folder_search)
     self.tabLayout.addWidget(self.select_folder)
-    self.tabLayout.addWidget(self.two_models_checkbutton)
-    self.tabLayout.addWidget(self.macro1_checkbutton)
-    self.tabLayout.addWidget(self.macro2_checkbutton)
+    self.tabLayout.addWidget(self.model2_checkbutton)
+    self.tabLayout.addWidget(self.mac1_checkbutton)
+    self.tabLayout.addWidget(self.mac2_checkbutton)
     self.tabLayout.addWidget(self.chi2_checkbutton)
     self.tabLayout.addWidget(self.binary_checkbutton)
 
@@ -80,7 +80,15 @@ def layouts(self):
     self.twoWidget.setLayout(self.twoLayout)
 
     self.oneLayout.addWidget(self.sc2)
+    self.sc2.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc2.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc2.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc2.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
     self.twoLayout.addWidget(self.sc3)
+    self.sc3.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc3.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc3.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc3.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
     self.threeWidget = QWidget()
     self.threeWidget.setLayout(self.right_layout)
@@ -93,6 +101,12 @@ def layouts(self):
     self.threeWidget.setLayout(self.threeLayout)
 
     self.threeLayout.addWidget(self.sc1)
+    self.sc1.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc1.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc1.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc1.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc1.ax5.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
     self.right_bottom_layout = QHBoxLayout()
     self.right_layout.addLayout(self.right_bottom_layout)
@@ -115,11 +129,10 @@ def widgets(self):
     self.btn_folder_search.clicked.connect(lambda checked: self.get_folder())
 
     self.select_folder = QComboBox(self)
-    #self.select_folder.addItems(self.instrument_options)
 
-    self.two_models_checkbutton = QCheckBox("Include 2 models",self)
-    self.macro1_checkbutton = QCheckBox("Include primary macroturbulence",self)
-    self.macro2_checkbutton = QCheckBox("Include secondary macroturbulence",self)
+    self.model2_checkbutton = QCheckBox("Include 2 models",self)
+    self.mac1_checkbutton = QCheckBox("Include primary macroturbulence",self)
+    self.mac2_checkbutton = QCheckBox("Include secondary macroturbulence",self)
     self.chi2_checkbutton = QCheckBox("Include chi^2",self)
     self.binary_checkbutton = QCheckBox("Include binary map",self)
 
@@ -151,23 +164,22 @@ def widgets(self):
     self.binary_btn.clicked.connect(lambda checked: self.get_binary())
     self.select_binary = QComboBox(self)
 
-
     self.frame_scale = QSlider(Qt.Horizontal)
-    self.frame_scale.sliderReleased.connect(self.update_frame)
+    self.frame_scale.sliderReleased.connect(lambda: change_frame(self))
     self.wl_scale = QSlider(Qt.Horizontal)
+    self.wl_scale.sliderReleased.connect(lambda: change_wl(self))
     self.optical_depth_scale = QSlider(Qt.Horizontal)
-
-
+    self.optical_depth_scale.sliderReleased.connect(lambda: change_optical_depth(self))
 
 class MplCanvas1(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-        self.ax1 = self.fig.add_subplot(321)
-        self.ax2 = self.fig.add_subplot(322)
-        self.ax3 = self.fig.add_subplot(323)
-        self.ax4 = self.fig.add_subplot(324)
-        self.ax5 = self.fig.add_subplot(325)
-        self.ax6 = self.fig.add_subplot(326)
+        self.ax1 = self.fig.add_subplot(611)
+        self.ax2 = self.fig.add_subplot(612)
+        self.ax3 = self.fig.add_subplot(613)
+        self.ax4 = self.fig.add_subplot(614)
+        self.ax5 = self.fig.add_subplot(615)
+        self.ax6 = self.fig.add_subplot(616)
         super(MplCanvas1, self).__init__(self.fig)
 class MplCanvas2(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):

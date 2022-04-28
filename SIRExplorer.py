@@ -3,12 +3,11 @@ from PyQt5.QtGui import QPixmap,QFont
 import sys,os
 import sqlite3
 from PIL import Image
-
 import numpy as np
 
 from design import layouts, widgets
 from Instruments import SIR
-from canvas_functions import show_IFU, click_IFU, show_imager, change_frame
+from canvas_functions import show, click, change_frame
 
 class SIRExplorer(QWidget):
     def __init__(self):
@@ -41,15 +40,17 @@ class SIRExplorer(QWidget):
         self.chi2_file_list = [None]
         self.binary_file_list = [None]
 
-        self.I_CT = ['gray',0.9,1.1,0]
-        self.T_CT = ['gray',6500,7500,0]
-        self.G_CT = ['bwr',0,180,0]
-        self.A_CT = ['hsv',0,360,0]
-        self.V_CT = ['bwr',-4,4,0]
-        self.B_CT = ['viridis',0,2000,0]
+        #[CT, min, max, automatic scaling flag, display flag]
+        self.I_CT = ['gray',0.9,1.1,0,1]
+        self.T_CT = ['gray',6500,7500,0,1]
+        self.G_CT = ['bwr',0,180,0,1]
+        self.A_CT = ['hsv',0,360,0,1]
+        self.V_CT = ['bwr',-4,4,0,1]
+        self.B_CT = ['viridis',0,2000,0,1]
 
-        self.fontsize_titles=10
-        self.fontsize_axislabels=10
+        self.fontsize_titles=7
+        self.fontsize_axislabels=7
+        self.fontsize_ticklabels=7
         self.linewidth=1
 
         self.wl_max=100
@@ -154,7 +155,6 @@ class SIRExplorer(QWidget):
 
     def get_folder(self):
         value = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        #url = QFileDialog.getOpenFileName(self,"Select a dataset","","All Files(*);;*fits")
         if value not in self.folder_list:
             self.folder_list.append(value)
             self.select_folder.addItem(value)
@@ -192,7 +192,7 @@ class SIRExplorer(QWidget):
             self.select_syn_prof.setCurrentIndex(index)
         del value
 
-        if self.two_models_checkbutton.isChecked():
+        if self.model2_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/mod2.fits"
             if value not in self.model2_file_list:
                 self.model2_file_list.append(value)
@@ -202,7 +202,7 @@ class SIRExplorer(QWidget):
                 self.select_model2.setCurrentIndex(index)
             del value
 
-        if self.macro1_checkbutton.isChecked():
+        if self.mac1_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/mac1.fits"
             if value not in self.mac1_file_list:
                 self.mac1_file_list.append(value)
@@ -212,7 +212,7 @@ class SIRExplorer(QWidget):
                 self.select_mac1.setCurrentIndex(index)
             del value
 
-        if self.macro2_checkbutton.isChecked():
+        if self.mac2_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/mac2.fits"
             if value not in self.mac2_file_list:
                 self.mac2_file_list.append(value)
@@ -256,43 +256,32 @@ class SIRExplorer(QWidget):
 
     def change_canvas(self):
         self.flag=False
-        self.get_all_values(self.class_objects,0,self.select_file.currentText())
-
+        self.get_all_values(self.class_objects,0,self.select_model1.currentText())
         if self.flag == True: #if match is found
             i=str(self.match)
-            if self.select_instrument.currentText() == "Imager":
-                print("imager match")
-            elif self.select_instrument.currentText() == "Integral field unit (IFU)" or self.select_instrument.currentText() == "GREGOR/GRIS-IFU":
-                show_IFU(self,self.class_objects[i],self.click_increment,self.increment,self.frame_flag,self.flag)
-                print("IFU match")
-
+            show(self,self.class_objects[i])
         elif self.flag == False: #if match is not found
-            if self.select_instrument.currentText() == "Imager" or self.select_instrument.currentText() == "GREGOR/HiFI":
-                class_object = Imager()
-                j=str(len(self.class_objects))
-                self.class_objects[j] = {'file': self.select_file.currentText(),
-                                        'class_object': class_object
-                                        }
-                print(self.class_objects[j])
-                show_imager(self,self.class_objects[j])
-            elif self.select_instrument.currentText() == "Integral field unit (IFU)" or self.select_instrument.currentText() == "GREGOR/GRIS-IFU":
-                class_object = IFU()
-                j=str(len(self.class_objects))
-                self.class_objects[j] = {'file': self.select_file.currentText(),
-                                        'class_object': class_object
-                                        }
-                print(self.class_objects[j])
-                show_IFU(self,self.class_objects[j],self.click_increment,self.increment,self.frame_flag,self.flag)
-
+            class_object = SIR()
+            j=str(len(self.class_objects))
+            self.class_objects[j] = {'model_file': self.select_model1.currentText(),
+                     'secondary_model_file': self.select_model2.currentText(),
+                     'obs_prof_file': self.select_obs_prof.currentText(),
+                     'syn_prof_file': self.select_syn_prof.currentText(),
+                     'mac1_file': self.select_mac1.currentText(),
+                     'mac2_file': self.select_mac2.currentText(),
+                     'chi2_file': self.select_chi2.currentText(),
+                     'binary_file': self.select_binary.currentText(),
+                     'class_object': class_object
+                                     }
+            show(self,self.class_objects[j])
         if self.increment == 0:
-            print("increment changed to 1")
-            click_IFU(self,self.class_objects[j],self.click_increment)
+            click(self,self.class_objects[j])
             self.increment=1
         #self.canvas_frame.toggle_widgets(self)
 
     def mouseclicks(self,event):
         self.flag=False
-        self.get_all_values(self.class_objects,0,self.select_file.currentText())
+        self.get_all_values(self.class_objects,0,self.select_model1.currentText())
         if self.flag == True:
             i=str(self.match)
             self.class_objects[i]["class_object"].current_x = event.xdata
@@ -300,26 +289,14 @@ class SIRExplorer(QWidget):
             if self.click_increment == 0 :
                 self.click_increment=1
                 print("click increment changed to 1")
-            click_IFU(self,self.class_objects[i],self.click_increment)
+            click(self,self.class_objects[i])
             self.change_canvas()
-
         else:
             print("error!! dataset not found...")
 
-    def update_wavelength(self, event):
-        self.set_wavelength=self.controller.control_panel.wlscale.get()
-        self.controller.canvas_frame.change_wl(self.set_wavelength)
-    def update_frame(self):
-        if self.frame_flag == 1:
-            self.set_frame=int(self.framescale.value())
-            change_frame(self,self.set_frame)
-    def update_optical_depth(self, event):
-        self.set_wavelength=self.controller.control_panel.wlscale.get()
-        self.controller.canvas_frame.change_wl(self.set_wavelength)
-
 def main():
     app=QApplication(sys.argv)
-    window=SIRExplorer()
+    SIRExplorer()
     sys.exit(app.exec_())
 if __name__ == '__main__':
     main()
