@@ -48,6 +48,7 @@ def show(self, class_object):
             self.frame_scale.setMinimum(0)
             self.frame_scale.setMaximum(class_object['class_object'].Attributes["t"] - 1)
         class_object["class_object"].Attributes["optical_depth"] = model1.shape[1]
+        print(model1.shape[1],"maximum optical depth")
         class_object["class_object"].Attributes["y"] = model1.shape[2]
         class_object["class_object"].Attributes["x"] = model1.shape[3]
         class_object["class_object"].Attributes["wl"] = obs_prof.shape[1]
@@ -278,7 +279,9 @@ def show(self, class_object):
 def click(self, class_object):
     current_x = class_object["class_object"].current_x
     current_y = class_object["class_object"].current_y
+    print("click increment is ", self.click_increment)
     if self.click_increment == 1:
+        print("plot axes cleared")
         self.sc2.ax1.clear()
         self.sc2.ax2.clear()
         self.sc2.ax3.clear()
@@ -398,12 +401,13 @@ def change_wl(self):
 
 def change_optical_depth(self):
     print("change optical depth")
-    optical_depth = int(self.frame_scale.value())
     self.flag = False
     self.get_all_values(self.class_objects, 0, self.select_model1.currentText())
     print(self.flag)
     if self.flag == True:
         i = str(self.match)
+        print(self.class_objects[i]['class_object'].current_optical_depth_index, self.optical_depth_scale.value())
+        optical_depth = int(self.optical_depth_scale.value())
         self.class_objects[i]['class_object'].current_optical_depth_index = int(optical_depth)
         self.change_canvas()
         click(self, self.class_objects[i])

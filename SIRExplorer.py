@@ -20,13 +20,13 @@ class SIRExplorer(QWidget):
         self.setGeometry(0,0,int(self.appwidth),int(self.appheight))
 
         self.increment = 0
-        self.click_increment=0
+        self.click_increment = 0
         self.flag = None
         self.match = 0
-        self.frame_flag=0
+        self.frame_flag = 0
 
-        self.set_wavelength=0
-        self.set_frame=0
+        self.set_wavelength = 0
+        self.set_frame = 0
 
         self.class_objects = {0: {"file": "first dummy value"}
                               }
@@ -276,17 +276,20 @@ class SIRExplorer(QWidget):
             show(self,self.class_objects[j])
         if self.increment == 0:
             click(self,self.class_objects[j])
+            if self.click_increment == 0:
+                self.click_increment=1
+                print("click increment changed to 1")
             self.increment=1
         #self.canvas_frame.toggle_widgets(self)
 
-    def mouseclicks(self,event):
+    def mouseclicks(self, event):
         self.flag=False
         self.get_all_values(self.class_objects,0,self.select_model1.currentText())
         if self.flag == True:
             i=str(self.match)
             self.class_objects[i]["class_object"].current_x = event.xdata
             self.class_objects[i]["class_object"].current_y = event.ydata
-            if self.click_increment == 0 :
+            if self.click_increment == 0:
                 self.click_increment=1
                 print("click increment changed to 1")
             click(self,self.class_objects[i])
@@ -295,8 +298,8 @@ class SIRExplorer(QWidget):
             print("error!! dataset not found...")
 
 def main():
-    app=QApplication(sys.argv)
-    SIRExplorer()
+    app = QApplication(sys.argv)
+    window = SIRExplorer()
     sys.exit(app.exec_())
 if __name__ == '__main__':
     main()
