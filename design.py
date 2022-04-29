@@ -110,9 +110,19 @@ def layouts(self):
 
     self.right_bottom_layout = QHBoxLayout()
     self.right_layout.addLayout(self.right_bottom_layout)
-    self.right_bottom_layout.addWidget(self.frame_scale)
-    self.right_bottom_layout.addWidget(self.wl_scale)
-    self.right_bottom_layout.addWidget(self.optical_depth_scale)
+
+    self.frame_layout = QHBoxLayout()
+    self.right_bottom_layout.addLayout(self.frame_layout)
+    self.wl_layout = QHBoxLayout()
+    self.right_bottom_layout.addLayout(self.wl_layout)
+    self.optical_depth_layout = QHBoxLayout()
+    self.right_bottom_layout.addLayout(self.optical_depth_layout)
+    self.frame_layout.addWidget(self.frame_label)
+    self.frame_layout.addWidget(self.frame_scale)
+    self.wl_layout.addWidget(self.wl_label)
+    self.wl_layout.addWidget(self.wl_scale)
+    self.optical_depth_layout.addWidget(self.optical_depth_label)
+    self.optical_depth_layout.addWidget(self.optical_depth_scale)
 
 def widgets(self):
     #-------widgets for canvas-------#
@@ -166,10 +176,23 @@ def widgets(self):
 
     self.frame_scale = QSlider(Qt.Horizontal)
     self.frame_scale.sliderReleased.connect(lambda: change_frame(self))
+    self.frame_scale.valueChanged.connect(lambda: update_frame_label(self))
+    self.frame_label = QLabel("FR: " + str(self.frame_scale.value()),self)
     self.wl_scale = QSlider(Qt.Horizontal)
     self.wl_scale.sliderReleased.connect(lambda: change_wl(self))
+    self.wl_scale.valueChanged.connect(lambda: update_wl_label(self))
+    self.wl_label = QLabel("WL: " + str(self.wl_scale.value()),self)
     self.optical_depth_scale = QSlider(Qt.Horizontal)
     self.optical_depth_scale.sliderReleased.connect(lambda: change_optical_depth(self))
+    self.optical_depth_scale.valueChanged.connect(lambda: update_optical_depth_label(self))
+    self.optical_depth_label = QLabel("OD: " + str(self.optical_depth_scale.value()),self)
+
+def update_frame_label(self):
+    self.frame_label.setText("FR: " + str(self.frame_scale.value()))
+def update_wl_label(self):
+    self.wl_label.setText("WL: " + str(self.wl_scale.value()))
+def update_optical_depth_label(self):
+    self.optical_depth_label.setText("OD: " + str(self.optical_depth_scale.value()))
 
 class MplCanvas1(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
