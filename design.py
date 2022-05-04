@@ -21,47 +21,60 @@ def layouts(self):
     self.tab2 = QWidget()
     self.tab3 = QWidget()
     self.tabs.addTab(self.tab1,"File manager")
-    self.tabs.addTab(self.tab2,"Options")
-    self.tabs.addTab(self.tab3,"Options")
-    self.tabLayout = QVBoxLayout()
+    self.tabs.addTab(self.tab2,"Map options")
+    self.tabs.addTab(self.tab3,"Plot options")
     self.left_layout.addWidget(self.tabs)
-    self.tabLayout.addWidget(self.btn_folder_search)
-    self.tabLayout.addWidget(self.select_folder)
-    self.tabLayout.addWidget(self.model2_checkbutton)
-    self.tabLayout.addWidget(self.mac1_checkbutton)
-    self.tabLayout.addWidget(self.mac2_checkbutton)
-    self.tabLayout.addWidget(self.chi2_checkbutton)
-    self.tabLayout.addWidget(self.binary_checkbutton)
+    #tab1
+    self.tab1Layout = QVBoxLayout()
+    self.tab1Layout.addWidget(self.btn_folder_search)
+    self.tab1Layout.addWidget(self.select_folder)
+    self.tab1Layout.addWidget(self.model2_checkbutton)
+    self.tab1Layout.addWidget(self.mac1_checkbutton)
+    self.tab1Layout.addWidget(self.mac2_checkbutton)
+    self.tab1Layout.addWidget(self.chi2_checkbutton)
+    self.tab1Layout.addWidget(self.binary_checkbutton)
 
-    self.tabLayout.addWidget(self.autofill_btn)
+    self.tab1Layout.addWidget(self.autofill_btn)
 
-    self.tabLayout.addWidget(self.model1_btn)
-    self.tabLayout.addWidget(self.select_model1)
+    self.tab1Layout.addWidget(self.model1_btn)
+    self.tab1Layout.addWidget(self.select_model1)
 
-    self.tabLayout.addWidget(self.syn_prof_btn)
-    self.tabLayout.addWidget(self.select_syn_prof)
+    self.tab1Layout.addWidget(self.syn_prof_btn)
+    self.tab1Layout.addWidget(self.select_syn_prof)
 
-    self.tabLayout.addWidget(self.obs_prof_btn)
-    self.tabLayout.addWidget(self.select_obs_prof)
+    self.tab1Layout.addWidget(self.obs_prof_btn)
+    self.tab1Layout.addWidget(self.select_obs_prof)
 
-    self.tabLayout.addWidget(self.model2_btn)
-    self.tabLayout.addWidget(self.select_model2)
+    self.tab1Layout.addWidget(self.model2_btn)
+    self.tab1Layout.addWidget(self.select_model2)
 
-    self.tabLayout.addWidget(self.mac1_btn)
-    self.tabLayout.addWidget(self.select_mac1)
+    self.tab1Layout.addWidget(self.mac1_btn)
+    self.tab1Layout.addWidget(self.select_mac1)
 
-    self.tabLayout.addWidget(self.mac2_btn)
-    self.tabLayout.addWidget(self.select_mac2)
+    self.tab1Layout.addWidget(self.mac2_btn)
+    self.tab1Layout.addWidget(self.select_mac2)
 
-    self.tabLayout.addWidget(self.chi2_btn)
-    self.tabLayout.addWidget(self.select_chi2)
+    self.tab1Layout.addWidget(self.chi2_btn)
+    self.tab1Layout.addWidget(self.select_chi2)
 
-    self.tabLayout.addWidget(self.binary_btn)
-    self.tabLayout.addWidget(self.select_binary)
+    self.tab1Layout.addWidget(self.binary_btn)
+    self.tab1Layout.addWidget(self.select_binary)
 
-    self.tabLayout.addStretch(1)
-    self.tab1.setLayout(self.tabLayout)
+    self.tab1Layout.addStretch(1)
+    self.tab1.setLayout(self.tab1Layout)
+    #tab2
+    self.tab2Layout = QVBoxLayout()
+    self.tab2Layout.addWidget(self.Stokes_checkbutton)
+    self.tab2Layout.addWidget(self.T_checkbutton)
+    self.tab2Layout.addWidget(self.B_checkbutton)
+    self.tab2Layout.addWidget(self.V_checkbutton)
+    self.tab2Layout.addWidget(self.G_checkbutton)
+    self.tab2Layout.addWidget(self.A_checkbutton)
+    self.tab2Layout.addWidget(self.hide_btn)
+    self.tab2Layout.addStretch(1)
+    self.tab2.setLayout(self.tab2Layout)
 
+    #display
     self.left_layout.addWidget(self.btnDisplay)
 
     #canvas
@@ -101,12 +114,12 @@ def layouts(self):
     self.threeWidget.setLayout(self.threeLayout)
 
     self.threeLayout.addWidget(self.sc1)
-    self.sc1.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc1.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc1.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc1.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc1.ax5.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc1.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc1.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc1.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc1.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc1.ax5.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
     self.right_bottom_layout = QHBoxLayout()
     self.right_layout.addLayout(self.right_bottom_layout)
@@ -125,16 +138,11 @@ def layouts(self):
     self.optical_depth_layout.addWidget(self.optical_depth_scale)
 
 def widgets(self):
-    #-------widgets for canvas-------#
-    self.sc1 = MplCanvas1(self, width=5, height=4, dpi=100)
-    self.sc1.fig.canvas.mpl_connect('button_press_event', self.mouseclicks)
-    self.sc2 = MplCanvas2(self, width=5, height=4, dpi=100)
-    self.sc3 = MplCanvas3(self, width=5, height=4, dpi=100)
-
     #-------widgets for control panel-------#
     self.btnDisplay = QPushButton("Display dataset")
     self.btnDisplay.clicked.connect(lambda checked: self.change_canvas())
 
+    #-------tab1-------#
     self.btn_folder_search = QPushButton("Search for folder")
     self.btn_folder_search.clicked.connect(lambda checked: self.get_folder())
 
@@ -145,6 +153,9 @@ def widgets(self):
     self.mac2_checkbutton = QCheckBox("Include secondary macroturbulence",self)
     self.chi2_checkbutton = QCheckBox("Include chi^2",self)
     self.binary_checkbutton = QCheckBox("Include binary map",self)
+
+    self.hide_btn = QPushButton("Update axes")
+    self.hide_btn.clicked.connect(lambda checked: destroy_axes(self))
 
     self.autofill_btn = QPushButton("Autofill")
     self.autofill_btn.clicked.connect(lambda checked: self.autofill())
@@ -174,6 +185,26 @@ def widgets(self):
     self.binary_btn.clicked.connect(lambda checked: self.get_binary())
     self.select_binary = QComboBox(self)
 
+    #-------tab1-------#
+    self.Stokes_checkbutton = QCheckBox("Show Stokes I",self)
+    self.Stokes_checkbutton.setChecked(True)
+    self.T_checkbutton = QCheckBox("Show temperature",self)
+    self.T_checkbutton.setChecked(True)
+    self.B_checkbutton = QCheckBox("Show magnetic field strength/flux",self)
+    self.B_checkbutton.setChecked(True)
+    self.V_checkbutton = QCheckBox("Show velocity",self)
+    self.V_checkbutton.setChecked(True)
+    self.G_checkbutton = QCheckBox("Show inclination",self)
+    self.G_checkbutton.setChecked(True)
+    self.A_checkbutton = QCheckBox("Show azimuth",self)
+    self.A_checkbutton.setChecked(True)
+
+    #-------widgets for canvas-------#
+    self.sc1 = MplCanvas1(self, width=5, height=4, dpi=100)
+    self.sc1.fig1.canvas.mpl_connect('button_press_event', self.mouseclicks)
+    self.sc2 = MplCanvas2(self, width=5, height=4, dpi=100)
+    self.sc3 = MplCanvas3(self, width=5, height=4, dpi=100)
+
     self.frame_scale = QSlider(Qt.Horizontal)
     self.frame_scale.sliderReleased.connect(lambda: change_frame(self))
     self.frame_scale.valueChanged.connect(lambda: update_frame_label(self))
@@ -186,6 +217,18 @@ def widgets(self):
     self.optical_depth_scale.sliderReleased.connect(lambda: change_optical_depth(self))
     self.optical_depth_scale.valueChanged.connect(lambda: update_optical_depth_label(self))
     self.optical_depth_label = QLabel("OD: " + str(self.optical_depth_scale.value()),self)
+#
+# def create_map(self):
+#     self.fig1.clf()
+#     self.sc1 = MplCanvas1(self, width=5, height=4, dpi=100)
+#     self.sc1.fig.canvas.mpl_connect('button_press_event', self.mouseclicks)
+#     self.threeLayout.addWidget(self.sc1)
+#     self.sc1.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+#     self.sc1.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+#     self.sc1.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+#     self.sc1.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+#     self.sc1.ax5.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+#     self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
 def update_frame_label(self):
     self.frame_label.setText("FR: " + str(self.frame_scale.value()))
@@ -196,14 +239,52 @@ def update_optical_depth_label(self):
 
 class MplCanvas1(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
-        self.fig = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-        self.ax1 = self.fig.add_subplot(611)
-        self.ax2 = self.fig.add_subplot(612)
-        self.ax3 = self.fig.add_subplot(613)
-        self.ax4 = self.fig.add_subplot(614)
-        self.ax5 = self.fig.add_subplot(615)
-        self.ax6 = self.fig.add_subplot(616)
-        super(MplCanvas1, self).__init__(self.fig)
+        self.fig1 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
+        # self.ax1 = self.fig.add_subplot(611)
+        # self.ax2 = self.fig.add_subplot(612)
+        # self.ax3 = self.fig.add_subplot(613)
+        # self.ax4 = self.fig.add_subplot(614)
+        # self.ax5 = self.fig.add_subplot(615)
+        # self.ax6 = self.fig.add_subplot(616)
+        super(MplCanvas1, self).__init__(self.fig1)
+
+# class MplCanvas1(FigureCanvasQTAgg):
+#     def __init__(self, parent=None, width=10, height=10, dpi=100):
+#         self.fig1 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
+#         val = 101
+#         if self.Stokes_checkbutton.isChecked():
+#             val=val+101
+#         if self.T_checkbutton.isChecked():
+#             val=val+101
+#         if self.B_checkbutton.isChecked():
+#             val=val+101
+#         if self.V_checkbutton.isChecked():
+#             val=val+101
+#         if self.G_checkbutton.isChecked():
+#             val=val+101
+#         if self.A_checkbutton.isChecked():
+#             val=val+101
+#         vall=11
+#         if self.Stokes_checkbutton.isChecked():
+#             self.ax1 = self.fig.add_subplot(val+vall)
+#             vall=vall+1
+#         if self.T_checkbutton.isChecked():
+#             self.ax2 = self.fig.add_subplot(val+vall)
+#             vall=vall+1
+#         if self.B_checkbutton.isChecked():
+#             self.ax3 = self.fig.add_subplot(val+vall)
+#             vall=vall+1
+#         if self.V_checkbutton.isChecked():
+#             self.ax4 = self.fig.add_subplot(val+vall)
+#             vall=vall+1
+#         if self.G_checkbutton.isChecked():
+#             self.ax5 = self.fig.add_subplot(val+vall)
+#             vall=vall+1
+#         if self.A_checkbutton.isChecked():
+#             self.ax6 = self.fig.add_subplot(val+vall)
+#             vall=vall+1
+#
+#         super(MplCanvas1, self).__init__(self.fig1)
 class MplCanvas2(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
