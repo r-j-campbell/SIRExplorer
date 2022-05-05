@@ -17,17 +17,8 @@ def show(self, class_object):
         self.sc1.ax4.clear()
         self.sc1.ax5.clear()
         self.sc1.ax6.clear()
-        try:
-            self.caxI.remove()
-            self.caxT.remove()
-            self.caxB.remove()
-            self.caxV.remove()
-            self.caxG.remove()
-            self.caxA.remove()
-        except:
-            print("Something went wrong")
-        else:
-            print("Nothing went wrong")
+
+        remove_cbars(self)
 
     if self.flag == False or self.frame_flag == 1:
         # open mandatory files
@@ -444,6 +435,43 @@ def destroy_axes(self):
     else:
         print("error!! dataset not found...")
 
+def remove_cbars(self):
+    try:
+        self.caxI.remove()
+    except:
+        print("Something went wrong")
+    else:
+        print("Nothing went wrong")
+    try:
+        self.caxT.remove()
+    except:
+        print("Something went wrong")
+    else:
+        print("Nothing went wrong")
+    try:
+        self.caxB.remove()
+    except:
+        print("Something went wrong")
+    else:
+        print("Nothing went wrong")
+    try:
+        self.caxV.remove()
+    except:
+        print("Something went wrong")
+    else:
+        print("Nothing went wrong")
+    try:
+        self.caxG.remove()
+    except:
+        print("Something went wrong")
+    else:
+        print("Nothing went wrong")
+    try:
+        self.caxA.remove()
+    except:
+        print("Something went wrong")
+    else:
+        print("Nothing went wrong")
 
 def change_frame(self):
     frame = int(self.frame_scale.value())

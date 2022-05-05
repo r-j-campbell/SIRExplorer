@@ -114,12 +114,6 @@ def layouts(self):
     self.threeWidget.setLayout(self.threeLayout)
 
     self.threeLayout.addWidget(self.sc1)
-    # self.sc1.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc1.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc1.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc1.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc1.ax5.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
     self.right_bottom_layout = QHBoxLayout()
     self.right_layout.addLayout(self.right_bottom_layout)
@@ -217,18 +211,6 @@ def widgets(self):
     self.optical_depth_scale.sliderReleased.connect(lambda: change_optical_depth(self))
     self.optical_depth_scale.valueChanged.connect(lambda: update_optical_depth_label(self))
     self.optical_depth_label = QLabel("OD: " + str(self.optical_depth_scale.value()),self)
-#
-# def create_map(self):
-#     self.fig1.clf()
-#     self.sc1 = MplCanvas1(self, width=5, height=4, dpi=100)
-#     self.sc1.fig.canvas.mpl_connect('button_press_event', self.mouseclicks)
-#     self.threeLayout.addWidget(self.sc1)
-#     self.sc1.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-#     self.sc1.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-#     self.sc1.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-#     self.sc1.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-#     self.sc1.ax5.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-#     self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
 def update_frame_label(self):
     self.frame_label.setText("FR: " + str(self.frame_scale.value()))
@@ -247,44 +229,6 @@ class MplCanvas1(FigureCanvasQTAgg):
         # self.ax5 = self.fig.add_subplot(615)
         # self.ax6 = self.fig.add_subplot(616)
         super(MplCanvas1, self).__init__(self.fig1)
-
-# class MplCanvas1(FigureCanvasQTAgg):
-#     def __init__(self, parent=None, width=10, height=10, dpi=100):
-#         self.fig1 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-#         val = 101
-#         if self.Stokes_checkbutton.isChecked():
-#             val=val+101
-#         if self.T_checkbutton.isChecked():
-#             val=val+101
-#         if self.B_checkbutton.isChecked():
-#             val=val+101
-#         if self.V_checkbutton.isChecked():
-#             val=val+101
-#         if self.G_checkbutton.isChecked():
-#             val=val+101
-#         if self.A_checkbutton.isChecked():
-#             val=val+101
-#         vall=11
-#         if self.Stokes_checkbutton.isChecked():
-#             self.ax1 = self.fig.add_subplot(val+vall)
-#             vall=vall+1
-#         if self.T_checkbutton.isChecked():
-#             self.ax2 = self.fig.add_subplot(val+vall)
-#             vall=vall+1
-#         if self.B_checkbutton.isChecked():
-#             self.ax3 = self.fig.add_subplot(val+vall)
-#             vall=vall+1
-#         if self.V_checkbutton.isChecked():
-#             self.ax4 = self.fig.add_subplot(val+vall)
-#             vall=vall+1
-#         if self.G_checkbutton.isChecked():
-#             self.ax5 = self.fig.add_subplot(val+vall)
-#             vall=vall+1
-#         if self.A_checkbutton.isChecked():
-#             self.ax6 = self.fig.add_subplot(val+vall)
-#             vall=vall+1
-#
-#         super(MplCanvas1, self).__init__(self.fig1)
 class MplCanvas2(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
         self.fig = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
