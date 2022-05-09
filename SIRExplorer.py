@@ -7,7 +7,7 @@ import numpy as np
 
 from design import layouts, widgets
 from Instruments import SIR
-from canvas_functions import show, click, change_frame
+from canvas_functions import show, click
 
 class SIRExplorer(QWidget):
     def __init__(self):
@@ -299,7 +299,7 @@ class SIRExplorer(QWidget):
 
 def main():
     app = QApplication(sys.argv)
-    window = SIRExplorer()
+    window = SIRExplorer() #DO NOT CHANGE - app will crash when windows resized without this
     sys.exit(app.exec_())
 if __name__ == '__main__':
     main()

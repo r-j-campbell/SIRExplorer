@@ -5,11 +5,13 @@ import matplotlib
 matplotlib.use("TkAgg")
 
 def show(self, class_object):
-    print("self.increment", self.increment)  # zero on first launch, always one thereafter
-    print("self.frame_flag", self.frame_flag)  # zero when dataset has 1 frame, one otherwise
-    print("self.flag", self.flag)  # false when dataset has no match in dict, true when match found
+    # print("self.increment", self.increment)  # zero on first launch, always one thereafter
+    # print("self.frame_flag", self.frame_flag)  # zero when dataset has 1 frame, one otherwise
+    # print("self.flag", self.flag)  # false when dataset has no match in dict, true when match found
     if self.increment == 0:
-        create_figure(self)
+        create_figure1(self)
+        create_figure2(self)
+        create_figure3(self)
     if self.increment == 1 or self.frame_flag == 1:
         self.sc1.ax1.clear()
         self.sc1.ax2.clear()
@@ -17,58 +19,63 @@ def show(self, class_object):
         self.sc1.ax4.clear()
         self.sc1.ax5.clear()
         self.sc1.ax6.clear()
-
         remove_cbars(self)
 
     if self.flag == False or self.frame_flag == 1:
-        # open mandatory files
-        model1 = pyfits.open(class_object["model_file"])[0].data
-        print(model1.shape)
-        obs_prof = pyfits.open(class_object["obs_prof_file"])[0].data
-        syn_prof = pyfits.open(class_object["syn_prof_file"])[0].data
-        model1 = np.squeeze(model1)
-        obs_prof = np.squeeze(obs_prof)
-        syn_prof = np.squeeze(syn_prof)
-        if model1.ndim == 4:
-            self.frame_flag = 0
-        if model1.ndim == 5:  # executed only if there are multiple frames of data
-            self.frame_flag = 1
-            class_object["class_object"].Attributes["t"] = model1.shape[0]
-            model1 = model1[class_object["class_object"].current_frame_index, :, :, :, :]
-            obs_prof = obs_prof[class_object["class_object"].current_frame_index, :, :, :, :]
-            syn_prof = syn_prof[class_object["class_object"].current_frame_index, :, :, :, :]
-            self.frame_scale.setMinimum(0)
-            self.frame_scale.setMaximum(class_object['class_object'].Attributes["t"] - 1)
-        class_object["class_object"].Attributes["optical_depth"] = model1.shape[1]
-        print(model1.shape[1],"maximum optical depth")
-        class_object["class_object"].Attributes["y"] = model1.shape[2]
-        class_object["class_object"].Attributes["x"] = model1.shape[3]
-        class_object["class_object"].Attributes["wl"] = obs_prof.shape[1]
-        self.wl_scale.setMinimum(0)
-        self.wl_scale.setMaximum(class_object["class_object"].Attributes["wl"] - 1)
-        self.optical_depth_scale.setMinimum(0)
-        self.optical_depth_scale.setMaximum(class_object["class_object"].Attributes["optical_depth"] - 1)
-        self.wl_max = obs_prof.shape[1]
-        self.wl_dim = obs_prof.shape[1]
-        class_object["class_object"].update_model1(model1)
-        class_object["class_object"].update_obs(obs_prof)
-        class_object["class_object"].update_syn(syn_prof)
-        if self.binary_checkbutton.isChecked():
-            binary_map = pyfits.open(class_object["binary_file"])[0].data
-            binary_map = np.squeeze(binary_map)
-            if binary_map.ndim == 3:  # executed only if there are multiple frames of data
-                binary_map = binary_map[class_object["class_object"].current_frame_index, :, :]
-            class_object["class_object"].update_binary(binary_map)
-        else:
-            binary_map = np.ones(
-                [class_object["class_object"].Attributes["y"], class_object["class_object"].Attributes["x"]])
-            class_object["class_object"].update_binary(binary_map)
-        if self.chi2_checkbutton.isChecked():
-            chi2 = pyfits.open(class_object["chi2_file"])[0].data
-            chi2 = np.squeeze(chi2)
-            if chi2.ndim == 3:  # executed only if there are multiple frames of data
-                chi2 = chi2[class_object["class_object"].current_frame_index, :, :]
-            class_object["class_object"].update_chi2(chi2)
+        open_files(self,class_object)
+
+    update_canvas(self,class_object)
+    self.sc1.fig1.canvas.draw()
+
+
+def open_files(self,class_object):
+    model1 = pyfits.open(class_object["model_file"])[0].data
+    print(model1.shape)
+    obs_prof = pyfits.open(class_object["obs_prof_file"])[0].data
+    syn_prof = pyfits.open(class_object["syn_prof_file"])[0].data
+    model1 = np.squeeze(model1)
+    obs_prof = np.squeeze(obs_prof)
+    syn_prof = np.squeeze(syn_prof)
+    if model1.ndim == 4:
+        self.frame_flag = 0
+    if model1.ndim == 5:  # executed only if there are multiple frames of data
+        self.frame_flag = 1
+        class_object["class_object"].Attributes["t"] = model1.shape[0]
+        model1 = model1[class_object["class_object"].current_frame_index, :, :, :, :]
+        obs_prof = obs_prof[class_object["class_object"].current_frame_index, :, :, :, :]
+        syn_prof = syn_prof[class_object["class_object"].current_frame_index, :, :, :, :]
+        self.frame_scale.setMinimum(0)
+        self.frame_scale.setMaximum(class_object['class_object'].Attributes["t"] - 1)
+    class_object["class_object"].Attributes["optical_depth"] = model1.shape[1]
+    print(model1.shape[1],"maximum optical depth")
+    class_object["class_object"].Attributes["y"] = model1.shape[2]
+    class_object["class_object"].Attributes["x"] = model1.shape[3]
+    class_object["class_object"].Attributes["wl"] = obs_prof.shape[1]
+    self.wl_scale.setMinimum(0)
+    self.wl_scale.setMaximum(class_object["class_object"].Attributes["wl"] - 1)
+    self.optical_depth_scale.setMinimum(0)
+    self.optical_depth_scale.setMaximum(class_object["class_object"].Attributes["optical_depth"] - 1)
+    self.wl_max = obs_prof.shape[1]
+    self.wl_dim = obs_prof.shape[1]
+    class_object["class_object"].update_model1(model1)
+    class_object["class_object"].update_obs(obs_prof)
+    class_object["class_object"].update_syn(syn_prof)
+    if self.binary_checkbutton.isChecked():
+        binary_map = pyfits.open(class_object["binary_file"])[0].data
+        binary_map = np.squeeze(binary_map)
+        if binary_map.ndim == 3:  # executed only if there are multiple frames of data
+            binary_map = binary_map[class_object["class_object"].current_frame_index, :, :]
+        class_object["class_object"].update_binary(binary_map)
+    else:
+        binary_map = np.ones(
+            [class_object["class_object"].Attributes["y"], class_object["class_object"].Attributes["x"]])
+        class_object["class_object"].update_binary(binary_map)
+    if self.chi2_checkbutton.isChecked():
+        chi2 = pyfits.open(class_object["chi2_file"])[0].data
+        chi2 = np.squeeze(chi2)
+        if chi2.ndim == 3:  # executed only if there are multiple frames of data
+            chi2 = chi2[class_object["class_object"].current_frame_index, :, :]
+        class_object["class_object"].update_chi2(chi2)
 
     if self.model2_checkbutton.isChecked() and self.mac1_checkbutton.isChecked() and self.mac2_checkbutton.isChecked():
         if self.flag == False or self.frame_flag == 1:
@@ -108,6 +115,7 @@ def show(self, class_object):
             mac2_file[1, :, :] = np.subtract(np.ones((model1.shape[2], model1.shape[3])), mac1_file[1, :, :])  # update dummy mac2 file filling factor as (1 - mac1) when mac2 not provided"
             class_object["class_object"].update_mac2(mac2_file)
 
+def update_canvas(self,class_object):
     model1 = class_object["class_object"].model1
     model2 = class_object["class_object"].model2
     obs_prof = class_object["class_object"].obs
@@ -115,13 +123,13 @@ def show(self, class_object):
     binary_map = class_object["class_object"].binary
     mac1_file = class_object["class_object"].mac1
     mac2_file = class_object["class_object"].mac2
-    print(model1.shape)
-    print(model2.shape)
-    print(obs_prof.shape)
-    print(syn_prof.shape)
-    print(binary_map.shape)
-    print(mac1_file.shape)
-    print(mac2_file.shape)
+    # print(model1.shape)
+    # print(model2.shape)
+    # print(obs_prof.shape)
+    # print(syn_prof.shape)
+    # print(binary_map.shape)
+    # print(mac1_file.shape)
+    # print(mac2_file.shape)
 
     if self.Stokes_checkbutton.isChecked():
         if self.I_CT[3] == 0:
@@ -271,8 +279,6 @@ def show(self, class_object):
     self.sc1.ax5.set_ylabel("X [pix.]", fontsize=self.fontsize_axislabels)
     self.sc1.ax4.set_ylabel("X [pix.]", fontsize=self.fontsize_axislabels)
 
-    self.sc1.fig1.canvas.draw()
-
     del model1, model2, syn_prof, obs_prof, binary_map, mac1_file, mac2_file
 
 def click(self, class_object):
@@ -369,12 +375,12 @@ def click(self, class_object):
             linestyle=':', color='blue', linewidth=self.linewidth)  # azimuth
         del model2, mac1, mac2
 
-    self.sc2.fig.canvas.draw()
-    self.sc3.fig.canvas.draw()
+    self.sc2.fig2.canvas.draw()
+    self.sc3.fig3.canvas.draw()
 
     del model1, obs_prof, syn_prof
 
-def create_figure(self):
+def create_figure1(self):
     index=1
     total=0
     if self.Stokes_checkbutton.isChecked():
@@ -409,7 +415,7 @@ def create_figure(self):
         self.sc1.ax6 = self.sc1.fig1.add_subplot(total,1,index)
         index+=1
 
-def destroy_axes(self):
+def clear_fig1(self):
     self.sc1.fig1.clf()
     try:
         self.caxI.remove()
@@ -422,14 +428,100 @@ def destroy_axes(self):
         print("Something went wrong")
     else:
         print("Nothing went wrong")
-    create_figure(self)
+    create_figure1(self)
+    self.flag=False
+    self.get_all_values(self.class_objects,0,self.select_model1.currentText())
+    if self.flag == True:
+        i=str(self.match)
+        if self.click_increment == 1:
+            #click(self,self.class_objects[i])
+            self.change_canvas()
+        else:
+            print("you have to load something first")
+    else:
+        print("error!! dataset not found...")
+
+def create_figure2(self):
+    index=1
+    total=0
+    if self.pI_checkbutton.isChecked():
+        total+=1
+    if self.pQ_checkbutton.isChecked():
+        total+=1
+    if self.pU_checkbutton.isChecked():
+        total+=1
+    if self.pV_checkbutton.isChecked():
+        total+=1
+
+    if self.pI_checkbutton.isChecked():
+        self.sc2.ax1 = self.sc2.fig2.add_subplot(total,1,index)
+        index+=1
+    if self.pQ_checkbutton.isChecked():
+        self.sc2.ax2 = self.sc2.fig2.add_subplot(total,1,index)
+        index+=1
+    if self.pU_checkbutton.isChecked():
+        self.sc2.ax3 = self.sc2.fig2.add_subplot(total,1,index)
+        index+=1
+    if self.pV_checkbutton.isChecked():
+        self.sc2.ax4 = self.sc2.fig2.add_subplot(total,1,index)
+        index+=1
+
+
+def clear_fig2(self):
+    self.sc2.fig2.clf()
+    create_figure2(self)
     self.flag=False
     self.get_all_values(self.class_objects,0,self.select_model1.currentText())
     if self.flag == True:
         i=str(self.match)
         if self.click_increment == 1:
             click(self,self.class_objects[i])
-            self.change_canvas()
+            #self.change_canvas()
+        else:
+            print("you have to load something first")
+    else:
+        print("error!! dataset not found...")
+
+def create_figure3(self):
+    index=1
+    total=0
+    if self.mT_checkbutton.isChecked():
+        total+=1
+    if self.mB_checkbutton.isChecked():
+        total+=1
+    if self.mV_checkbutton.isChecked():
+        total+=1
+    if self.mG_checkbutton.isChecked():
+        total+=1
+    if total <= 2:
+        rows = 1
+        columns = total
+    else:
+        rows = 2
+        columns = 2
+    if self.mT_checkbutton.isChecked():
+        self.sc3.ax1 = self.sc3.fig3.add_subplot(columns,rows,index)
+        index+=1
+    if self.mB_checkbutton.isChecked():
+        self.sc3.ax2 = self.sc3.fig3.add_subplot(columns,rows,index)
+        index+=1
+    if self.mV_checkbutton.isChecked():
+        self.sc3.ax3 = self.sc3.fig3.add_subplot(columns,rows,index)
+        index+=1
+    if self.mG_checkbutton.isChecked():
+        self.sc3.ax4 = self.sc3.fig3.add_subplot(columns,rows,index)
+        index+=1
+
+def clear_fig3(self):
+    self.sc3.fig3.clf()
+    create_figure3(self)
+    self.flag=False
+    self.get_all_values(self.class_objects,0,self.select_model1.currentText())
+    if self.flag == True:
+        i=str(self.match)
+        if self.click_increment == 1:
+            click(self,self.class_objects[i])
+            #self.change_canvas()
         else:
             print("you have to load something first")
     else:
@@ -439,27 +531,20 @@ def remove_cbars(self):
     try:
         self.caxI.remove()
     except:
-        print("Something went wrong")
-    else:
-        print("Nothing went wrong")
+        pass
     try:
         self.caxT.remove()
     except:
         print("Something went wrong")
-    else:
-        print("Nothing went wrong")
     try:
         self.caxB.remove()
     except:
         print("Something went wrong")
-    else:
-        print("Nothing went wrong")
     try:
         self.caxV.remove()
     except:
         print("Something went wrong")
-    else:
-        print("Nothing went wrong")
+
     try:
         self.caxG.remove()
     except:

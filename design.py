@@ -70,9 +70,23 @@ def layouts(self):
     self.tab2Layout.addWidget(self.V_checkbutton)
     self.tab2Layout.addWidget(self.G_checkbutton)
     self.tab2Layout.addWidget(self.A_checkbutton)
-    self.tab2Layout.addWidget(self.hide_btn)
+    self.tab2Layout.addWidget(self.clear_map_btn)
     self.tab2Layout.addStretch(1)
     self.tab2.setLayout(self.tab2Layout)
+    #tab3
+    self.tab3Layout = QVBoxLayout()
+    self.tab3Layout.addWidget(self.pI_checkbutton)
+    self.tab3Layout.addWidget(self.pQ_checkbutton)
+    self.tab3Layout.addWidget(self.pU_checkbutton)
+    self.tab3Layout.addWidget(self.pV_checkbutton)
+    self.tab3Layout.addWidget(self.clear_profiles_btn)
+    self.tab3Layout.addWidget(self.mT_checkbutton)
+    self.tab3Layout.addWidget(self.mB_checkbutton)
+    self.tab3Layout.addWidget(self.mV_checkbutton)
+    self.tab3Layout.addWidget(self.mG_checkbutton)
+    self.tab3Layout.addWidget(self.clear_models_btn)
+    self.tab3Layout.addStretch(1)
+    self.tab3.setLayout(self.tab3Layout)
 
     #display
     self.left_layout.addWidget(self.btnDisplay)
@@ -93,15 +107,15 @@ def layouts(self):
     self.twoWidget.setLayout(self.twoLayout)
 
     self.oneLayout.addWidget(self.sc2)
-    self.sc2.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc2.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc2.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc2.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc2.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc2.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc2.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc2.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
     self.twoLayout.addWidget(self.sc3)
-    self.sc3.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc3.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc3.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    self.sc3.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc3.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc3.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc3.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    # self.sc3.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
     self.threeWidget = QWidget()
     self.threeWidget.setLayout(self.right_layout)
@@ -148,8 +162,13 @@ def widgets(self):
     self.chi2_checkbutton = QCheckBox("Include chi^2",self)
     self.binary_checkbutton = QCheckBox("Include binary map",self)
 
-    self.hide_btn = QPushButton("Update axes")
-    self.hide_btn.clicked.connect(lambda checked: destroy_axes(self))
+    self.clear_map_btn = QPushButton("Update axes")
+    self.clear_map_btn.clicked.connect(lambda checked: clear_fig1(self))
+
+    self.clear_profiles_btn = QPushButton("Update profiles axes")
+    self.clear_profiles_btn.clicked.connect(lambda checked: clear_fig2(self))
+    self.clear_models_btn = QPushButton("Update models axes")
+    self.clear_models_btn.clicked.connect(lambda checked: clear_fig3(self))
 
     self.autofill_btn = QPushButton("Autofill")
     self.autofill_btn.clicked.connect(lambda checked: self.autofill())
@@ -179,7 +198,7 @@ def widgets(self):
     self.binary_btn.clicked.connect(lambda checked: self.get_binary())
     self.select_binary = QComboBox(self)
 
-    #-------tab1-------#
+    #-------tab2-------#
     self.Stokes_checkbutton = QCheckBox("Show Stokes I",self)
     self.Stokes_checkbutton.setChecked(True)
     self.T_checkbutton = QCheckBox("Show temperature",self)
@@ -192,6 +211,24 @@ def widgets(self):
     self.G_checkbutton.setChecked(True)
     self.A_checkbutton = QCheckBox("Show azimuth",self)
     self.A_checkbutton.setChecked(True)
+    #-------tab3-------#
+    self.pI_checkbutton = QCheckBox("Show Stokes I",self)
+    self.pI_checkbutton.setChecked(True)
+    self.pQ_checkbutton = QCheckBox("Show Stokes Q",self)
+    self.pQ_checkbutton.setChecked(True)
+    self.pU_checkbutton = QCheckBox("Show Stokes U",self)
+    self.pU_checkbutton.setChecked(True)
+    self.pV_checkbutton = QCheckBox("Show Stokes V",self)
+    self.pV_checkbutton.setChecked(True)
+
+    self.mT_checkbutton = QCheckBox("Show temperature",self)
+    self.mT_checkbutton.setChecked(True)
+    self.mB_checkbutton = QCheckBox("Show magnetic field strength/flux",self)
+    self.mB_checkbutton.setChecked(True)
+    self.mV_checkbutton = QCheckBox("Show velocity",self)
+    self.mV_checkbutton.setChecked(True)
+    self.mG_checkbutton = QCheckBox("Show inclin./azi.",self)
+    self.mG_checkbutton.setChecked(True)
 
     #-------widgets for canvas-------#
     self.sc1 = MplCanvas1(self, width=5, height=4, dpi=100)
@@ -231,18 +268,18 @@ class MplCanvas1(FigureCanvasQTAgg):
         super(MplCanvas1, self).__init__(self.fig1)
 class MplCanvas2(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
-        self.fig = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-        self.ax1 = self.fig.add_subplot(411)
-        self.ax2 = self.fig.add_subplot(412)
-        self.ax3 = self.fig.add_subplot(413)
-        self.ax4 = self.fig.add_subplot(414)
-        super(MplCanvas2, self).__init__(self.fig)
+        self.fig2 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
+        # self.ax1 = self.fig2.add_subplot(411)
+        # self.ax2 = self.fig2.add_subplot(412)
+        # self.ax3 = self.fig2.add_subplot(413)
+        # self.ax4 = self.fig2.add_subplot(414)
+        super(MplCanvas2, self).__init__(self.fig2)
 class MplCanvas3(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
-        self.fig = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-        self.ax1 = self.fig.add_subplot(221)
-        self.ax2 = self.fig.add_subplot(222)
-        self.ax3 = self.fig.add_subplot(223)
-        self.ax4 = self.fig.add_subplot(224)
-        super(MplCanvas3, self).__init__(self.fig)
+        self.fig3 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
+        # self.ax1 = self.fig.add_subplot(221)
+        # self.ax2 = self.fig.add_subplot(222)
+        # self.ax3 = self.fig.add_subplot(223)
+        # self.ax4 = self.fig.add_subplot(224)
+        super(MplCanvas3, self).__init__(self.fig3)
 
