@@ -30,7 +30,6 @@ def show(self, class_object):
 
 def open_files(self,class_object):
     model1 = pyfits.open(class_object["model_file"])[0].data
-    print(model1.shape)
     obs_prof = pyfits.open(class_object["obs_prof_file"])[0].data
     syn_prof = pyfits.open(class_object["syn_prof_file"])[0].data
     model1 = np.squeeze(model1)
@@ -47,7 +46,6 @@ def open_files(self,class_object):
         self.frame_scale.setMinimum(0)
         self.frame_scale.setMaximum(class_object['class_object'].Attributes["t"] - 1)
     class_object["class_object"].Attributes["optical_depth"] = model1.shape[1]
-    print(model1.shape[1],"maximum optical depth")
     class_object["class_object"].Attributes["y"] = model1.shape[2]
     class_object["class_object"].Attributes["x"] = model1.shape[3]
     class_object["class_object"].Attributes["wl"] = obs_prof.shape[1]
@@ -101,7 +99,6 @@ def open_files(self,class_object):
             class_object["class_object"].updatemac1(mac1_file)
     elif self.model2_checkbutton.isChecked() and self.mac1_checkbutton.isChecked() and self.mac2_checkbutton.isChecked() == False:
         if self.flag == False or self.frame_flag == 1:
-            print("executed")
             model2 = pyfits.open(class_object["secondary_model_file"])[0].data
             model2 = np.squeeze(model2)
             mac1_file = pyfits.open(class_object["mac1_file"])[0].data
@@ -284,9 +281,7 @@ def update_canvas(self,class_object):
 def click(self, class_object):
     current_x = class_object["class_object"].current_x
     current_y = class_object["class_object"].current_y
-    print("click increment is ", self.click_increment)
     if self.click_increment == 1:
-        print("plot axes cleared")
         self.sc2.ax1.clear()
         self.sc2.ax2.clear()
         self.sc2.ax3.clear()
@@ -312,7 +307,6 @@ def click(self, class_object):
     self.sc2.ax3.set_xlabel("wavelength [pix.]", fontsize=self.fontsize_axislabels)
     self.sc2.ax4.set_xlabel("wavelength [pix.]", fontsize=self.fontsize_axislabels)
 
-    print("click executed", current_y, current_x)
     model1 = class_object["class_object"].model1
     obs_prof = class_object["class_object"].obs
     syn_prof = class_object["class_object"].syn
@@ -417,17 +411,6 @@ def create_figure1(self):
 
 def clear_fig1(self):
     self.sc1.fig1.clf()
-    try:
-        self.caxI.remove()
-        self.caxT.remove()
-        self.caxB.remove()
-        self.caxV.remove()
-        self.caxG.remove()
-        self.caxA.remove()
-    except:
-        print("Something went wrong")
-    else:
-        print("Nothing went wrong")
     create_figure1(self)
     self.flag=False
     self.get_all_values(self.class_objects,0,self.select_model1.currentText())
@@ -583,13 +566,11 @@ def change_wl(self):
         print("ERROR: dataset not found")
 
 def change_optical_depth(self):
-    print("change optical depth")
     self.flag = False
     self.get_all_values(self.class_objects, 0, self.select_model1.currentText())
     print(self.flag)
     if self.flag == True:
         i = str(self.match)
-        print(self.class_objects[i]['class_object'].current_optical_depth_index, self.optical_depth_scale.value())
         optical_depth = int(self.optical_depth_scale.value())
         self.class_objects[i]['class_object'].current_optical_depth_index = int(optical_depth)
         self.change_canvas()

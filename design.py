@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
 from PyQt5 import QtGui
+
 import matplotlib
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
@@ -71,6 +72,7 @@ def layouts(self):
     self.tab2Layout.addWidget(self.G_checkbutton)
     self.tab2Layout.addWidget(self.A_checkbutton)
     self.tab2Layout.addWidget(self.clear_map_btn)
+    self.tab2Layout.addWidget(self.colour_table_options_btn)
     self.tab2Layout.addStretch(1)
     self.tab2.setLayout(self.tab2Layout)
     #tab3
@@ -162,8 +164,11 @@ def widgets(self):
     self.chi2_checkbutton = QCheckBox("Include chi^2",self)
     self.binary_checkbutton = QCheckBox("Include binary map",self)
 
-    self.clear_map_btn = QPushButton("Update axes")
+    self.clear_map_btn = QPushButton("Update maps")
     self.clear_map_btn.clicked.connect(lambda checked: clear_fig1(self))
+
+    self.colour_table_options_btn = QPushButton("Colour table options")
+    self.colour_table_options_btn.clicked.connect(lambda checked: self.colour_table_options())
 
     self.clear_profiles_btn = QPushButton("Update profiles axes")
     self.clear_profiles_btn.clicked.connect(lambda checked: clear_fig2(self))
@@ -199,7 +204,7 @@ def widgets(self):
     self.select_binary = QComboBox(self)
 
     #-------tab2-------#
-    self.Stokes_checkbutton = QCheckBox("Show Stokes I",self)
+    self.Stokes_checkbutton = QCheckBox("Show observed profiles",self)
     self.Stokes_checkbutton.setChecked(True)
     self.T_checkbutton = QCheckBox("Show temperature",self)
     self.T_checkbutton.setChecked(True)
@@ -227,7 +232,7 @@ def widgets(self):
     self.mB_checkbutton.setChecked(True)
     self.mV_checkbutton = QCheckBox("Show velocity",self)
     self.mV_checkbutton.setChecked(True)
-    self.mG_checkbutton = QCheckBox("Show inclin./azi.",self)
+    self.mG_checkbutton = QCheckBox("Show inclination/azimuth",self)
     self.mG_checkbutton.setChecked(True)
 
     #-------widgets for canvas-------#
@@ -259,27 +264,148 @@ def update_optical_depth_label(self):
 class MplCanvas1(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
         self.fig1 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-        # self.ax1 = self.fig.add_subplot(611)
-        # self.ax2 = self.fig.add_subplot(612)
-        # self.ax3 = self.fig.add_subplot(613)
-        # self.ax4 = self.fig.add_subplot(614)
-        # self.ax5 = self.fig.add_subplot(615)
-        # self.ax6 = self.fig.add_subplot(616)
         super(MplCanvas1, self).__init__(self.fig1)
 class MplCanvas2(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
         self.fig2 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-        # self.ax1 = self.fig2.add_subplot(411)
-        # self.ax2 = self.fig2.add_subplot(412)
-        # self.ax3 = self.fig2.add_subplot(413)
-        # self.ax4 = self.fig2.add_subplot(414)
         super(MplCanvas2, self).__init__(self.fig2)
 class MplCanvas3(FigureCanvasQTAgg):
     def __init__(self, parent=None, width=10, height=10, dpi=100):
         self.fig3 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
-        # self.ax1 = self.fig.add_subplot(221)
-        # self.ax2 = self.fig.add_subplot(222)
-        # self.ax3 = self.fig.add_subplot(223)
-        # self.ax4 = self.fig.add_subplot(224)
         super(MplCanvas3, self).__init__(self.fig3)
+
+
+def colour_table_layouts(self,sire):
+    self.colour_table_layout = QGridLayout() #row,col
+
+    self.colour_table_layout.addWidget(self.CT_empty_label,0,0)
+    self.colour_table_layout.addWidget(self.CT_StkI_label,1,0)
+    self.colour_table_layout.addWidget(self.CT_T_label,2,0)
+    self.colour_table_layout.addWidget(self.CT_B_label,3,0)
+    self.colour_table_layout.addWidget(self.CT_V_label,4,0)
+    self.colour_table_layout.addWidget(self.CT_G_label,5,0)
+    self.colour_table_layout.addWidget(self.CT_A_label,6,0)
+
+    self.colour_table_layout.addWidget(self.CT_label,0,1)
+    self.colour_table_layout.addWidget(self.CT_StkI,1,1)
+    self.colour_table_layout.addWidget(self.CT_T,2,1)
+    self.colour_table_layout.addWidget(self.CT_B,3,1)
+    self.colour_table_layout.addWidget(self.CT_V,4,1)
+    self.colour_table_layout.addWidget(self.CT_G,5,1)
+    self.colour_table_layout.addWidget(self.CT_A,6,1)
+
+    self.colour_table_layout.addWidget(self.CT_vmin_label,0,2)
+    self.colour_table_layout.addWidget(self.CT_StkI_vmin,1,2)
+    self.colour_table_layout.addWidget(self.CT_T_vmin,2,2)
+    self.colour_table_layout.addWidget(self.CT_B_vmin,3,2)
+    self.colour_table_layout.addWidget(self.CT_V_vmin,4,2)
+    self.colour_table_layout.addWidget(self.CT_G_vmin,5,2)
+    self.colour_table_layout.addWidget(self.CT_A_vmin,6,2)
+
+    self.colour_table_layout.addWidget(self.CT_vmax_label,0,3)
+    self.colour_table_layout.addWidget(self.CT_StkI_vmax,1,3)
+    self.colour_table_layout.addWidget(self.CT_T_vmax,2,3)
+    self.colour_table_layout.addWidget(self.CT_B_vmax,3,3)
+    self.colour_table_layout.addWidget(self.CT_V_vmax,4,3)
+    self.colour_table_layout.addWidget(self.CT_G_vmax,5,3)
+    self.colour_table_layout.addWidget(self.CT_A_vmax,6,3)
+
+    self.colour_table_layout.addWidget(self.CT_StkI_autoscaling_checkbutton,1,4)
+    self.colour_table_layout.addWidget(self.CT_T_autoscaling_checkbutton,2,4)
+    self.colour_table_layout.addWidget(self.CT_B_autoscaling_checkbutton,3,4)
+    self.colour_table_layout.addWidget(self.CT_V_autoscaling_checkbutton,4,4)
+    self.colour_table_layout.addWidget(self.CT_G_autoscaling_checkbutton,5,4)
+    self.colour_table_layout.addWidget(self.CT_A_autoscaling_checkbutton,6,4)
+
+    self.colour_table_layout.addWidget(self.update_and_set,7,0)
+
+    self.setLayout(self.colour_table_layout)
+def colour_table_widgets(self,sire):
+    self.CT_empty_label = QLabel(" ")
+    self.CT_StkI_label = QLabel("Stokes ")
+    self.CT_T_label = QLabel("Temperature ")
+    self.CT_B_label = QLabel("Magnetic field str./flux dens.")
+    self.CT_V_label = QLabel("Velocity")
+    self.CT_G_label = QLabel("Inclination ")
+    self.CT_A_label = QLabel("Azimuth ")
+
+    self.CT_label = QLabel("Colour tables")
+    self.CT_StkI = QComboBox(self)
+    set_CT_combos(self.CT_StkI,sire.I_CT[0],sire.CT_options)
+    self.CT_T = QComboBox(self)
+    set_CT_combos(self.CT_T,sire.T_CT[0],sire.CT_options)
+    self.CT_B = QComboBox(self)
+    set_CT_combos(self.CT_B,sire.B_CT[0],sire.CT_options)
+    self.CT_V = QComboBox(self)
+    set_CT_combos(self.CT_V,sire.V_CT[0],sire.CT_options)
+    self.CT_G = QComboBox(self)
+    set_CT_combos(self.CT_G,sire.G_CT[0],sire.CT_options)
+    self.CT_A = QComboBox(self)
+    set_CT_combos(self.CT_A,sire.A_CT[0],sire.CT_options)
+
+    self.CT_vmin_label = QLabel("Vmin")
+    self.CT_StkI_vmin = QLineEdit(self)
+    self.CT_StkI_vmin.setText(str(sire.I_CT[1]))
+    self.CT_StkI_vmin.setEnabled(False)
+    self.CT_T_vmin = QLineEdit(self)
+    self.CT_T_vmin.setText(str(sire.T_CT[1]))
+    self.CT_T_vmin.setEnabled(False)
+    self.CT_B_vmin = QLineEdit(self)
+    self.CT_B_vmin.setText(str(sire.B_CT[1]))
+    self.CT_B_vmin.setEnabled(False)
+    self.CT_V_vmin = QLineEdit(self)
+    self.CT_V_vmin.setText(str(sire.V_CT[1]))
+    self.CT_V_vmin.setEnabled(False)
+    self.CT_G_vmin = QLineEdit(self)
+    self.CT_G_vmin.setText(str(sire.G_CT[1]))
+    self.CT_G_vmin.setEnabled(False)
+    self.CT_A_vmin = QLineEdit(self)
+    self.CT_A_vmin.setText(str(sire.A_CT[1]))
+    self.CT_A_vmin.setEnabled(False)
+
+    self.CT_vmax_label = QLabel("Vmax")
+    self.CT_StkI_vmax = QLineEdit(self)
+    self.CT_StkI_vmax.setText(str(sire.I_CT[2]))
+    self.CT_StkI_vmax.setEnabled(False)
+    self.CT_T_vmax = QLineEdit(self)
+    self.CT_T_vmax.setText(str(sire.T_CT[2]))
+    self.CT_T_vmax.setEnabled(False)
+    self.CT_B_vmax = QLineEdit(self)
+    self.CT_B_vmax.setText(str(sire.B_CT[2]))
+    self.CT_B_vmax.setEnabled(False)
+    self.CT_V_vmax = QLineEdit(self)
+    self.CT_V_vmax.setText(str(sire.V_CT[2]))
+    self.CT_V_vmax.setEnabled(False)
+    self.CT_G_vmax = QLineEdit(self)
+    self.CT_G_vmax.setText(str(sire.G_CT[2]))
+    self.CT_G_vmax.setEnabled(False)
+    self.CT_A_vmax = QLineEdit(self)
+    self.CT_A_vmax.setText(str(sire.A_CT[2]))
+    self.CT_A_vmax.setEnabled(False)
+
+    self.CT_StkI_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_StkI_autoscaling_checkbutton.setChecked(sire.I_CT[3])
+    self.CT_T_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_T_autoscaling_checkbutton.setChecked(sire.T_CT[3])
+    self.CT_B_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_B_autoscaling_checkbutton.setChecked(sire.B_CT[3])
+    self.CT_V_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_V_autoscaling_checkbutton.setChecked(sire.V_CT[3])
+    self.CT_G_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_G_autoscaling_checkbutton.setChecked(sire.G_CT[3])
+    self.CT_A_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_A_autoscaling_checkbutton.setChecked(sire.A_CT[3])
+
+    self.update_and_set = QPushButton("Set values and display")
+    self.update_and_set.clicked.connect(lambda checked: clear_fig1(sire))
+
+def set_CT_combos(combo,text,items):
+    combo.addItems(items)
+    index = combo.findText(text, Qt.MatchFixedString) #-1 if no match
+    if index >= 0:
+        combo.setCurrentIndex(index)
+
+
+
+
 

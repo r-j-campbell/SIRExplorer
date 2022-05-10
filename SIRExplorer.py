@@ -5,7 +5,7 @@ import sqlite3
 from PIL import Image
 import numpy as np
 
-from design import layouts, widgets
+from design import layouts, widgets, colour_table_layouts, colour_table_widgets
 from Instruments import SIR
 from canvas_functions import show, click
 
@@ -18,6 +18,7 @@ class SIRExplorer(QWidget):
         self.appheight = self.screenRect.height()
         self.appwidth = self.screenRect.width()
         self.setGeometry(0,0,int(self.appwidth),int(self.appheight))
+        self.w = None
 
         self.increment = 0
         self.click_increment = 0
@@ -41,12 +42,25 @@ class SIRExplorer(QWidget):
         self.binary_file_list = [None]
 
         #[CT, min, max, automatic scaling flag, display flag]
-        self.I_CT = ['gray',0.9,1.1,0,1]
-        self.T_CT = ['gray',6500,7500,0,1]
-        self.G_CT = ['bwr',0,180,0,1]
-        self.A_CT = ['hsv',0,360,0,1]
-        self.V_CT = ['bwr',-4,4,0,1]
-        self.B_CT = ['viridis',0,2000,0,1]
+        self.I_CT = ['gray',0.9,1.1,1,1]
+        self.T_CT = ['gray',6500,7500,1,1]
+        self.G_CT = ['bwr',0,180,1,1]
+        self.A_CT = ['hsv',0,360,1,1]
+        self.V_CT = ['bwr',-4,4,1,1]
+        self.B_CT = ['viridis',0,2000,1,1]
+        self.CT_options = ['hsv', 'gray', 'viridis','bwr', 'hot', 'plasma' 'inferno', 'magma', 'cividis',
+                            'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
+                            'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
+                            'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn',
+                            'binary', 'gist_yarg', 'gist_gray', 'bone',
+                            'pink', 'spring', 'summer', 'autumn', 'winter', 'cool',
+                            'Wistia', 'afmhot', 'gist_heat', 'copper',
+                            'PiYG', 'PRGn', 'BrBG', 'PuOr', 'RdGy', 'RdBu', 'RdYlBu',
+                            'RdYlGn', 'Spectral', 'coolwarm', 'seismic',
+                            'flag', 'prism', 'ocean', 'gist_earth', 'terrain',
+                            'gist_stern', 'gnuplot', 'gnuplot2', 'CMRmap',
+                            'cubehelix', 'brg', 'gist_rainbow', 'rainbow', 'jet',
+                            'turbo', 'nipy_spectral', 'gist_ncar']
 
         self.fontsize_titles=7
         self.fontsize_axislabels=7
@@ -278,7 +292,6 @@ class SIRExplorer(QWidget):
             click(self,self.class_objects[j])
             if self.click_increment == 0:
                 self.click_increment=1
-                print("click increment changed to 1")
             self.increment=1
         #self.canvas_frame.toggle_widgets(self)
 
@@ -291,11 +304,26 @@ class SIRExplorer(QWidget):
             self.class_objects[i]["class_object"].current_y = event.ydata
             if self.click_increment == 0:
                 self.click_increment=1
-                print("click increment changed to 1")
             click(self,self.class_objects[i])
             self.change_canvas()
         else:
             print("error!! dataset not found...")
+
+    def colour_table_options(self):
+        if self.w is None:
+            self.w = ColourTables(self)
+            #self.w.setFixedSize(self.w.size())
+            self.w.show()
+
+        else:
+            self.w.close()
+            self.w = None
+
+class ColourTables(QWidget):
+    def __init__(self,sire):
+        super().__init__()
+        colour_table_widgets(self,sire)
+        colour_table_layouts(self,sire)
 
 def main():
     app = QApplication(sys.argv)
