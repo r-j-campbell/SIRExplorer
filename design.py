@@ -385,19 +385,25 @@ def colour_table_widgets(self,sire):
 
     self.CT_StkI_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
     self.CT_StkI_autoscaling_checkbutton.setChecked(sire.I_CT[3])
+    self.CT_StkI_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_StkI_vmin, self.CT_StkI_vmax, self.CT_StkI_autoscaling_checkbutton))
     self.CT_T_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
     self.CT_T_autoscaling_checkbutton.setChecked(sire.T_CT[3])
+    self.CT_T_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_T_vmin, self.CT_T_vmax, self.CT_T_autoscaling_checkbutton))
     self.CT_B_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
     self.CT_B_autoscaling_checkbutton.setChecked(sire.B_CT[3])
+    self.CT_B_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_B_vmin, self.CT_B_vmax, self.CT_B_autoscaling_checkbutton))
     self.CT_V_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
     self.CT_V_autoscaling_checkbutton.setChecked(sire.V_CT[3])
+    self.CT_V_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_V_vmin, self.CT_V_vmax, self.CT_V_autoscaling_checkbutton))
     self.CT_G_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
     self.CT_G_autoscaling_checkbutton.setChecked(sire.G_CT[3])
+    self.CT_G_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_G_vmin, self.CT_G_vmax, self.CT_G_autoscaling_checkbutton))
     self.CT_A_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
     self.CT_A_autoscaling_checkbutton.setChecked(sire.A_CT[3])
+    self.CT_A_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_A_vmin, self.CT_A_vmax, self.CT_A_autoscaling_checkbutton))
 
     self.update_and_set = QPushButton("Set values and display")
-    self.update_and_set.clicked.connect(lambda checked: clear_fig1(sire))
+    self.update_and_set.clicked.connect(lambda: update_and_set(self,sire))
 
 def set_CT_combos(combo,text,items):
     combo.addItems(items)
@@ -405,6 +411,60 @@ def set_CT_combos(combo,text,items):
     if index >= 0:
         combo.setCurrentIndex(index)
 
+def CT_state_changed(widget1, widget2, checkbutton):
+    if checkbutton.isChecked():
+        widget1.setEnabled(False)
+        widget2.setEnabled(False)
+    else:
+        widget1.setEnabled(True)
+        widget2.setEnabled(True)
+
+def update_and_set(self,sire):
+    sire.I_CT[0] = self.CT_StkI.currentText()
+    sire.T_CT[0] = self.CT_T.currentText()
+    sire.B_CT[0] = self.CT_B.currentText()
+    sire.V_CT[0] = self.CT_V.currentText()
+    sire.G_CT[0] = self.CT_G.currentText()
+    sire.A_CT[0] = self.CT_A.currentText()
+
+    if self.CT_StkI_autoscaling_checkbutton.isChecked():
+        sire.I_CT[3] = 1
+    else:
+        sire.I_CT[3] = 0
+        sire.I_CT[1] = self.CT_StkI_vmin.text()
+        sire.I_CT[2] = self.CT_StkI_vmax.text()
+    if self.CT_T_autoscaling_checkbutton.isChecked():
+        sire.T_CT[3] = 1
+    else:
+        sire.T_CT[3] = 0
+        sire.T_CT[1] = self.CT_T_vmin.text()
+        sire.T_CT[2] = self.CT_T_vmax.text()
+    if self.CT_B_autoscaling_checkbutton.isChecked():
+        sire.B_CT[3] = 1
+    else:
+        sire.B_CT[3] = 0
+        sire.B_CT[1] = self.CT_B_vmin.text()
+        sire.B_CT[2] = self.CT_B_vmax.text()
+    if self.CT_V_autoscaling_checkbutton.isChecked():
+        sire.V_CT[3] = 1
+    else:
+        sire.V_CT[3] = 0
+        sire.V_CT[1] = self.CT_V_vmin.text()
+        sire.V_CT[2] = self.CT_V_vmax.text()
+    if self.CT_G_autoscaling_checkbutton.isChecked():
+        sire.G_CT[3] = 1
+    else:
+        sire.G_CT[3] = 0
+        sire.G_CT[1] = float(self.CT_G_vmin.text())
+        sire.G_CT[2] = float(self.CT_G_vmax.text())
+    if self.CT_A_autoscaling_checkbutton.isChecked():
+        sire.A_CT[3] = 1
+    else:
+        sire.A_CT[3] = 0
+        sire.A_CT[1] = self.CT_A_vmin.text()
+        sire.A_CT[2] = self.CT_A_vmax.text()
+
+    clear_fig1(sire)
 
 
 
