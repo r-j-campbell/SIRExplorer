@@ -404,9 +404,11 @@ def create_figure1(self):
         index+=1
     if self.G_checkbutton.isChecked():
         self.sc1.ax5 = self.sc1.fig1.add_subplot(total,1,index)
+        self.sc1.ax5.set_facecolor('xkcd:black')
         index+=1
     if self.A_checkbutton.isChecked():
         self.sc1.ax6 = self.sc1.fig1.add_subplot(total,1,index)
+        self.sc1.ax6.set_facecolor('xkcd:black')
         index+=1
 
 def clear_fig1(self):
