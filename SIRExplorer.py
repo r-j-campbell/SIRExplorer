@@ -7,7 +7,7 @@ import numpy as np
 
 from design import layouts, widgets, colour_table_layouts, colour_table_widgets
 from Instruments import SIR
-from canvas_functions import show, click
+from canvas_functions import show, click, update_pixel_info
 
 class SIRExplorer(QWidget):
     def __init__(self):
@@ -290,6 +290,7 @@ class SIRExplorer(QWidget):
             show(self,self.class_objects[j])
         if self.increment == 0:
             click(self,self.class_objects[j])
+            update_pixel_info(self, self.class_objects[j])
             if self.click_increment == 0:
                 self.click_increment=1
             self.increment=1
@@ -306,6 +307,7 @@ class SIRExplorer(QWidget):
                 self.click_increment=1
             click(self,self.class_objects[i])
             self.change_canvas()
+            update_pixel_info(self, self.class_objects[i])
         else:
             print("error!! dataset not found...")
 

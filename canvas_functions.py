@@ -120,13 +120,6 @@ def update_canvas(self,class_object):
     binary_map = class_object["class_object"].binary
     mac1_file = class_object["class_object"].mac1
     mac2_file = class_object["class_object"].mac2
-    # print(model1.shape)
-    # print(model2.shape)
-    # print(obs_prof.shape)
-    # print(syn_prof.shape)
-    # print(binary_map.shape)
-    # print(mac1_file.shape)
-    # print(mac2_file.shape)
 
     if self.Stokes_checkbutton.isChecked():
         if self.I_CT[3] == 0:
@@ -552,6 +545,7 @@ def change_frame(self):
         self.class_objects[i]['class_object'].current_frame_index = int(frame)
         self.change_canvas()
         click(self, self.class_objects[i])
+        update_pixel_info(self, self.class_objects[i])
     elif self.flag == False:
         print("ERROR: dataset not found")
 
@@ -564,6 +558,7 @@ def change_wl(self):
         self.class_objects[i]['class_object'].current_wl_index = int(wl)
         self.change_canvas()
         click(self, self.class_objects[i])
+        update_pixel_info(self, self.class_objects[i])
     elif self.flag == False:
         print("ERROR: dataset not found")
 
@@ -577,5 +572,51 @@ def change_optical_depth(self):
         self.class_objects[i]['class_object'].current_optical_depth_index = int(optical_depth)
         self.change_canvas()
         click(self, self.class_objects[i])
+        update_pixel_info(self, self.class_objects[i])
     elif self.flag == False:
         print("ERROR: dataset not found")
+
+def update_pixel_info(sire, class_object):
+    T1 = class_object["class_object"].model1[1,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+    G1 = class_object["class_object"].model1[6,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+    B1 = class_object["class_object"].model1[4,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+    A1 = class_object["class_object"].model1[7,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+    V1 = class_object["class_object"].model1[5,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]/(100*1000)
+    mic1 = class_object["class_object"].model1[3,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+    if sire.mac1_checkbutton.isChecked():
+        ff1 = class_object["class_object"].mac1[1, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+        mac1 = class_object["class_object"].mac1[0, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+        sire.mod1_mac_value.setText(str(round(mac1,3)))
+    else:
+        ff1 = 1
+    sire.mod1_ff_value.setText(str(round(ff1,3)))
+    sire.mod1_T_value.setText(str(round(T1,3)))
+    sire.mod1_B_value.setText(str(round(B1,3)))
+    sire.mod1_V_value.setText(str(round(V1,3)))
+    sire.mod1_G_value.setText(str(round(G1,3)))
+    sire.mod1_A_value.setText(str(round(A1,3)))
+    sire.mod1_mic_value.setText(str(round(mic1,3)))
+
+    if sire.model2_checkbutton.isChecked():
+        T2 = class_object["class_object"].model2[1,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+        G2 = class_object["class_object"].model2[6,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+        B2 = class_object["class_object"].model2[4,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+        A2 = class_object["class_object"].model2[7,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+        V2 = class_object["class_object"].model2[5,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]/(100*1000)
+        mic2 = class_object["class_object"].model2[3,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+        if sire.mac2_checkbutton.isChecked():
+            mac2 = class_object["class_object"].mac2[0, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]
+            sire.mod2_mac_value.setText(str(round(mac2,3)))
+        sire.mod2_ff_value.setText(str(round(1-ff1,3)))
+        sire.mod2_T_value.setText(str(round(T2,3)))
+        sire.mod2_B_value.setText(str(round(B2,3)))
+        sire.mod2_V_value.setText(str(round(V2,3)))
+        sire.mod2_G_value.setText(str(round(G2,3)))
+        sire.mod2_A_value.setText(str(round(A2,3)))
+        sire.mod2_mic_value.setText(str(round(mic2,3)))
+
+    X = int(class_object["class_object"].current_x)
+    Y = int(class_object["class_object"].current_y)
+    Z = round(class_object["class_object"].model1[8, class_object["class_object"].current_optical_depth_index, Y, X], 3)
+    OD = round(class_object["class_object"].model1[0, class_object["class_object"].current_optical_depth_index, Y, X], 3)
+    sire.pixel_values.setText("X: %s Y: %s Z: %s [cm] OD: %s" %(str(X), str(Y), str(Z), str(OD)))
