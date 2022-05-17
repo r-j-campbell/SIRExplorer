@@ -3,6 +3,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import astropy.io.fits as pyfits
 import matplotlib
 matplotlib.use("TkAgg")
+from PyQt5.QtWidgets import QMessageBox
 
 def show(self, class_object):
     # print("self.increment", self.increment)  # zero on first launch, always one thereafter
@@ -49,12 +50,27 @@ def open_files(self,class_object):
     class_object["class_object"].Attributes["y"] = model1.shape[2]
     class_object["class_object"].Attributes["x"] = model1.shape[3]
     class_object["class_object"].Attributes["wl"] = obs_prof.shape[1]
-    self.wl_scale.setMinimum(0)
-    self.wl_scale.setMaximum(class_object["class_object"].Attributes["wl"] - 1)
-    self.optical_depth_scale.setMinimum(0)
-    self.optical_depth_scale.setMaximum(class_object["class_object"].Attributes["optical_depth"] - 1)
-    self.wl_max = obs_prof.shape[1]
-    self.wl_dim = obs_prof.shape[1]
+
+    if self.flag == False:
+        self.wl_scale.setMinimum(0)
+        self.wl_scale.setMaximum(class_object["class_object"].Attributes["wl"] - 1)
+        self.optical_depth_scale.setMinimum(0)
+        self.optical_depth_scale.setMaximum(class_object["class_object"].Attributes["optical_depth"] - 1)
+
+        class_object["class_object"].wl_min = 0
+        class_object["class_object"].wl_max = class_object["class_object"].Attributes["wl"] -1
+        self.wl_min_entry.setEnabled(True)
+        self.wl_min_entry.setText(str(0))
+        self.wl_max_entry.setEnabled(True)
+        self.wl_max_entry.setText(str(class_object["class_object"].Attributes["wl"] - 1))
+
+        class_object["class_object"].optical_depth_min = 0
+        class_object["class_object"].optical_depth_max = class_object["class_object"].Attributes["optical_depth"] -1
+        self.optical_depth_min_entry.setEnabled(True)
+        self.optical_depth_min_entry.setText(str(0))
+        self.optical_depth_max_entry.setEnabled(True)
+        self.optical_depth_max_entry.setText(str(class_object["class_object"].Attributes["optical_depth"] - 1))
+
     class_object["class_object"].update_model1(model1)
     class_object["class_object"].update_obs(obs_prof)
     class_object["class_object"].update_syn(syn_prof)
@@ -111,6 +127,7 @@ def open_files(self,class_object):
             mac2_file = np.empty((3, model1.shape[2], model1.shape[3]))  # create dummy mac2 file
             mac2_file[1, :, :] = np.subtract(np.ones((model1.shape[2], model1.shape[3])), mac1_file[1, :, :])  # update dummy mac2 file filling factor as (1 - mac1) when mac2 not provided"
             class_object["class_object"].update_mac2(mac2_file)
+
 
 def update_canvas(self,class_object):
     model1 = class_object["class_object"].model1
@@ -271,6 +288,7 @@ def update_canvas(self,class_object):
 
     del model1, model2, syn_prof, obs_prof, binary_map, mac1_file, mac2_file
 
+
 def click(self, class_object):
     current_x = class_object["class_object"].current_x
     current_y = class_object["class_object"].current_y
@@ -313,39 +331,46 @@ def click(self, class_object):
     self.sc2.ax1.axvline(class_object["class_object"].current_wl_index, linestyle=':', color='gray', linewidth=self.linewidth)
     self.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Synthetic profile', linewidth=self.linewidth)
     self.sc2.ax1.legend(frameon=False, fontsize=self.fontsize_axislabels)
-    self.sc2.ax1.set_xlim(self.wl_min, self.wl_max)
+    self.sc2.ax1.set_xlim(class_object["class_object"].wl_min, class_object["class_object"].wl_max)
     self.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=self.linewidth)
     self.sc2.ax2.axvline(class_object["class_object"].current_wl_index, linestyle=':', color='gray', linewidth=self.linewidth)
     self.sc2.ax2.plot(syn_prof[1, :, int(current_y), int(current_x)], linewidth=self.linewidth)
-    self.sc2.ax2.set_xlim(self.wl_min, self.wl_max)
+    self.sc2.ax2.set_xlim(class_object["class_object"].wl_min, class_object["class_object"].wl_max)
     self.sc2.ax3.plot(obs_prof[2, :, int(current_y), int(current_x)], linewidth=self.linewidth)
     self.sc2.ax3.axvline(class_object["class_object"].current_wl_index, linestyle=':', color='gray', linewidth=self.linewidth)
     self.sc2.ax3.plot(syn_prof[2, :, int(current_y), int(current_x)], linewidth=self.linewidth)
-    self.sc2.ax3.set_xlim(self.wl_min, self.wl_max)
+    self.sc2.ax3.set_xlim(class_object["class_object"].wl_min, class_object["class_object"].wl_max)
     self.sc2.ax4.plot(obs_prof[3, :, int(current_y), int(current_x)], linewidth=self.linewidth)
     self.sc2.ax4.axvline(class_object["class_object"].current_wl_index, linestyle=':', color='gray', linewidth=self.linewidth)
     self.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=self.linewidth)
-    self.sc2.ax4.set_xlim(self.wl_min, self.wl_max)
+    self.sc2.ax4.set_xlim(class_object["class_object"].wl_min, class_object["class_object"].wl_max)
 
     # Model parameter plots
     self.sc3.ax1.plot(model1[0, :, int(current_y), int(current_x)], model1[1, :, int(current_y), int(current_x)], label="mod 1",
         linestyle='solid',color='red', linewidth=self.linewidth)
     self.sc3.ax1.axvline(model1[0, class_object["class_object"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=self.linewidth)
+    self.sc3.ax1.set_xlim(model1[0, class_object["class_object"].optical_depth_min, int(current_y), int(current_x)], model1[0, class_object["class_object"].optical_depth_max, int(current_y), int(current_x)])
+
     self.sc3.ax2.plot(model1[0, :, int(current_y), int(current_x)], model1[4, :, int(current_y), int(current_x)],
         linestyle='solid', color='red', linewidth=self.linewidth)
     self.sc3.ax2.axvline(model1[0, class_object["class_object"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=self.linewidth)
+    self.sc3.ax2.set_xlim(model1[0, class_object["class_object"].optical_depth_min, int(current_y), int(current_x)], model1[0, class_object["class_object"].optical_depth_max, int(current_y), int(current_x)])
+
     self.sc3.ax3.plot(model1[0, :, int(current_y), int(current_x)], model1[5, :, int(current_y), int(current_x)] / (100 * 1000),
         linestyle='solid', color='red', linewidth=self.linewidth)
     self.sc3.ax3.axvline(model1[0, class_object["class_object"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=self.linewidth)
+    self.sc3.ax3.set_xlim(model1[0, class_object["class_object"].optical_depth_min, int(current_y), int(current_x)], model1[0, class_object["class_object"].optical_depth_max, int(current_y), int(current_x)])
+
     self.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[6, :, int(current_y), int(current_x)],
         linestyle='solid', color='red', linewidth=self.linewidth)  # inclination
     self.sc3.ax4.axvline(model1[0, class_object["class_object"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=self.linewidth)
     self.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[7, :, int(current_y), int(current_x)],
         linestyle=':', color='red', linewidth=self.linewidth)  # azimuth
+    self.sc3.ax4.set_xlim(model1[0, class_object["class_object"].optical_depth_min, int(current_y), int(current_x)], model1[0, class_object["class_object"].optical_depth_max, int(current_y), int(current_x)])
 
     if self.model2_checkbutton.isChecked():
         model2 = class_object["class_object"].model2
@@ -366,6 +391,7 @@ def click(self, class_object):
     self.sc3.fig3.canvas.draw()
 
     del model1, obs_prof, syn_prof
+
 
 def create_figure1(self):
     index=1
@@ -404,6 +430,7 @@ def create_figure1(self):
         self.sc1.ax6.set_facecolor('xkcd:black')
         index+=1
 
+
 def clear_fig1(self):
     self.sc1.fig1.clf()
     create_figure1(self)
@@ -418,6 +445,7 @@ def clear_fig1(self):
             print("you have to load something first")
     else:
         print("error!! dataset not found...")
+
 
 def create_figure2(self):
     index=1
@@ -460,6 +488,7 @@ def clear_fig2(self):
     else:
         print("error!! dataset not found...")
 
+
 def create_figure3(self):
     index=1
     total=0
@@ -490,6 +519,7 @@ def create_figure3(self):
         self.sc3.ax4 = self.sc3.fig3.add_subplot(columns,rows,index)
         index+=1
 
+
 def clear_fig3(self):
     self.sc3.fig3.clf()
     create_figure3(self)
@@ -505,6 +535,7 @@ def clear_fig3(self):
     else:
         print("error!! dataset not found...")
 
+
 def remove_cbars(self):
     try:
         self.caxI.remove()
@@ -513,28 +544,80 @@ def remove_cbars(self):
     try:
         self.caxT.remove()
     except:
-        print("Something went wrong")
+        pass
     try:
         self.caxB.remove()
     except:
-        print("Something went wrong")
+        pass
     try:
         self.caxV.remove()
     except:
-        print("Something went wrong")
-
+        pass
     try:
         self.caxG.remove()
     except:
-        print("Something went wrong")
-    else:
-        print("Nothing went wrong")
+        pass
     try:
         self.caxA.remove()
     except:
-        print("Something went wrong")
-    else:
-        print("Nothing went wrong")
+        pass
+
+
+def set_wavelength_range(sire):
+    sire.flag = False
+    sire.get_all_values(sire.class_objects, 0, sire.select_model1.currentText())
+    if sire.flag == True:
+        i = str(sire.match)
+        try:
+            if int(sire.wl_min_entry.text()) > 0 and int(sire.wl_max_entry.text()) <= sire.class_objects[i]["class_object"].Attributes['wl']:
+                sire.class_objects[i]["class_object"].wl_min = int(sire.wl_min_entry.text())
+                sire.class_objects[i]["class_object"].wl_max = int(sire.wl_max_entry.text())
+                click(sire, sire.class_objects[i])
+            else:
+                msg = QMessageBox()
+                msg.setText("Selected range out of bounds.")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
+                sire.wl_min_entry.setText(str(sire.class_objects[i]["class_object"].wl_min))
+                sire.wl_max_entry.setText(str(sire.class_objects[i]["class_object"].wl_max))
+        except ValueError:
+            msg = QMessageBox()
+            msg.setText("Value error. You must enter an integer as the index.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
+            sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
+            sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
+    elif sire.flag == False:
+        print("ERROR: dataset not found")
+
+
+def set_optical_depth_range(sire):
+    sire.flag = False
+    sire.get_all_values(sire.class_objects, 0, sire.select_model1.currentText())
+    if sire.flag == True:
+        i = str(sire.match)
+        try:
+            if int(sire.optical_depth_min_entry.text()) >= 0 and int(sire.optical_depth_max_entry.text()) < sire.class_objects[i]["class_object"].Attributes['optical_depth']:
+                sire.class_objects[i]["class_object"].optical_depth_min = int(sire.optical_depth_min_entry.text())
+                sire.class_objects[i]["class_object"].optical_depth_max = int(sire.optical_depth_max_entry.text())
+                click(sire, sire.class_objects[i])
+            else:
+                msg = QMessageBox()
+                msg.setText("Selected range out of bounds.")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
+                sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
+                sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
+        except ValueError:
+                msg = QMessageBox()
+                msg.setText("Value error. You must enter an integer as the index.")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
+                sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
+                sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
+    elif sire.flag == False:
+        print("ERROR: dataset not found")
+
 
 def change_frame(self):
     frame = int(self.frame_scale.value())
@@ -549,6 +632,7 @@ def change_frame(self):
     elif self.flag == False:
         print("ERROR: dataset not found")
 
+
 def change_wl(self):
     wl = int(self.wl_scale.value())
     self.flag = False
@@ -561,6 +645,7 @@ def change_wl(self):
         update_pixel_info(self, self.class_objects[i])
     elif self.flag == False:
         print("ERROR: dataset not found")
+
 
 def change_optical_depth(self):
     self.flag = False
@@ -575,6 +660,7 @@ def change_optical_depth(self):
         update_pixel_info(self, self.class_objects[i])
     elif self.flag == False:
         print("ERROR: dataset not found")
+
 
 def update_pixel_info(sire, class_object):
     T1 = class_object["class_object"].model1[1,class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)]

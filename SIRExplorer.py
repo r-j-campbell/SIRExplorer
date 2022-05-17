@@ -48,7 +48,7 @@ class SIRExplorer(QWidget):
         self.A_CT = ['hsv',0,360,1,1]
         self.V_CT = ['bwr',-4,4,1,1]
         self.B_CT = ['viridis',0,2000,1,1]
-        self.CT_options = ['hsv', 'gray', 'viridis','bwr', 'hot', 'plasma' 'inferno', 'magma', 'cividis',
+        self.CT_options = ['hsv', 'gray', 'viridis','bwr', 'hot', 'plasma', 'inferno', 'magma', 'cividis',
                             'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
                             'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
                             'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn',
