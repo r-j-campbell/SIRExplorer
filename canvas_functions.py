@@ -564,102 +564,77 @@ def remove_cbars(self):
 
 
 def set_wavelength_range(sire):
-    sire.flag = False
-    sire.get_all_values(sire.class_objects, 0, sire.select_model1.currentText())
-    if sire.flag == True:
-        i = str(sire.match)
-        try:
-            if int(sire.wl_min_entry.text()) > 0 and int(sire.wl_max_entry.text()) <= sire.class_objects[i]["class_object"].Attributes['wl']:
-                sire.class_objects[i]["class_object"].wl_min = int(sire.wl_min_entry.text())
-                sire.class_objects[i]["class_object"].wl_max = int(sire.wl_max_entry.text())
-                click(sire, sire.class_objects[i])
-            else:
-                msg = QMessageBox()
-                msg.setText("Selected range out of bounds.")
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.exec()
-                sire.wl_min_entry.setText(str(sire.class_objects[i]["class_object"].wl_min))
-                sire.wl_max_entry.setText(str(sire.class_objects[i]["class_object"].wl_max))
-        except ValueError:
+    i = str(sire.match)
+    try:
+        if int(sire.wl_min_entry.text()) > 0 and int(sire.wl_max_entry.text()) <= sire.class_objects[i]["class_object"].Attributes['wl']:
+            sire.class_objects[i]["class_object"].wl_min = int(sire.wl_min_entry.text())
+            sire.class_objects[i]["class_object"].wl_max = int(sire.wl_max_entry.text())
+            click(sire, sire.class_objects[i])
+        else:
+            msg = QMessageBox()
+            msg.setText("Selected range out of bounds.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
+            sire.wl_min_entry.setText(str(sire.class_objects[i]["class_object"].wl_min))
+            sire.wl_max_entry.setText(str(sire.class_objects[i]["class_object"].wl_max))
+    except ValueError:
+        msg = QMessageBox()
+        msg.setText("Value error. You must enter an integer as the index.")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec()
+        sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
+        sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
+
+
+
+def set_optical_depth_range(sire):
+    i = str(sire.match)
+    try:
+        if int(sire.optical_depth_min_entry.text()) >= 0 and int(sire.optical_depth_max_entry.text()) < sire.class_objects[i]["class_object"].Attributes['optical_depth']:
+            sire.class_objects[i]["class_object"].optical_depth_min = int(sire.optical_depth_min_entry.text())
+            sire.class_objects[i]["class_object"].optical_depth_max = int(sire.optical_depth_max_entry.text())
+            click(sire, sire.class_objects[i])
+        else:
+            msg = QMessageBox()
+            msg.setText("Selected range out of bounds.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
+            sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
+            sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
+    except ValueError:
             msg = QMessageBox()
             msg.setText("Value error. You must enter an integer as the index.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
             sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
             sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
-    elif sire.flag == False:
-        print("ERROR: dataset not found")
-
-
-def set_optical_depth_range(sire):
-    sire.flag = False
-    sire.get_all_values(sire.class_objects, 0, sire.select_model1.currentText())
-    if sire.flag == True:
-        i = str(sire.match)
-        try:
-            if int(sire.optical_depth_min_entry.text()) >= 0 and int(sire.optical_depth_max_entry.text()) < sire.class_objects[i]["class_object"].Attributes['optical_depth']:
-                sire.class_objects[i]["class_object"].optical_depth_min = int(sire.optical_depth_min_entry.text())
-                sire.class_objects[i]["class_object"].optical_depth_max = int(sire.optical_depth_max_entry.text())
-                click(sire, sire.class_objects[i])
-            else:
-                msg = QMessageBox()
-                msg.setText("Selected range out of bounds.")
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.exec()
-                sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
-                sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
-        except ValueError:
-                msg = QMessageBox()
-                msg.setText("Value error. You must enter an integer as the index.")
-                msg.setStandardButtons(QMessageBox.Ok)
-                msg.exec()
-                sire.optical_depth_min_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_min))
-                sire.optical_depth_max_entry.setText(str(sire.class_objects[i]["class_object"].optical_depth_max))
-    elif sire.flag == False:
-        print("ERROR: dataset not found")
 
 
 def change_frame(self):
     frame = int(self.frame_scale.value())
-    self.flag = False
-    self.get_all_values(self.class_objects, 0, self.select_model1.currentText())
-    if self.flag == True:
-        i = str(self.match)
-        self.class_objects[i]['class_object'].current_frame_index = int(frame)
-        self.change_canvas()
-        click(self, self.class_objects[i])
-        update_pixel_info(self, self.class_objects[i])
-    elif self.flag == False:
-        print("ERROR: dataset not found")
+    i = str(self.match)
+    self.class_objects[i]['class_object'].current_frame_index = int(frame)
+    self.change_canvas()
+    click(self, self.class_objects[i])
+    update_pixel_info(self, self.class_objects[i])
 
 
 def change_wl(self):
     wl = int(self.wl_scale.value())
-    self.flag = False
-    self.get_all_values(self.class_objects, 0, self.select_model1.currentText())
-    if self.flag == True:
-        i = str(self.match)
-        self.class_objects[i]['class_object'].current_wl_index = int(wl)
-        self.change_canvas()
-        click(self, self.class_objects[i])
-        update_pixel_info(self, self.class_objects[i])
-    elif self.flag == False:
-        print("ERROR: dataset not found")
+    i = str(self.match)
+    self.class_objects[i]['class_object'].current_wl_index = int(wl)
+    self.change_canvas()
+    click(self, self.class_objects[i])
+    update_pixel_info(self, self.class_objects[i])
 
 
 def change_optical_depth(self):
-    self.flag = False
-    self.get_all_values(self.class_objects, 0, self.select_model1.currentText())
-    print(self.flag)
-    if self.flag == True:
-        i = str(self.match)
-        optical_depth = int(self.optical_depth_scale.value())
-        self.class_objects[i]['class_object'].current_optical_depth_index = int(optical_depth)
-        self.change_canvas()
-        click(self, self.class_objects[i])
-        update_pixel_info(self, self.class_objects[i])
-    elif self.flag == False:
-        print("ERROR: dataset not found")
+    optical_depth = int(self.optical_depth_scale.value())
+    i = str(self.match)
+    self.class_objects[i]['class_object'].current_optical_depth_index = int(optical_depth)
+    self.change_canvas()
+    click(self, self.class_objects[i])
+    update_pixel_info(self, self.class_objects[i])
 
 
 def update_pixel_info(sire, class_object):

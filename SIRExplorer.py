@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QPixmap,QFont
+from PyQt5.Qt import Qt
 import sys,os
 import sqlite3
 from PIL import Image
@@ -89,6 +90,7 @@ class SIRExplorer(QWidget):
             msg.setText("This file has already been selected.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
+
     def get_syn_prof(self):
         url = QFileDialog.getOpenFileName(self,"Select a synthetic profile file","","All Files(*);;*fits")
         value = str(url[0])
@@ -100,6 +102,7 @@ class SIRExplorer(QWidget):
             msg.setText("This file has already been selected.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
+
     def get_obs_prof(self):
         url = QFileDialog.getOpenFileName(self,"Select a observed profile file","","All Files(*);;*fits")
         value = str(url[0])
@@ -111,6 +114,7 @@ class SIRExplorer(QWidget):
             msg.setText("This file has already been selected.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
+
     def get_model2(self):
         url = QFileDialog.getOpenFileName(self,"Select a secondary model file","","All Files(*);;*fits")
         value = str(url[0])
@@ -122,6 +126,7 @@ class SIRExplorer(QWidget):
             msg.setText("This file has already been selected.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
+
     def get_mac1(self):
         url = QFileDialog.getOpenFileName(self,"Select a primary macroturbulence file","","All Files(*);;*fits")
         value = str(url[0])
@@ -133,6 +138,7 @@ class SIRExplorer(QWidget):
             msg.setText("This file has already been selected.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
+
     def get_mac2(self):
         url = QFileDialog.getOpenFileName(self,"Select a secondary macroturbulence file","","All Files(*);;*fits")
         value = str(url[0])
@@ -144,6 +150,7 @@ class SIRExplorer(QWidget):
             msg.setText("This file has already been selected.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
+
     def get_chi2(self):
         url = QFileDialog.getOpenFileName(self,"Select a chi^2 file","","All Files(*);;*fits")
         value = str(url[0])
@@ -155,6 +162,7 @@ class SIRExplorer(QWidget):
             msg.setText("This file has already been selected.")
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
+
     def get_binary(self):
         url = QFileDialog.getOpenFileName(self,"Select a binary file","","All Files(*);;*fits")
         value = str(url[0])
@@ -256,7 +264,6 @@ class SIRExplorer(QWidget):
                 self.select_binary.setCurrentIndex(index)
             del value
 
-
     def get_all_values(self,nested_dictionary,i,match): #searches nested dictionary for datasets that are already loaded
         for key, value in nested_dictionary.items():
             if type(value) is dict:
@@ -277,6 +284,7 @@ class SIRExplorer(QWidget):
         elif self.flag == False: #if match is not found
             class_object = SIR()
             j=str(len(self.class_objects))
+            self.match = j
             self.class_objects[j] = {'model_file': self.select_model1.currentText(),
                      'secondary_model_file': self.select_model2.currentText(),
                      'obs_prof_file': self.select_obs_prof.currentText(),
@@ -297,26 +305,48 @@ class SIRExplorer(QWidget):
         #self.canvas_frame.toggle_widgets(self)
 
     def mouseclicks(self, event):
-        self.flag=False
-        self.get_all_values(self.class_objects,0,self.select_model1.currentText())
-        if self.flag == True:
-            i=str(self.match)
-            self.class_objects[i]["class_object"].current_x = event.xdata
-            self.class_objects[i]["class_object"].current_y = event.ydata
-            if self.click_increment == 0:
-                self.click_increment=1
-            click(self,self.class_objects[i])
-            self.change_canvas()
-            update_pixel_info(self, self.class_objects[i])
-        else:
-            print("error!! dataset not found...")
+        i=str(self.match)
+        self.class_objects[i]["class_object"].current_x = event.xdata
+        self.class_objects[i]["class_object"].current_y = event.ydata
+        if self.click_increment == 0:
+            self.click_increment=1
+        click(self,self.class_objects[i])
+        self.change_canvas()
+        update_pixel_info(self, self.class_objects[i])
+
+    def keyPressEvent(self, event):
+        i=str(self.match)
+        if event.key() == Qt.Key_Up:
+            if int(self.class_objects[i]["class_object"].current_y) + 1 < self.class_objects[i]["class_object"].Attributes["y"]:
+                self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y + 1
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
+        if event.key() == Qt.Key_Right:
+            if int(self.class_objects[i]["class_object"].current_x) + 1 < self.class_objects[i]["class_object"].Attributes["x"]:
+                self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x + 1
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
+        if event.key() == Qt.Key_Down:
+            if int(self.class_objects[i]["class_object"].current_y) - 1 >= 0:
+                self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y - 1
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
+        if event.key() == Qt.Key_Left:
+            if int(self.class_objects[i]["class_object"].current_x) - 1 >= 0:
+                self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x - 1
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
+            else:
+                pass
 
     def colour_table_options(self):
         if self.w is None:
             self.w = ColourTables(self)
-            #self.w.setFixedSize(self.w.size())
             self.w.show()
-
         else:
             self.w.close()
             self.w = None
@@ -327,9 +357,9 @@ class ColourTables(QWidget):
         colour_table_widgets(self,sire)
         colour_table_layouts(self,sire)
 
-def main():
-    app = QApplication(sys.argv)
-    window = SIRExplorer() #DO NOT CHANGE - app will crash when windows resized without this
-    sys.exit(app.exec_())
 if __name__ == '__main__':
-    main()
+    app = QApplication(sys.argv)
+    window = SIRExplorer()
+    window.show()
+    sys.exit(app.exec_())
+
