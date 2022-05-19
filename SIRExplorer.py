@@ -1,12 +1,8 @@
 from PyQt5.QtWidgets import *
-from PyQt5.QtGui import QPixmap,QFont
 from PyQt5.Qt import Qt
-import sys,os
-import sqlite3
-from PIL import Image
-import numpy as np
+import sys
 
-from design import layouts, widgets, colour_table_layouts, colour_table_widgets
+from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets
 from Instruments import SIR
 from canvas_functions import show, click, update_pixel_info
 
@@ -20,12 +16,13 @@ class SIRExplorer(QWidget):
         self.appwidth = self.screenRect.width()
         self.setGeometry(0,0,int(self.appwidth),int(self.appheight))
         self.w = None
+        self.p = None
 
-        self.increment = 0
+        self.increment = 0 #zero on first launch, 1 thereafter
         self.click_increment = 0
         self.flag = None
-        self.match = 0
-        self.frame_flag = 0
+        self.match = 0 #zero when no match is found, index of class_objects otherwise
+        self.frame_flag = 0 # zero when dataset has 1 frame, one otherwise
 
         self.set_wavelength = 0
         self.set_frame = 0
@@ -67,10 +64,6 @@ class SIRExplorer(QWidget):
         self.fontsize_axislabels=7
         self.fontsize_ticklabels=7
         self.linewidth=1
-
-        self.wl_max=100
-        self.wl_min=0
-        self.wl_dim=100
 
         self.UI()
         self.show()
@@ -244,15 +237,15 @@ class SIRExplorer(QWidget):
                 self.select_mac2.setCurrentIndex(index)
             del value
 
-        if self.chi2_checkbutton.isChecked():
-            value = str(self.select_folder.currentText())+"/chi2.fits"
-            if value not in self.chi2_file_list:
-                self.chi2_file_list.append(value)
-                self.select_chi2.addItem(value)
-            index = self.select_chi2.findText(value)
-            if index >= 0:
-                self.select_chi2.setCurrentIndex(index)
-            del value
+        # if self.chi2_checkbutton.isChecked():
+        #     value = str(self.select_folder.currentText())+"/chi2.fits"
+        #     if value not in self.chi2_file_list:
+        #         self.chi2_file_list.append(value)
+        #         self.select_chi2.addItem(value)
+        #     index = self.select_chi2.findText(value)
+        #     if index >= 0:
+        #         self.select_chi2.setCurrentIndex(index)
+        #     del value
 
         if self.binary_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/binary.fits"
@@ -291,7 +284,7 @@ class SIRExplorer(QWidget):
                      'syn_prof_file': self.select_syn_prof.currentText(),
                      'mac1_file': self.select_mac1.currentText(),
                      'mac2_file': self.select_mac2.currentText(),
-                     'chi2_file': self.select_chi2.currentText(),
+                     #'chi2_file': self.select_chi2.currentText(),
                      'binary_file': self.select_binary.currentText(),
                      'class_object': class_object
                                      }
@@ -302,7 +295,6 @@ class SIRExplorer(QWidget):
             if self.click_increment == 0:
                 self.click_increment=1
             self.increment=1
-        #self.canvas_frame.toggle_widgets(self)
 
     def mouseclicks(self, event):
         i=str(self.match)
@@ -351,11 +343,25 @@ class SIRExplorer(QWidget):
             self.w.close()
             self.w = None
 
+    def preferences(self):
+        if self.p is None:
+            self.p = Preferences(self)
+            self.p.show()
+        else:
+            self.p.close()
+            self.p = None
+
 class ColourTables(QWidget):
     def __init__(self,sire):
         super().__init__()
         colour_table_widgets(self,sire)
         colour_table_layouts(self,sire)
+
+class Preferences(QWidget):
+    def __init__(self,sire):
+        super().__init__()
+        preferences_widgets(self,sire)
+        preferences_layouts(self,sire)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

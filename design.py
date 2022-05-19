@@ -1,6 +1,5 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from PyQt5 import QtGui
 
 import matplotlib
 matplotlib.use('Qt5Agg')
@@ -34,7 +33,7 @@ def layouts(self):
     self.tab1Layout.addWidget(self.model2_checkbutton)
     self.tab1Layout.addWidget(self.mac1_checkbutton)
     self.tab1Layout.addWidget(self.mac2_checkbutton)
-    self.tab1Layout.addWidget(self.chi2_checkbutton)
+    #self.tab1Layout.addWidget(self.chi2_checkbutton)
     self.tab1Layout.addWidget(self.binary_checkbutton)
 
     self.tab1Layout.addWidget(self.autofill_btn)
@@ -57,8 +56,8 @@ def layouts(self):
     self.tab1Layout.addWidget(self.mac2_btn)
     self.tab1Layout.addWidget(self.select_mac2)
 
-    self.tab1Layout.addWidget(self.chi2_btn)
-    self.tab1Layout.addWidget(self.select_chi2)
+    # self.tab1Layout.addWidget(self.chi2_btn)
+    # self.tab1Layout.addWidget(self.select_chi2)
 
     self.tab1Layout.addWidget(self.binary_btn)
     self.tab1Layout.addWidget(self.select_binary)
@@ -67,28 +66,24 @@ def layouts(self):
     self.tab1.setLayout(self.tab1Layout)
     #tab2
     self.tab2Layout = QVBoxLayout()
+    self.tab2Layout.addWidget(self.clear_map_btn)
     self.tab2Layout.addWidget(self.Stokes_checkbutton)
     self.tab2Layout.addWidget(self.T_checkbutton)
     self.tab2Layout.addWidget(self.B_checkbutton)
     self.tab2Layout.addWidget(self.V_checkbutton)
     self.tab2Layout.addWidget(self.G_checkbutton)
     self.tab2Layout.addWidget(self.A_checkbutton)
-    self.tab2Layout.addWidget(self.clear_map_btn)
     self.tab2Layout.addWidget(self.colour_table_options_btn)
     self.tab2Layout.addStretch(1)
     self.tab2.setLayout(self.tab2Layout)
     #tab3
     self.tab3Layout = QVBoxLayout()
+    self.tab3Layout.addWidget(self.clear_profiles_btn)
+    self.tab3Layout.addWidget(self.clear_models_btn)
     self.tab3Layout.addWidget(self.pI_checkbutton)
     self.tab3Layout.addWidget(self.pQ_checkbutton)
     self.tab3Layout.addWidget(self.pU_checkbutton)
     self.tab3Layout.addWidget(self.pV_checkbutton)
-    self.tab3Layout.addWidget(self.clear_profiles_btn)
-    self.tab3Layout.addWidget(self.mT_checkbutton)
-    self.tab3Layout.addWidget(self.mB_checkbutton)
-    self.tab3Layout.addWidget(self.mV_checkbutton)
-    self.tab3Layout.addWidget(self.mG_checkbutton)
-    self.tab3Layout.addWidget(self.clear_models_btn)
     self.tab3_wl_min_layout = QHBoxLayout()
     self.tab3Layout.addLayout(self.tab3_wl_min_layout)
     self.tab3_wl_min_layout.addWidget(self.wl_min_label)
@@ -96,6 +91,10 @@ def layouts(self):
     self.tab3_wl_min_layout.addWidget(self.wl_max_label)
     self.tab3_wl_min_layout.addWidget(self.wl_max_entry)
     self.tab3Layout.addWidget(self.wl_range_btn)
+    self.tab3Layout.addWidget(self.mT_checkbutton)
+    self.tab3Layout.addWidget(self.mB_checkbutton)
+    self.tab3Layout.addWidget(self.mV_checkbutton)
+    self.tab3Layout.addWidget(self.mG_checkbutton)
     self.tab3_optical_depth_min_layout = QHBoxLayout()
     self.tab3Layout.addLayout(self.tab3_optical_depth_min_layout)
     self.tab3_optical_depth_min_layout.addWidget(self.optical_depth_min_label)
@@ -142,7 +141,9 @@ def layouts(self):
     self.tab4Layout.addStretch(1)
 
     #display
-    self.left_layout.addWidget(self.btnDisplay)
+    self.left_layout.addWidget(self.display_btn)
+    #preferences
+    self.left_layout.addWidget(self.preferences_btn)
 
     #canvas
     self.oneWidget = QWidget()
@@ -165,10 +166,6 @@ def layouts(self):
     # self.sc2.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
     # self.sc2.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
     self.twoLayout.addWidget(self.sc3)
-    # self.sc3.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc3.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc3.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc3.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
 
     self.threeWidget = QWidget()
     self.threeWidget.setLayout(self.right_layout)
@@ -200,8 +197,11 @@ def layouts(self):
 
 def widgets(self):
     #-------widgets for control panel-------#
-    self.btnDisplay = QPushButton("Display dataset")
-    self.btnDisplay.clicked.connect(lambda checked: self.change_canvas())
+    self.display_btn = QPushButton("Display")
+    self.display_btn.clicked.connect(lambda checked: self.change_canvas())
+
+    self.preferences_btn = QPushButton("Preferences")
+    self.preferences_btn.clicked.connect(lambda checked: self.preferences())
 
     #-------tab1-------#
     self.btn_folder_search = QPushButton("Search for folder")
@@ -212,7 +212,7 @@ def widgets(self):
     self.model2_checkbutton = QCheckBox("Include 2 models",self)
     self.mac1_checkbutton = QCheckBox("Include primary macroturbulence",self)
     self.mac2_checkbutton = QCheckBox("Include secondary macroturbulence",self)
-    self.chi2_checkbutton = QCheckBox("Include chi^2",self)
+    #self.chi2_checkbutton = QCheckBox("Include chi^2",self)
     self.binary_checkbutton = QCheckBox("Include binary map",self)
 
     self.clear_map_btn = QPushButton("Update maps")
@@ -247,9 +247,9 @@ def widgets(self):
     self.mac2_btn = QPushButton("Search for secondary macroturbulence files")
     self.mac2_btn.clicked.connect(lambda checked: self.get_mac2())
     self.select_mac2 = QComboBox(self)
-    self.chi2_btn = QPushButton("Search for chi^2 files")
-    self.chi2_btn.clicked.connect(lambda checked: self.get_chi2())
-    self.select_chi2 = QComboBox(self)
+    # self.chi2_btn = QPushButton("Search for chi^2 files")
+    # self.chi2_btn.clicked.connect(lambda checked: self.get_chi2())
+    # self.select_chi2 = QComboBox(self)
     self.binary_btn = QPushButton("Search for binary map files")
     self.binary_btn.clicked.connect(lambda checked: self.get_binary())
     self.select_binary = QComboBox(self)
@@ -566,5 +566,34 @@ def update_and_set(self,sire):
 
     clear_fig1(sire)
 
+def preferences_layouts(self,sire):
+    self.preferences_layout = QGridLayout() #row,col
 
+    self.preferences_layout.addWidget(self.fontsize_label,0,0)
+    self.preferences_layout.addWidget(self.fontsize_btn,0,1)
 
+    self.preferences_layout.addWidget(self.fontsize_titles_map_label,1,0)
+    self.preferences_layout.addWidget(self.fontsize_titles_map_entry,1,1)
+
+    self.preferences_layout.addWidget(self.fontsize_axislabels_map_label,2,0)
+    self.preferences_layout.addWidget(self.fontsize_axislabels_map_entry,2,1)
+
+    self.preferences_layout.addWidget(self.fontsize_ticklabels_map_label,3,0)
+    self.preferences_layout.addWidget(self.fontsize_ticklabels_map_entry,3,1)
+
+    self.setLayout(self.preferences_layout)
+
+def preferences_widgets(self,sire):
+    self.fontsize_label = QLabel("Font sizes")
+    self.fontsize_label.setStyleSheet("font-weight: bold")
+    self.fontsize_titles_map_label = QLabel("Titles: ")
+    self.fontsize_titles_map_entry = QLineEdit(self)
+    self.fontsize_axislabels_map_label = QLabel("Axis labels: ")
+    self.fontsize_axislabels_map_entry = QLineEdit(self)
+    self.fontsize_ticklabels_map_label = QLabel("Tick labels: ")
+    self.fontsize_ticklabels_map_entry = QLineEdit(self)
+    self.fontsize_btn = QPushButton("Set font sizes")
+    self.fontsize_btn.clicked.connect(lambda: set_font_sizes(self,sire))
+    self.fontsize_titles_map_entry.setText(str(sire.fontsize_titles))
+    self.fontsize_axislabels_map_entry.setText(str(sire.fontsize_axislabels))
+    self.fontsize_ticklabels_map_entry.setText(str(sire.fontsize_ticklabels))

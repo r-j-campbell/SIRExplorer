@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class SIR: #files should be [t,St,y,x,wl]
     def __init__(self):
         self.Attributes = {
