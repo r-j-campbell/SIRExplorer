@@ -17,6 +17,9 @@ def show(self, class_object):
         self.sc1.ax4.clear()
         self.sc1.ax5.clear()
         self.sc1.ax6.clear()
+        self.sc1.ax7.clear()
+        self.sc1.ax8.clear()
+        self.sc1.ax9.clear()
         remove_cbars(self)
 
     if self.flag == False or self.frame_flag == 1:
@@ -62,7 +65,7 @@ def open_files(self,class_object):
         self.wl_max_entry.setText(str(class_object["class_object"].Attributes["wl"] - 1))
 
         class_object["class_object"].optical_depth_min = 0
-        class_object["class_object"].optical_depth_max = class_object["class_object"].Attributes["optical_depth"] -1
+        class_object["class_object"].optical_depth_max = class_object["class_object"].Attributes["optical_depth"] - 1
         self.optical_depth_min_entry.setEnabled(True)
         self.optical_depth_min_entry.setText(str(0))
         self.optical_depth_max_entry.setEnabled(True)
@@ -81,6 +84,7 @@ def open_files(self,class_object):
         binary_map = np.ones(
             [class_object["class_object"].Attributes["y"], class_object["class_object"].Attributes["x"]])
         class_object["class_object"].update_binary(binary_map)
+    print(binary_map.shape)
     # if self.chi2_checkbutton.isChecked():
     #     chi2 = pyfits.open(class_object["chi2_file"])[0].data
     #     chi2 = np.squeeze(chi2)
@@ -134,161 +138,208 @@ def update_canvas(self,class_object):
     binary_map = class_object["class_object"].binary
     mac1_file = class_object["class_object"].mac1
     mac2_file = class_object["class_object"].mac2
+    current_x = int(class_object["class_object"].current_x)
+    current_y = int(class_object["class_object"].current_y)
 
     if self.Stokes_checkbutton.isChecked():
-        if self.I_CT[3] == 0:
-            I_map = self.sc1.ax1.imshow(obs_prof[0, class_object["class_object"].current_wl_index, :, :], origin='lower',
-                    cmap=self.I_CT[0], vmin=self.I_CT[1], vmax=self.I_CT[2])
-        elif self.I_CT[3] == 1:
-            I_map = self.sc1.ax1.imshow(obs_prof[0, class_object["class_object"].current_wl_index, :, :], origin='lower',
-                    cmap=self.I_CT[0])
-        dividerI = make_axes_locatable(self.sc1.ax1)
-        self.caxI = dividerI.append_axes("right", size="3%", pad=0)
-        self.cbar_I = self.sc1.fig1.colorbar(I_map, cax=self.caxI, pad=0)
-        self.cbar_I.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        if self.StkI_CT[3] == 0:
+            StkI_map = self.sc1.ax1.imshow(obs_prof[0, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkI_CT[0], vmin=self.StkI_CT[1], vmax=self.StkI_CT[2])
+        elif self.StkI_CT[3] == 1:
+            StkI_map = self.sc1.ax1.imshow(obs_prof[0, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkI_CT[0])
+        dividerStkI = make_axes_locatable(self.sc1.ax1)
+        self.caxStkI = dividerStkI.append_axes("right", size="3%", pad=0)
+        self.cbar_StkI = self.sc1.fig1.colorbar(StkI_map, cax=self.caxStkI, pad=0)
+        self.cbar_StkI.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax1.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax1.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax1.set_title("Stokes $I$ [$I_c$]", fontsize=self.fontsize_titles)
+        self.sc1.ax1.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax1.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
+
+    if self.Stokes_Q_checkbutton.isChecked():
+        if self.StkQ_CT[3] == 0:
+            StkQ_map = self.sc1.ax2.imshow(obs_prof[1, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkQ_CT[0], vmin=self.StkQ_CT[1], vmax=self.StkQ_CT[2])
+        elif self.StkQ_CT[3] == 1:
+            StkQ_map = self.sc1.ax2.imshow(obs_prof[1, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkQ_CT[0])
+        dividerStkQ = make_axes_locatable(self.sc1.ax2)
+        self.caxStkQ = dividerStkQ.append_axes("right", size="3%", pad=0)
+        self.cbar_StkQ = self.sc1.fig1.colorbar(StkQ_map, cax=self.caxStkQ, pad=0)
+        self.cbar_StkQ.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax2.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax2.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax2.set_title("Stokes $Q$ [$I_c$]", fontsize=self.fontsize_titles)
+        self.sc1.ax2.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax2.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
+
+    if self.Stokes_U_checkbutton.isChecked():
+        if self.StkU_CT[3] == 0:
+            StkU_map = self.sc1.ax3.imshow(obs_prof[2, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkI_CT[0], vmin=self.StkU_CT[1], vmax=self.StkU_CT[2])
+        elif self.StkU_CT[3] == 1:
+            StkU_map = self.sc1.ax3.imshow(obs_prof[2, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkU_CT[0])
+        dividerStkU = make_axes_locatable(self.sc1.ax3)
+        self.caxStkU = dividerStkU.append_axes("right", size="3%", pad=0)
+        self.cbar_StkU = self.sc1.fig1.colorbar(StkU_map, cax=self.caxStkU, pad=0)
+        self.cbar_StkU.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax3.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax3.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax3.set_title("Stokes $U$ [$I_c$]", fontsize=self.fontsize_titles)
+        self.sc1.ax3.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax3.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
+
+    if self.Stokes_V_checkbutton.isChecked():
+        if self.StkV_CT[3] == 0:
+            StkV_map = self.sc1.ax4.imshow(obs_prof[3, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkV_CT[0], vmin=self.StkV_CT[1], vmax=self.StkV_CT[2])
+        elif self.StkV_CT[3] == 1:
+            StkV_map = self.sc1.ax4.imshow(obs_prof[3, class_object["class_object"].current_wl_index, :, :], origin='lower',
+                    cmap=self.StkV_CT[0])
+        dividerStkV = make_axes_locatable(self.sc1.ax4)
+        self.caxStkV = dividerStkV.append_axes("right", size="3%", pad=0)
+        self.cbar_StkV = self.sc1.fig1.colorbar(StkV_map, cax=self.caxStkV, pad=0)
+        self.cbar_StkV.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax4.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax4.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax4.set_title("Stokes $V$ [$I_c$]", fontsize=self.fontsize_titles)
+        self.sc1.ax4.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax4.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
 
     if self.T_checkbutton.isChecked():
         if self.T_CT[3] == 0:
-            T_map = self.sc1.ax2.imshow(model1[1, class_object["class_object"].current_optical_depth_index, :, :],
+            T_map = self.sc1.ax5.imshow(model1[1, class_object["class_object"].current_optical_depth_index, :, :],
                     origin='lower', cmap=self.T_CT[0], vmin=self.T_CT[1], vmax=self.T_CT[2])
         elif self.T_CT[3] == 1:
-            T_map = self.sc1.ax2.imshow(model1[1, class_object["class_object"].current_optical_depth_index, :, :],
+            T_map = self.sc1.ax5.imshow(model1[1, class_object["class_object"].current_optical_depth_index, :, :],
                     origin='lower', cmap=self.T_CT[0])
-        dividerT = make_axes_locatable(self.sc1.ax2)
+        dividerT = make_axes_locatable(self.sc1.ax5)
         self.caxT = dividerT.append_axes("right", size="3%", pad=0)
         self.cbar_T = self.sc1.fig1.colorbar(T_map, cax=self.caxT, pad=0)
         self.cbar_T.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax5.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax5.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax5.set_title("T [K]", fontsize=self.fontsize_titles)
+        self.sc1.ax5.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax5.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
 
     if self.B_checkbutton.isChecked():
         if self.model2_checkbutton.isChecked():
             if self.B_CT[3] == 0:
-                B_map = self.sc1.ax3.imshow(
+                B_map = self.sc1.ax6.imshow(
                     model1[4, class_object["class_object"].current_optical_depth_index, :, :] * mac1_file[1, :, :] * binary_map,
                     origin='lower', vmin=self.B_CT[1], vmax=self.B_CT[2], cmap=self.B_CT[0])
             elif self.B_CT[3] == 1:
-                B_map = self.sc1.ax3.imshow(
+                B_map = self.sc1.ax6.imshow(
                     model1[4, class_object["class_object"].current_optical_depth_index, :, :] * mac1_file[1, :, :] * binary_map,
                     origin='lower', cmap=self.B_CT[0])
+            self.sc1.ax6.set_title("$\\alpha$ B [G]", fontsize=self.fontsize_titles)
         else:
             if self.B_CT[3] == 0:
-                B_map = self.sc1.ax3.imshow(
+                B_map = self.sc1.ax6.imshow(
                     model1[4, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     vmin=self.B_CT[1], vmax=self.B_CT[2], cmap=self.B_CT[0])
             elif self.B_CT[3] == 1:
-                B_map = self.sc1.ax3.imshow(
+                B_map = self.sc1.ax6.imshow(
                     model1[4, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=self.B_CT[0])
-        dividerB = make_axes_locatable(self.sc1.ax3)
+            self.sc1.ax6.set_title("B [G]", fontsize=self.fontsize_titles)
+        dividerB = make_axes_locatable(self.sc1.ax6)
         self.caxB = dividerB.append_axes("right", size="3%", pad=0)
         self.cbar_B = self.sc1.fig1.colorbar(B_map, cax=self.caxB, pad=0)
         self.cbar_B.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax6.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax6.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax6.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax6.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
 
     if self.V_checkbutton.isChecked():
         if self.model2_checkbutton.isChecked():
             combined_V = np.empty([class_object["class_object"].Attributes["y"], class_object["class_object"].Attributes["x"]]) * np.nan
             combined_V = (model2[5, class_object["class_object"].current_optical_depth_index, :, :] * mac2_file[1, :, :]) + (model1[5, class_object["class_object"].current_optical_depth_index, :, :] * mac1_file[1, :, :])
             if self.V_CT[3] == 0:
-                V_map = self.sc1.ax4.imshow((combined_V / (100 * 1000)), origin='lower', cmap=self.V_CT[0], vmin=self.V_CT[1], vmax=self.V_CT[2])
+                V_map = self.sc1.ax7.imshow((combined_V / (100 * 1000)), origin='lower', cmap=self.V_CT[0], vmin=self.V_CT[1], vmax=self.V_CT[2])
             elif self.V_CT[3] == 1:
-                V_map = self.sc1.ax4.imshow((combined_V / (100 * 1000)), origin='lower', cmap=self.V_CT[0])
+                V_map = self.sc1.ax7.imshow((combined_V / (100 * 1000)), origin='lower', cmap=self.V_CT[0])
         else:
             if self.V_CT[3] == 0:
-                V_map = self.sc1.ax4.imshow(
+                V_map = self.sc1.ax7.imshow(
                     (model1[5, class_object["class_object"].current_optical_depth_index, :, :] / (100 * 1000)),
                     origin='lower', cmap=self.V_CT[0], vmin=self.V_CT[1], vmax=self.V_CT[2])
             elif self.V_CT[3] == 1:
-                V_map = self.sc1.ax4.imshow(
+                V_map = self.sc1.ax7.imshow(
                     (model1[5, class_object["class_object"].current_optical_depth_index, :, :] / (100 * 1000)),
                     origin='lower', cmap=self.V_CT[0])
-        dividerV = make_axes_locatable(self.sc1.ax4)
+        dividerV = make_axes_locatable(self.sc1.ax7)
         self.caxV = dividerV.append_axes("right", size="3%", pad=0)
         self.cbar_V = self.sc1.fig1.colorbar(V_map, cax=self.caxV, pad=0)
         self.cbar_V.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax7.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax7.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax7.set_title("$v_\mathrm{{LOS}}$ [km/s]", fontsize=self.fontsize_titles)
+        self.sc1.ax7.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax7.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
 
     if self.G_checkbutton.isChecked():
         if self.model2_checkbutton.isChecked():
             if self.G_CT[3] == 0:
-                G_map = self.sc1.ax5.imshow(
+                G_map = self.sc1.ax8.imshow(
                     model1[6, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     vmin=self.G_CT[1], vmax=self.G_CT[2], cmap=self.G_CT[0])
             elif self.G_CT[3] == 1:
-                G_map = self.sc1.ax5.imshow(
+                G_map = self.sc1.ax8.imshow(
                     model1[6, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=self.G_CT[0])
         else:
             if self.G_CT[3] == 0:
-                G_map = self.sc1.ax5.imshow(
+                G_map = self.sc1.ax8.imshow(
                     model1[6, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     vmin=self.G_CT[1], vmax=self.G_CT[2], cmap=self.G_CT[0])
             if self.G_CT[3] == 1:
-                G_map = self.sc1.ax5.imshow(
+                G_map = self.sc1.ax8.imshow(
                     model1[6, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=self.G_CT[0])
-        dividerG = make_axes_locatable(self.sc1.ax5)
+        dividerG = make_axes_locatable(self.sc1.ax8)
         self.caxG = dividerG.append_axes("right", size="3%", pad=0)
         self.cbar_G = self.sc1.fig1.colorbar(G_map, cax=self.caxG, pad=0)
         self.cbar_G.ax.tick_params(labelsize=self.fontsize_ticklabels)
+        self.sc1.ax8.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax8.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax8.set_title("$\\gamma$ [deg.]", fontsize=self.fontsize_titles)
+        self.sc1.ax8.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax8.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
 
     if self.A_checkbutton.isChecked():
         if self.model2_checkbutton.isChecked():
             if self.A_CT[3] == 0:
-                A_map = self.sc1.ax6.imshow(
+                A_map = self.sc1.ax9.imshow(
                     model1[7, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=self.A_CT[0], vmin=self.A_CT[1], vmax=self.A_CT[2])
             elif self.A_CT[3] == 1:
-                A_map = self.sc1.ax6.imshow(
+                A_map = self.sc1.ax9.imshow(
                     model1[7, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=self.A_CT[0])
         else:
             if self.A_CT[3] == 0:
-                A_map = self.sc1.ax6.imshow(
+                A_map = self.sc1.ax9.imshow(
                     model1[7, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=self.A_CT[0], vmin=self.A_CT[1], vmax=self.A_CT[2])
             elif self.A_CT[3] == 1:
-                A_map = self.sc1.ax6.imshow(
+                A_map = self.sc1.ax9.imshow(
                     model1[7, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=self.A_CT[0])
-        dividerA = make_axes_locatable(self.sc1.ax6)
+        dividerA = make_axes_locatable(self.sc1.ax9)
         self.caxA = dividerA.append_axes("right", size="3%", pad=0)
         self.cbar_A = self.sc1.fig1.colorbar(A_map, cax=self.caxA, pad=0)
         self.cbar_A.ax.tick_params(labelsize=self.fontsize_ticklabels)
-
-    current_x = int(class_object["class_object"].current_x)
-    current_y = int(class_object["class_object"].current_y)
-    #if self.click_increment == 1:
-    self.sc1.ax1.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax1.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax2.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax2.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax3.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax3.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax4.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax4.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax5.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax5.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax6.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax6.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
-    self.sc1.ax1.set_title("Stokes $I$ [$I_c$]", fontsize=self.fontsize_titles)
-    self.sc1.ax2.set_title("T [K]", fontsize=self.fontsize_titles)
-    self.sc1.ax5.set_title("$\\gamma$ [deg.]", fontsize=self.fontsize_titles)
-    self.sc1.ax4.set_title("$v_\mathrm{{LOS}}$ [km/s]", fontsize=self.fontsize_titles)
-    if self.model2_checkbutton.isChecked():
-        self.sc1.ax3.set_title("$\\alpha$ B [G]", fontsize=self.fontsize_titles)
-    else:
-        self.sc1.ax3.set_title("B [G]", fontsize=self.fontsize_titles)
-    self.sc1.ax6.set_title("$\\phi$ [deg.]", fontsize=self.fontsize_titles)
-    self.sc1.ax1.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax2.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax3.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax4.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax5.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax6.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax1.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax2.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax3.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax4.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax5.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
-    self.sc1.ax6.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax9.axvline(current_x, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax9.axhline(current_y, color='red', linestyle=':', linewidth=self.linewidth)
+        self.sc1.ax9.set_title("$\\phi$ [deg.]", fontsize=self.fontsize_titles)
+        self.sc1.ax9.set_xlabel("X [pix.]", fontsize=self.fontsize_axislabels)
+        self.sc1.ax9.set_ylabel("Y [pix.]", fontsize=self.fontsize_axislabels)
 
     del model1, model2, syn_prof, obs_prof, binary_map, mac1_file, mac2_file
 
@@ -398,6 +449,12 @@ def create_figure1(self):
     total=0
     if self.Stokes_checkbutton.isChecked():
         total+=1
+    if self.Stokes_Q_checkbutton.isChecked():
+        total+=1
+    if self.Stokes_U_checkbutton.isChecked():
+        total+=1
+    if self.Stokes_V_checkbutton.isChecked():
+        total+=1
     if self.T_checkbutton.isChecked():
         total+=1
     if self.B_checkbutton.isChecked():
@@ -408,32 +465,53 @@ def create_figure1(self):
         total+=1
     if self.A_checkbutton.isChecked():
         total+=1
+    if total >= 7:
+        columns = 2
+        if total % 2 == 0:
+            rows = int(total/2)
 
+        else:
+            rows = int((total+1)/2)
+    else:
+        rows = int(total)
+        columns = 1
     if self.Stokes_checkbutton.isChecked():
-        self.sc1.ax1 = self.sc1.fig1.add_subplot(total,1,index)
+        self.sc1.ax1 = self.sc1.fig1.add_subplot(rows,columns,index)
         self.sc1.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
         index+=1
-    if self.T_checkbutton.isChecked():
-        self.sc1.ax2 = self.sc1.fig1.add_subplot(total,1,index)
+    if self.Stokes_Q_checkbutton.isChecked():
+        self.sc1.ax2 = self.sc1.fig1.add_subplot(rows,columns,index)
         self.sc1.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
         index+=1
-    if self.B_checkbutton.isChecked():
-        self.sc1.ax3 = self.sc1.fig1.add_subplot(total,1,index)
+    if self.Stokes_U_checkbutton.isChecked():
+        self.sc1.ax3 = self.sc1.fig1.add_subplot(rows,columns,index)
         self.sc1.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
         index+=1
-    if self.V_checkbutton.isChecked():
-        self.sc1.ax4 = self.sc1.fig1.add_subplot(total,1,index)
+    if self.Stokes_V_checkbutton.isChecked():
+        self.sc1.ax4 = self.sc1.fig1.add_subplot(rows,columns,index)
         self.sc1.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
         index+=1
-    if self.G_checkbutton.isChecked():
-        self.sc1.ax5 = self.sc1.fig1.add_subplot(total,1,index)
+    if self.T_checkbutton.isChecked():
+        self.sc1.ax5 = self.sc1.fig1.add_subplot(rows,columns,index)
         self.sc1.ax5.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-        self.sc1.ax5.set_facecolor('xkcd:black')
+        index+=1
+    if self.B_checkbutton.isChecked():
+        self.sc1.ax6 = self.sc1.fig1.add_subplot(rows,columns,index)
+        self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+        index+=1
+    if self.V_checkbutton.isChecked():
+        self.sc1.ax7 = self.sc1.fig1.add_subplot(rows,columns,index)
+        self.sc1.ax7.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+        index+=1
+    if self.G_checkbutton.isChecked():
+        self.sc1.ax8 = self.sc1.fig1.add_subplot(rows,columns,index)
+        self.sc1.ax8.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+        self.sc1.ax8.set_facecolor('xkcd:black')
         index+=1
     if self.A_checkbutton.isChecked():
-        self.sc1.ax6 = self.sc1.fig1.add_subplot(total,1,index)
-        self.sc1.ax6.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-        self.sc1.ax6.set_facecolor('xkcd:black')
+        self.sc1.ax9 = self.sc1.fig1.add_subplot(rows,columns,index)
+        self.sc1.ax9.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+        self.sc1.ax9.set_facecolor('xkcd:black')
         index+=1
 
 
@@ -552,7 +630,19 @@ def clear_fig3(self):
 
 def remove_cbars(self):
     try:
-        self.caxI.remove()
+        self.caxStkI.remove()
+    except:
+        pass
+    try:
+        self.caxStkQ.remove()
+    except:
+        pass
+    try:
+        self.caxStkU.remove()
+    except:
+        pass
+    try:
+        self.caxStkV.remove()
     except:
         pass
     try:
@@ -580,7 +670,7 @@ def remove_cbars(self):
 def set_wavelength_range(sire):
     i = str(sire.match)
     try:
-        if int(sire.wl_min_entry.text()) > 0 and int(sire.wl_max_entry.text()) <= sire.class_objects[i]["class_object"].Attributes['wl']:
+        if int(sire.wl_min_entry.text()) >= 0 and int(sire.wl_max_entry.text()) < sire.class_objects[i]["class_object"].Attributes['wl']:
             sire.class_objects[i]["class_object"].wl_min = int(sire.wl_min_entry.text())
             sire.class_objects[i]["class_object"].wl_max = int(sire.wl_max_entry.text())
             click(sire, sire.class_objects[i])

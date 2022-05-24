@@ -68,6 +68,9 @@ def layouts(self):
     self.tab2Layout = QVBoxLayout()
     self.tab2Layout.addWidget(self.clear_map_btn)
     self.tab2Layout.addWidget(self.Stokes_checkbutton)
+    self.tab2Layout.addWidget(self.Stokes_Q_checkbutton)
+    self.tab2Layout.addWidget(self.Stokes_U_checkbutton)
+    self.tab2Layout.addWidget(self.Stokes_V_checkbutton)
     self.tab2Layout.addWidget(self.T_checkbutton)
     self.tab2Layout.addWidget(self.B_checkbutton)
     self.tab2Layout.addWidget(self.V_checkbutton)
@@ -161,11 +164,9 @@ def layouts(self):
     self.twoWidget.setLayout(self.twoLayout)
 
     self.oneLayout.addWidget(self.sc2)
-    # self.sc2.ax1.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc2.ax2.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc2.ax3.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
-    # self.sc2.ax4.tick_params(axis='both', labelsize=self.fontsize_ticklabels)
+    self.sc2.setMinimumSize(1,1)
     self.twoLayout.addWidget(self.sc3)
+    self.sc3.setMinimumSize(1,1)
 
     self.threeWidget = QWidget()
     self.threeWidget.setLayout(self.right_layout)
@@ -178,6 +179,7 @@ def layouts(self):
     self.threeWidget.setLayout(self.threeLayout)
 
     self.threeLayout.addWidget(self.sc1)
+    self.sc1.setMinimumSize(1,1)
 
     self.right_bottom_layout = QHBoxLayout()
     self.right_layout.addLayout(self.right_bottom_layout)
@@ -254,8 +256,14 @@ def widgets(self):
     self.binary_btn.clicked.connect(lambda checked: self.get_binary())
     self.select_binary = QComboBox(self)
     #-------tab2-------#
-    self.Stokes_checkbutton = QCheckBox("Show observed profiles",self)
+    self.Stokes_checkbutton = QCheckBox("Show observed Stokes I",self)
     self.Stokes_checkbutton.setChecked(True)
+    self.Stokes_Q_checkbutton = QCheckBox("Show observed Stokes Q",self)
+    self.Stokes_Q_checkbutton.setChecked(True)
+    self.Stokes_U_checkbutton = QCheckBox("Show observed Stokes U",self)
+    self.Stokes_U_checkbutton.setChecked(True)
+    self.Stokes_V_checkbutton = QCheckBox("Show observed Stokes V",self)
+    self.Stokes_V_checkbutton.setChecked(True)
     self.T_checkbutton = QCheckBox("Show temperature",self)
     self.T_checkbutton.setChecked(True)
     self.B_checkbutton = QCheckBox("Show magnetic field strength/flux",self)
@@ -362,15 +370,15 @@ def update_optical_depth_label(self):
     self.optical_depth_label.setText("OD: " + str(self.optical_depth_scale.value()))
 
 class MplCanvas1(FigureCanvasQTAgg):
-    def __init__(self, parent=None, width=10, height=10, dpi=100):
+    def __init__(self, parent=None, width=10, height=10, dpi=300):
         self.fig1 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
         super(MplCanvas1, self).__init__(self.fig1)
 class MplCanvas2(FigureCanvasQTAgg):
-    def __init__(self, parent=None, width=10, height=10, dpi=100):
+    def __init__(self, parent=None, width=10, height=10, dpi=300):
         self.fig2 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
         super(MplCanvas2, self).__init__(self.fig2)
 class MplCanvas3(FigureCanvasQTAgg):
-    def __init__(self, parent=None, width=10, height=10, dpi=100):
+    def __init__(self, parent=None, width=10, height=10, dpi=300):
         self.fig3 = Figure(figsize=(width, height), dpi=dpi,tight_layout=True)
         super(MplCanvas3, self).__init__(self.fig3)
 
@@ -380,49 +388,67 @@ def colour_table_layouts(self,sire):
 
     self.colour_table_layout.addWidget(self.CT_empty_label,0,0)
     self.colour_table_layout.addWidget(self.CT_StkI_label,1,0)
-    self.colour_table_layout.addWidget(self.CT_T_label,2,0)
-    self.colour_table_layout.addWidget(self.CT_B_label,3,0)
-    self.colour_table_layout.addWidget(self.CT_V_label,4,0)
-    self.colour_table_layout.addWidget(self.CT_G_label,5,0)
-    self.colour_table_layout.addWidget(self.CT_A_label,6,0)
+    self.colour_table_layout.addWidget(self.CT_StkQ_label,2,0)
+    self.colour_table_layout.addWidget(self.CT_StkU_label,3,0)
+    self.colour_table_layout.addWidget(self.CT_StkV_label,4,0)
+    self.colour_table_layout.addWidget(self.CT_T_label,5,0)
+    self.colour_table_layout.addWidget(self.CT_B_label,6,0)
+    self.colour_table_layout.addWidget(self.CT_V_label,7,0)
+    self.colour_table_layout.addWidget(self.CT_G_label,8,0)
+    self.colour_table_layout.addWidget(self.CT_A_label,9,0)
 
     self.colour_table_layout.addWidget(self.CT_label,0,1)
     self.colour_table_layout.addWidget(self.CT_StkI,1,1)
-    self.colour_table_layout.addWidget(self.CT_T,2,1)
-    self.colour_table_layout.addWidget(self.CT_B,3,1)
-    self.colour_table_layout.addWidget(self.CT_V,4,1)
-    self.colour_table_layout.addWidget(self.CT_G,5,1)
-    self.colour_table_layout.addWidget(self.CT_A,6,1)
+    self.colour_table_layout.addWidget(self.CT_StkQ,2,1)
+    self.colour_table_layout.addWidget(self.CT_StkU,3,1)
+    self.colour_table_layout.addWidget(self.CT_StkV,4,1)
+    self.colour_table_layout.addWidget(self.CT_T,5,1)
+    self.colour_table_layout.addWidget(self.CT_B,6,1)
+    self.colour_table_layout.addWidget(self.CT_V,7,1)
+    self.colour_table_layout.addWidget(self.CT_G,8,1)
+    self.colour_table_layout.addWidget(self.CT_A,9,1)
 
     self.colour_table_layout.addWidget(self.CT_vmin_label,0,2)
     self.colour_table_layout.addWidget(self.CT_StkI_vmin,1,2)
-    self.colour_table_layout.addWidget(self.CT_T_vmin,2,2)
-    self.colour_table_layout.addWidget(self.CT_B_vmin,3,2)
-    self.colour_table_layout.addWidget(self.CT_V_vmin,4,2)
-    self.colour_table_layout.addWidget(self.CT_G_vmin,5,2)
-    self.colour_table_layout.addWidget(self.CT_A_vmin,6,2)
+    self.colour_table_layout.addWidget(self.CT_StkQ_vmin,2,2)
+    self.colour_table_layout.addWidget(self.CT_StkU_vmin,3,2)
+    self.colour_table_layout.addWidget(self.CT_StkV_vmin,4,2)
+    self.colour_table_layout.addWidget(self.CT_T_vmin,5,2)
+    self.colour_table_layout.addWidget(self.CT_B_vmin,6,2)
+    self.colour_table_layout.addWidget(self.CT_V_vmin,7,2)
+    self.colour_table_layout.addWidget(self.CT_G_vmin,8,2)
+    self.colour_table_layout.addWidget(self.CT_A_vmin,9,2)
 
     self.colour_table_layout.addWidget(self.CT_vmax_label,0,3)
     self.colour_table_layout.addWidget(self.CT_StkI_vmax,1,3)
-    self.colour_table_layout.addWidget(self.CT_T_vmax,2,3)
-    self.colour_table_layout.addWidget(self.CT_B_vmax,3,3)
-    self.colour_table_layout.addWidget(self.CT_V_vmax,4,3)
-    self.colour_table_layout.addWidget(self.CT_G_vmax,5,3)
-    self.colour_table_layout.addWidget(self.CT_A_vmax,6,3)
+    self.colour_table_layout.addWidget(self.CT_StkQ_vmax,2,3)
+    self.colour_table_layout.addWidget(self.CT_StkU_vmax,3,3)
+    self.colour_table_layout.addWidget(self.CT_StkV_vmax,4,3)
+    self.colour_table_layout.addWidget(self.CT_T_vmax,5,3)
+    self.colour_table_layout.addWidget(self.CT_B_vmax,6,3)
+    self.colour_table_layout.addWidget(self.CT_V_vmax,7,3)
+    self.colour_table_layout.addWidget(self.CT_G_vmax,8,3)
+    self.colour_table_layout.addWidget(self.CT_A_vmax,9,3)
 
     self.colour_table_layout.addWidget(self.CT_StkI_autoscaling_checkbutton,1,4)
-    self.colour_table_layout.addWidget(self.CT_T_autoscaling_checkbutton,2,4)
-    self.colour_table_layout.addWidget(self.CT_B_autoscaling_checkbutton,3,4)
-    self.colour_table_layout.addWidget(self.CT_V_autoscaling_checkbutton,4,4)
-    self.colour_table_layout.addWidget(self.CT_G_autoscaling_checkbutton,5,4)
-    self.colour_table_layout.addWidget(self.CT_A_autoscaling_checkbutton,6,4)
+    self.colour_table_layout.addWidget(self.CT_StkQ_autoscaling_checkbutton,2,4)
+    self.colour_table_layout.addWidget(self.CT_StkU_autoscaling_checkbutton,3,4)
+    self.colour_table_layout.addWidget(self.CT_StkV_autoscaling_checkbutton,4,4)
+    self.colour_table_layout.addWidget(self.CT_T_autoscaling_checkbutton,5,4)
+    self.colour_table_layout.addWidget(self.CT_B_autoscaling_checkbutton,6,4)
+    self.colour_table_layout.addWidget(self.CT_V_autoscaling_checkbutton,7,4)
+    self.colour_table_layout.addWidget(self.CT_G_autoscaling_checkbutton,8,4)
+    self.colour_table_layout.addWidget(self.CT_A_autoscaling_checkbutton,9,4)
 
-    self.colour_table_layout.addWidget(self.update_and_set,7,0)
+    self.colour_table_layout.addWidget(self.update_and_set,10,0)
 
     self.setLayout(self.colour_table_layout)
 def colour_table_widgets(self,sire):
     self.CT_empty_label = QLabel(" ")
-    self.CT_StkI_label = QLabel("Stokes ")
+    self.CT_StkI_label = QLabel("Stokes I")
+    self.CT_StkQ_label = QLabel("Stokes Q")
+    self.CT_StkU_label = QLabel("Stokes U")
+    self.CT_StkV_label = QLabel("Stokes V")
     self.CT_T_label = QLabel("Temperature ")
     self.CT_B_label = QLabel("Magnetic field str./flux dens.")
     self.CT_V_label = QLabel("Velocity")
@@ -431,7 +457,13 @@ def colour_table_widgets(self,sire):
 
     self.CT_label = QLabel("Colour tables")
     self.CT_StkI = QComboBox(self)
-    set_CT_combos(self.CT_StkI,sire.I_CT[0],sire.CT_options)
+    set_CT_combos(self.CT_StkI,sire.StkI_CT[0],sire.CT_options)
+    self.CT_StkQ = QComboBox(self)
+    set_CT_combos(self.CT_StkQ,sire.StkQ_CT[0],sire.CT_options)
+    self.CT_StkU = QComboBox(self)
+    set_CT_combos(self.CT_StkU,sire.StkU_CT[0],sire.CT_options)
+    self.CT_StkV = QComboBox(self)
+    set_CT_combos(self.CT_StkV,sire.StkV_CT[0],sire.CT_options)
     self.CT_T = QComboBox(self)
     set_CT_combos(self.CT_T,sire.T_CT[0],sire.CT_options)
     self.CT_B = QComboBox(self)
@@ -445,8 +477,17 @@ def colour_table_widgets(self,sire):
 
     self.CT_vmin_label = QLabel("Vmin")
     self.CT_StkI_vmin = QLineEdit(self)
-    self.CT_StkI_vmin.setText(str(sire.I_CT[1]))
+    self.CT_StkI_vmin.setText(str(sire.StkI_CT[1]))
     self.CT_StkI_vmin.setEnabled(False)
+    self.CT_StkQ_vmin = QLineEdit(self)
+    self.CT_StkQ_vmin.setText(str(sire.StkQ_CT[1]))
+    self.CT_StkQ_vmin.setEnabled(False)
+    self.CT_StkU_vmin = QLineEdit(self)
+    self.CT_StkU_vmin.setText(str(sire.StkU_CT[1]))
+    self.CT_StkU_vmin.setEnabled(False)
+    self.CT_StkV_vmin = QLineEdit(self)
+    self.CT_StkV_vmin.setText(str(sire.StkV_CT[1]))
+    self.CT_StkV_vmin.setEnabled(False)
     self.CT_T_vmin = QLineEdit(self)
     self.CT_T_vmin.setText(str(sire.T_CT[1]))
     self.CT_T_vmin.setEnabled(False)
@@ -465,8 +506,17 @@ def colour_table_widgets(self,sire):
 
     self.CT_vmax_label = QLabel("Vmax")
     self.CT_StkI_vmax = QLineEdit(self)
-    self.CT_StkI_vmax.setText(str(sire.I_CT[2]))
+    self.CT_StkI_vmax.setText(str(sire.StkI_CT[2]))
     self.CT_StkI_vmax.setEnabled(False)
+    self.CT_StkQ_vmax = QLineEdit(self)
+    self.CT_StkQ_vmax.setText(str(sire.StkQ_CT[2]))
+    self.CT_StkQ_vmax.setEnabled(False)
+    self.CT_StkU_vmax = QLineEdit(self)
+    self.CT_StkU_vmax.setText(str(sire.StkU_CT[2]))
+    self.CT_StkU_vmax.setEnabled(False)
+    self.CT_StkV_vmax = QLineEdit(self)
+    self.CT_StkV_vmax.setText(str(sire.StkV_CT[2]))
+    self.CT_StkV_vmax.setEnabled(False)
     self.CT_T_vmax = QLineEdit(self)
     self.CT_T_vmax.setText(str(sire.T_CT[2]))
     self.CT_T_vmax.setEnabled(False)
@@ -484,8 +534,17 @@ def colour_table_widgets(self,sire):
     self.CT_A_vmax.setEnabled(False)
 
     self.CT_StkI_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
-    self.CT_StkI_autoscaling_checkbutton.setChecked(sire.I_CT[3])
+    self.CT_StkI_autoscaling_checkbutton.setChecked(sire.StkI_CT[3])
     self.CT_StkI_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_StkI_vmin, self.CT_StkI_vmax, self.CT_StkI_autoscaling_checkbutton))
+    self.CT_StkQ_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_StkQ_autoscaling_checkbutton.setChecked(sire.StkQ_CT[3])
+    self.CT_StkQ_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_StkQ_vmin, self.CT_StkQ_vmax, self.CT_StkQ_autoscaling_checkbutton))
+    self.CT_StkU_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_StkU_autoscaling_checkbutton.setChecked(sire.StkU_CT[3])
+    self.CT_StkU_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_StkU_vmin, self.CT_StkU_vmax, self.CT_StkU_autoscaling_checkbutton))
+    self.CT_StkV_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
+    self.CT_StkV_autoscaling_checkbutton.setChecked(sire.StkV_CT[3])
+    self.CT_StkV_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_StkV_vmin, self.CT_StkV_vmax, self.CT_StkV_autoscaling_checkbutton))
     self.CT_T_autoscaling_checkbutton = QCheckBox("Enable autoscaling",self)
     self.CT_T_autoscaling_checkbutton.setChecked(sire.T_CT[3])
     self.CT_T_autoscaling_checkbutton.stateChanged.connect(lambda: CT_state_changed(self.CT_T_vmin, self.CT_T_vmax, self.CT_T_autoscaling_checkbutton))
@@ -520,7 +579,10 @@ def CT_state_changed(widget1, widget2, checkbutton):
         widget2.setEnabled(True)
 
 def update_and_set(self,sire):
-    sire.I_CT[0] = self.CT_StkI.currentText()
+    sire.StkI_CT[0] = self.CT_StkI.currentText()
+    sire.StkQ_CT[0] = self.CT_StkQ.currentText()
+    sire.StkU_CT[0] = self.CT_StkU.currentText()
+    sire.StkV_CT[0] = self.CT_StkV.currentText()
     sire.T_CT[0] = self.CT_T.currentText()
     sire.B_CT[0] = self.CT_B.currentText()
     sire.V_CT[0] = self.CT_V.currentText()
@@ -528,11 +590,29 @@ def update_and_set(self,sire):
     sire.A_CT[0] = self.CT_A.currentText()
 
     if self.CT_StkI_autoscaling_checkbutton.isChecked():
-        sire.I_CT[3] = 1
+        sire.StkI_CT[3] = 1
     else:
-        sire.I_CT[3] = 0
-        sire.I_CT[1] = self.CT_StkI_vmin.text()
-        sire.I_CT[2] = self.CT_StkI_vmax.text()
+        sire.StkI_CT[3] = 0
+        sire.StkI_CT[1] = self.CT_StkI_vmin.text()
+        sire.StkI_CT[2] = self.CT_StkI_vmax.text()
+    if self.CT_StkQ_autoscaling_checkbutton.isChecked():
+        sire.StkQ_CT[3] = 1
+    else:
+        sire.StkQ_CT[3] = 0
+        sire.StkQ_CT[1] = self.CT_StkQ_vmin.text()
+        sire.StkQ_CT[2] = self.CT_StkQ_vmax.text()
+    if self.CT_StkU_autoscaling_checkbutton.isChecked():
+        sire.StkU_CT[3] = 1
+    else:
+        sire.StkU_CT[3] = 0
+        sire.StkU_CT[1] = self.CT_StkU_vmin.text()
+        sire.StkU_CT[2] = self.CT_StkU_vmax.text()
+    if self.CT_StkV_autoscaling_checkbutton.isChecked():
+        sire.StkV_CT[3] = 1
+    else:
+        sire.StkV_CT[3] = 0
+        sire.StkV_CT[1] = self.CT_StkV_vmin.text()
+        sire.StkV_CT[2] = self.CT_StkV_vmax.text()
     if self.CT_T_autoscaling_checkbutton.isChecked():
         sire.T_CT[3] = 1
     else:

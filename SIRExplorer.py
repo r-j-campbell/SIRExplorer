@@ -40,7 +40,10 @@ class SIRExplorer(QWidget):
         self.binary_file_list = [None]
 
         #[CT, min, max, automatic scaling flag, display flag]
-        self.I_CT = ['gray',0.9,1.1,1,1]
+        self.StkI_CT = ['gray',0.9,1.1,1,1]
+        self.StkQ_CT = ['gray',-0.05,0.05,1,1]
+        self.StkU_CT = ['gray',-0.05,0.05,1,1]
+        self.StkV_CT = ['gray',-0.05,0.05,1,1]
         self.T_CT = ['gray',6500,7500,1,1]
         self.G_CT = ['bwr',0,180,1,1]
         self.A_CT = ['hsv',0,360,1,1]
