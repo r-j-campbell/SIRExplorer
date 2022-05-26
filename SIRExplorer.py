@@ -300,11 +300,23 @@ class SIRExplorer(QWidget):
             self.increment=1
 
     def mouseclicks(self, event):
+        self.setFocus()
         i=str(self.match)
         self.class_objects[i]["class_object"].current_x = event.xdata
         self.class_objects[i]["class_object"].current_y = event.ydata
         if self.click_increment == 0:
-            self.click_increment=1
+            self.click_increment = 1
+        click(self,self.class_objects[i])
+        self.change_canvas()
+        update_pixel_info(self, self.class_objects[i])
+
+
+    def xy_spinbox(self):
+        i=str(self.match)
+        self.class_objects[i]["class_object"].current_x = int(self.x_spinbox.value())
+        self.class_objects[i]["class_object"].current_y = int(self.y_spinbox.value())
+        if self.click_increment == 0:
+            self.click_increment = 1
         click(self,self.class_objects[i])
         self.change_canvas()
         update_pixel_info(self, self.class_objects[i])
@@ -314,29 +326,19 @@ class SIRExplorer(QWidget):
         if event.key() == Qt.Key_Up:
             if int(self.class_objects[i]["class_object"].current_y) + 1 < self.class_objects[i]["class_object"].Attributes["y"]:
                 self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y + 1
-                click(self,self.class_objects[i])
-                self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
         if event.key() == Qt.Key_Right:
             if int(self.class_objects[i]["class_object"].current_x) + 1 < self.class_objects[i]["class_object"].Attributes["x"]:
                 self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x + 1
-                click(self,self.class_objects[i])
-                self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
         if event.key() == Qt.Key_Down:
             if int(self.class_objects[i]["class_object"].current_y) - 1 >= 0:
                 self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y - 1
-                click(self,self.class_objects[i])
-                self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
         if event.key() == Qt.Key_Left:
             if int(self.class_objects[i]["class_object"].current_x) - 1 >= 0:
                 self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x - 1
-                click(self,self.class_objects[i])
-                self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
-            else:
-                pass
+        click(self,self.class_objects[i])
+        self.change_canvas()
+        update_pixel_info(self, self.class_objects[i])
+
 
     def colour_table_options(self):
         if self.w is None:

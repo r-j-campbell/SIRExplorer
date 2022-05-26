@@ -3,6 +3,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 import astropy.io.fits as pyfits
 import matplotlib
 matplotlib.use("TkAgg")
+matplotlib.rc('image',interpolation='none',origin='lower')
 from PyQt5.QtWidgets import QMessageBox
 
 def show(self, class_object):
@@ -50,6 +51,8 @@ def open_files(self,class_object):
     class_object["class_object"].Attributes["y"] = model1.shape[2]
     class_object["class_object"].Attributes["x"] = model1.shape[3]
     class_object["class_object"].Attributes["wl"] = obs_prof.shape[1]
+    self.x_spinbox.setRange(0,class_object["class_object"].Attributes["x"]-1)
+    self.y_spinbox.setRange(0,class_object["class_object"].Attributes["y"]-1)
 
     if self.flag == False:
         self.wl_scale.setMinimum(0)
@@ -84,13 +87,6 @@ def open_files(self,class_object):
         binary_map = np.ones(
             [class_object["class_object"].Attributes["y"], class_object["class_object"].Attributes["x"]])
         class_object["class_object"].update_binary(binary_map)
-    print(binary_map.shape)
-    # if self.chi2_checkbutton.isChecked():
-    #     chi2 = pyfits.open(class_object["chi2_file"])[0].data
-    #     chi2 = np.squeeze(chi2)
-    #     if chi2.ndim == 3:  # executed only if there are multiple frames of data
-    #         chi2 = chi2[class_object["class_object"].current_frame_index, :, :]
-    #     class_object["class_object"].update_chi2(chi2)
 
     if self.model2_checkbutton.isChecked() and self.mac1_checkbutton.isChecked() and self.mac2_checkbutton.isChecked():
         if self.flag == False or self.frame_flag == 1:
@@ -140,7 +136,6 @@ def update_canvas(self,class_object):
     mac2_file = class_object["class_object"].mac2
     current_x = int(class_object["class_object"].current_x)
     current_y = int(class_object["class_object"].current_y)
-
     if self.Stokes_checkbutton.isChecked():
         if self.StkI_CT[3] == 0:
             StkI_map = self.sc1.ax1.imshow(obs_prof[0, class_object["class_object"].current_wl_index, :, :], origin='lower',
@@ -178,7 +173,7 @@ def update_canvas(self,class_object):
     if self.Stokes_U_checkbutton.isChecked():
         if self.StkU_CT[3] == 0:
             StkU_map = self.sc1.ax3.imshow(obs_prof[2, class_object["class_object"].current_wl_index, :, :], origin='lower',
-                    cmap=self.StkI_CT[0], vmin=self.StkU_CT[1], vmax=self.StkU_CT[2])
+                    cmap=self.StkU_CT[0], vmin=self.StkU_CT[1], vmax=self.StkU_CT[2])
         elif self.StkU_CT[3] == 1:
             StkU_map = self.sc1.ax3.imshow(obs_prof[2, class_object["class_object"].current_wl_index, :, :], origin='lower',
                     cmap=self.StkU_CT[0])
@@ -235,7 +230,7 @@ def update_canvas(self,class_object):
             elif self.B_CT[3] == 1:
                 B_map = self.sc1.ax6.imshow(
                     model1[4, class_object["class_object"].current_optical_depth_index, :, :] * mac1_file[1, :, :] * binary_map,
-                    origin='lower', cmap=self.B_CT[0])
+                    origin='lower', cmap=self.B_CT[0], interpolation='none')
             self.sc1.ax6.set_title("$\\alpha$ B [G]", fontsize=self.fontsize_titles)
         else:
             if self.B_CT[3] == 0:
@@ -245,7 +240,7 @@ def update_canvas(self,class_object):
             elif self.B_CT[3] == 1:
                 B_map = self.sc1.ax6.imshow(
                     model1[4, class_object["class_object"].current_optical_depth_index, :, :] * binary_map, origin='lower',
-                    cmap=self.B_CT[0])
+                    cmap=self.B_CT[0], interpolation='none')
             self.sc1.ax6.set_title("B [G]", fontsize=self.fontsize_titles)
         dividerB = make_axes_locatable(self.sc1.ax6)
         self.caxB = dividerB.append_axes("right", size="3%", pad=0)
@@ -378,9 +373,9 @@ def click(self, class_object):
     syn_prof = class_object["class_object"].syn
 
     # Stokes plots
-    self.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Observed profile', linewidth=self.linewidth)
+    self.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=self.linewidth)
     self.sc2.ax1.axvline(class_object["class_object"].current_wl_index, linestyle=':', color='gray', linewidth=self.linewidth)
-    self.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Synthetic profile', linewidth=self.linewidth)
+    self.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Syn', linewidth=self.linewidth)
     self.sc2.ax1.legend(frameon=False, fontsize=self.fontsize_axislabels)
     self.sc2.ax1.set_xlim(class_object["class_object"].wl_min, class_object["class_object"].wl_max)
     self.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=self.linewidth)
@@ -465,7 +460,7 @@ def create_figure1(self):
         total+=1
     if self.A_checkbutton.isChecked():
         total+=1
-    if total >= 7:
+    if total >= 6:
         columns = 2
         if total % 2 == 0:
             rows = int(total/2)
@@ -523,7 +518,6 @@ def clear_fig1(self):
     if self.flag == True:
         i=str(self.match)
         if self.click_increment == 1:
-            #click(self,self.class_objects[i])
             self.change_canvas()
         else:
             print("you have to load something first")
@@ -570,7 +564,6 @@ def clear_fig2(self):
         i=str(self.match)
         if self.click_increment == 1:
             click(self,self.class_objects[i])
-            #self.change_canvas()
         else:
             print("you have to load something first")
     else:
@@ -621,7 +614,6 @@ def clear_fig3(self):
         i=str(self.match)
         if self.click_increment == 1:
             click(self,self.class_objects[i])
-            #self.change_canvas()
         else:
             print("you have to load something first")
     else:
@@ -780,11 +772,15 @@ def update_pixel_info(sire, class_object):
         sire.mod2_A_value.setText(str(round(A2,3)))
         sire.mod2_mic_value.setText(str(round(mic2,3)))
 
-    X = int(class_object["class_object"].current_x)
-    Y = int(class_object["class_object"].current_y)
-    Z = round(class_object["class_object"].model1[8, class_object["class_object"].current_optical_depth_index, Y, X], 3)
-    OD = round(class_object["class_object"].model1[0, class_object["class_object"].current_optical_depth_index, Y, X], 3)
-    sire.pixel_values.setText("X: %s Y: %s Z: %s [cm] OD: %s" %(str(X), str(Y), str(Z), str(OD)))
+    Z = round(class_object["class_object"].model1[8, class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)], 3)
+    OD = round(class_object["class_object"].model1[0, class_object["class_object"].current_optical_depth_index, int(class_object["class_object"].current_y), int(class_object["class_object"].current_x)], 3)
+    sire.pixel_values.setText("Z: %s [cm] OD: %s" %(str(Z), str(OD)))
+    sire.x_spinbox.blockSignals(True)
+    sire.y_spinbox.blockSignals(True)
+    sire.x_spinbox.setValue(int(class_object["class_object"].current_x))
+    sire.y_spinbox.setValue(int(class_object["class_object"].current_y))
+    sire.x_spinbox.blockSignals(False)
+    sire.y_spinbox.blockSignals(False)
 
 def set_font_sizes(self,sire):
     try:
