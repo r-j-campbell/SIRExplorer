@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import *
 from PyQt5.Qt import Qt
 import sys
-from time import sleep
 from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets
 from Instruments import SIR
 from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth
+from PyQt5.QtGui import QIntValidator
 
 class SIRExplorer(QWidget):
     def __init__(self):
@@ -15,17 +15,18 @@ class SIRExplorer(QWidget):
         self.appheight = self.screenRect.height()
         self.appwidth = self.screenRect.width()
         self.setGeometry(0,0,int(self.appwidth),int(self.appheight))
-        self.w = None
-        self.p = None
+        self.CT_flag = None
+        self.preferences_flag = None
+
+        self.only_int = QIntValidator()
 
         self.increment = 0 #zero on first launch, 1 thereafter
         self.click_increment = 0
         self.flag = None
-        self.match = 0 #zero when no match is found, index of class_objects otherwise
+        self.match = 0 #zero when no match is found, index of dataset_dict otherwise
         self.frame_changed_flag = 0 #1 when framescale released, otherwise 0
 
-        self.class_objects = {0: {"file": "first dummy value"}
-                              }
+        self.dataset_dict = {0: {"file": "first dummy value"}}
         self.folder_list = [None]
         self.model1_file_list = [None]
         self.model2_file_list = [None]
@@ -37,15 +38,15 @@ class SIRExplorer(QWidget):
         self.binary_file_list = [None]
 
         #[CT, min, max, automatic scaling flag, display flag]
-        self.StkI_CT = ['gray',0.9,1.1,1,1]
-        self.StkQ_CT = ['gray',-0.05,0.05,1,1]
-        self.StkU_CT = ['gray',-0.05,0.05,1,1]
-        self.StkV_CT = ['gray',-0.05,0.05,1,1]
-        self.T_CT = ['gray',6500,7500,1,1]
-        self.G_CT = ['bwr',0,180,1,1]
-        self.A_CT = ['hsv',0,360,1,1]
-        self.V_CT = ['bwr',-4,4,1,1]
-        self.B_CT = ['viridis',0,2000,1,1]
+        self.StkI_CT = ['gray', 0.9, 1.1, 1, 1]
+        self.StkQ_CT = ['gray', -0.05, 0.05, 1, 1]
+        self.StkU_CT = ['gray', -0.05, 0.05, 1, 1]
+        self.StkV_CT = ['gray', -0.05, 0.05, 1, 1]
+        self.T_CT = ['gray', 6500, 7500, 1, 1]
+        self.G_CT = ['bwr', 0, 180, 1, 1]
+        self.A_CT = ['hsv', 0, 360, 1, 1]
+        self.V_CT = ['bwr', -4, 4, 1, 1]
+        self.B_CT = ['viridis', 0, 2000, 1, 1]
         self.CT_options = ['hsv', 'gray', 'gray_r', 'viridis','bwr', 'bwr_r','hot', 'plasma', 'inferno', 'magma', 'cividis',
                             'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
                             'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
@@ -60,10 +61,10 @@ class SIRExplorer(QWidget):
                             'cubehelix', 'brg', 'gist_rainbow', 'rainbow', 'jet',
                             'turbo', 'nipy_spectral', 'gist_ncar']
 
-        self.fontsize_titles=7
-        self.fontsize_axislabels=7
-        self.fontsize_ticklabels=7
-        self.linewidth=1
+        self.fontsize_titles = 7
+        self.fontsize_axislabels = 7
+        self.fontsize_ticklabels = 7
+        self.linewidth = 1
 
         self.UI()
         self.show()
@@ -259,30 +260,28 @@ class SIRExplorer(QWidget):
                     return
 
     def change_canvas(self):
-        print("change canvas")
         self.flag=False
-        self.get_all_values(self.class_objects,0,self.select_model1.currentText())
+        self.get_all_values(self.dataset_dict,0,self.select_model1.currentText())
         if self.flag == True: #if match is found
-            print("match found")
             i=str(self.match)
-            show(self,self.class_objects[i])
+            show(self,self.dataset_dict[i])
         elif self.flag == False: #if match is not found
-            class_object = SIR()
-            j=str(len(self.class_objects))
+            sir = SIR()
+            j=str(len(self.dataset_dict))
             self.match = j
-            self.class_objects[j] = {'model_file': self.select_model1.currentText(),
-                     'secondary_model_file': self.select_model2.currentText(),
-                     'obs_prof_file': self.select_obs_prof.currentText(),
-                     'syn_prof_file': self.select_syn_prof.currentText(),
-                     'mac1_file': self.select_mac1.currentText(),
-                     'mac2_file': self.select_mac2.currentText(),
-                     'binary_file': self.select_binary.currentText(),
-                     'class_object': class_object
+            self.dataset_dict[j] = {'model_file': self.select_model1.currentText(),
+                                    'secondary_model_file': self.select_model2.currentText(),
+                                    'obs_prof_file': self.select_obs_prof.currentText(),
+                                    'syn_prof_file': self.select_syn_prof.currentText(),
+                                    'mac1_file': self.select_mac1.currentText(),
+                                    'mac2_file': self.select_mac2.currentText(),
+                                    'binary_file': self.select_binary.currentText(),
+                                    'sir': sir
                                      }
-            show(self,self.class_objects[j])
+            show(self,self.dataset_dict[j])
         if self.increment == 0:
-            click(self,self.class_objects[j])
-            update_pixel_info(self, self.class_objects[j])
+            click(self,self.dataset_dict[j])
+            update_pixel_info(self, self.dataset_dict[j])
             if self.click_increment == 0:
                 self.click_increment=1
             self.increment=1
@@ -290,40 +289,40 @@ class SIRExplorer(QWidget):
     def mouseclicks(self, event):
         self.setFocus()
         i=str(self.match)
-        self.class_objects[i]["class_object"].current_x = event.xdata
-        self.class_objects[i]["class_object"].current_y = event.ydata
+        self.dataset_dict[i]["sir"].current_x = event.xdata
+        self.dataset_dict[i]["sir"].current_y = event.ydata
         if self.click_increment == 0:
             self.click_increment = 1
-        click(self,self.class_objects[i])
+        click(self,self.dataset_dict[i])
         self.change_canvas()
-        update_pixel_info(self, self.class_objects[i])
+        update_pixel_info(self, self.dataset_dict[i])
 
     def keyPressEvent(self, event):
         i=str(self.match)
         if event.key() == Qt.Key_Up:
-            if int(self.class_objects[i]["class_object"].current_y) + 1 < self.class_objects[i]["class_object"].Attributes["y"]:
-                self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y + 1
-                click(self,self.class_objects[i])
+            if int(self.dataset_dict[i]["sir"].current_y) + 1 < self.dataset_dict[i]["sir"].Attributes["y"]:
+                self.dataset_dict[i]["sir"].current_y = self.dataset_dict[i]["sir"].current_y + 1
+                click(self,self.dataset_dict[i])
                 self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
+                update_pixel_info(self, self.dataset_dict[i])
         if event.key() == Qt.Key_Right:
-            if int(self.class_objects[i]["class_object"].current_x) + 1 < self.class_objects[i]["class_object"].Attributes["x"]:
-                self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x + 1
-                click(self,self.class_objects[i])
+            if int(self.dataset_dict[i]["sir"].current_x) + 1 < self.dataset_dict[i]["sir"].Attributes["x"]:
+                self.dataset_dict[i]["sir"].current_x = self.dataset_dict[i]["sir"].current_x + 1
+                click(self,self.dataset_dict[i])
                 self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
+                update_pixel_info(self, self.dataset_dict[i])
         if event.key() == Qt.Key_Down:
-            if int(self.class_objects[i]["class_object"].current_y) - 1 >= 0:
-                self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y - 1
-                click(self,self.class_objects[i])
+            if int(self.dataset_dict[i]["sir"].current_y) - 1 >= 0:
+                self.dataset_dict[i]["sir"].current_y = self.dataset_dict[i]["sir"].current_y - 1
+                click(self,self.dataset_dict[i])
                 self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
+                update_pixel_info(self, self.dataset_dict[i])
         if event.key() == Qt.Key_Left:
-            if int(self.class_objects[i]["class_object"].current_x) - 1 >= 0:
-                self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x - 1
-                click(self,self.class_objects[i])
+            if int(self.dataset_dict[i]["sir"].current_x) - 1 >= 0:
+                self.dataset_dict[i]["sir"].current_x = self.dataset_dict[i]["sir"].current_x - 1
+                click(self,self.dataset_dict[i])
                 self.change_canvas()
-                update_pixel_info(self, self.class_objects[i])
+                update_pixel_info(self, self.dataset_dict[i])
         if event.key() == Qt.Key_Q:
             self.frame_scale.setSliderPosition(int(self.frame_scale.value()-1))
             change_frame(self)
@@ -346,20 +345,20 @@ class SIRExplorer(QWidget):
 
 
     def colour_table_options(self):
-        if self.w is None:
-            self.w = ColourTables(self)
-            self.w.show()
+        if self.CT_flag is None:
+            self.CT_flag = ColourTables(self)
+            self.CT_flag.show()
         else:
-            self.w.close()
-            self.w = None
+            self.CT_flag.close()
+            self.CT_flag = None
 
     def preferences(self):
-        if self.p is None:
-            self.p = Preferences(self)
-            self.p.show()
+        if self.preferences_flag is None:
+            self.preferences_flag = Preferences(self)
+            self.preferences_flag.show()
         else:
-            self.p.close()
-            self.p = None
+            self.preferences_flag.close()
+            self.preferences_flag = None
 
 class ColourTables(QWidget):
     def __init__(self,sire):
