@@ -1,10 +1,10 @@
 from PyQt5.QtWidgets import *
 from PyQt5.Qt import Qt
 import sys
-
+from time import sleep
 from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets
 from Instruments import SIR
-from canvas_functions import show, click, update_pixel_info
+from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth
 
 class SIRExplorer(QWidget):
     def __init__(self):
@@ -22,10 +22,7 @@ class SIRExplorer(QWidget):
         self.click_increment = 0
         self.flag = None
         self.match = 0 #zero when no match is found, index of class_objects otherwise
-        self.frame_flag = 0 # zero when dataset has 1 frame, one otherwise
-
-        self.set_wavelength = 0
-        self.set_frame = 0
+        self.frame_changed_flag = 0 #1 when framescale released, otherwise 0
 
         self.class_objects = {0: {"file": "first dummy value"}
                               }
@@ -49,7 +46,7 @@ class SIRExplorer(QWidget):
         self.A_CT = ['hsv',0,360,1,1]
         self.V_CT = ['bwr',-4,4,1,1]
         self.B_CT = ['viridis',0,2000,1,1]
-        self.CT_options = ['hsv', 'gray', 'viridis','bwr', 'hot', 'plasma', 'inferno', 'magma', 'cividis',
+        self.CT_options = ['hsv', 'gray', 'gray_r', 'viridis','bwr', 'bwr_r','hot', 'plasma', 'inferno', 'magma', 'cividis',
                             'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
                             'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
                             'GnBu', 'PuBu', 'YlGnBu', 'PuBuGn', 'BuGn', 'YlGn',
@@ -240,16 +237,6 @@ class SIRExplorer(QWidget):
                 self.select_mac2.setCurrentIndex(index)
             del value
 
-        # if self.chi2_checkbutton.isChecked():
-        #     value = str(self.select_folder.currentText())+"/chi2.fits"
-        #     if value not in self.chi2_file_list:
-        #         self.chi2_file_list.append(value)
-        #         self.select_chi2.addItem(value)
-        #     index = self.select_chi2.findText(value)
-        #     if index >= 0:
-        #         self.select_chi2.setCurrentIndex(index)
-        #     del value
-
         if self.binary_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/binary.fits"
             if value not in self.binary_file_list:
@@ -272,9 +259,11 @@ class SIRExplorer(QWidget):
                     return
 
     def change_canvas(self):
+        print("change canvas")
         self.flag=False
         self.get_all_values(self.class_objects,0,self.select_model1.currentText())
         if self.flag == True: #if match is found
+            print("match found")
             i=str(self.match)
             show(self,self.class_objects[i])
         elif self.flag == False: #if match is not found
@@ -287,7 +276,6 @@ class SIRExplorer(QWidget):
                      'syn_prof_file': self.select_syn_prof.currentText(),
                      'mac1_file': self.select_mac1.currentText(),
                      'mac2_file': self.select_mac2.currentText(),
-                     #'chi2_file': self.select_chi2.currentText(),
                      'binary_file': self.select_binary.currentText(),
                      'class_object': class_object
                                      }
@@ -310,34 +298,51 @@ class SIRExplorer(QWidget):
         self.change_canvas()
         update_pixel_info(self, self.class_objects[i])
 
-
-    def xy_spinbox(self):
-        i=str(self.match)
-        self.class_objects[i]["class_object"].current_x = int(self.x_spinbox.value())
-        self.class_objects[i]["class_object"].current_y = int(self.y_spinbox.value())
-        if self.click_increment == 0:
-            self.click_increment = 1
-        click(self,self.class_objects[i])
-        self.change_canvas()
-        update_pixel_info(self, self.class_objects[i])
-
     def keyPressEvent(self, event):
         i=str(self.match)
         if event.key() == Qt.Key_Up:
             if int(self.class_objects[i]["class_object"].current_y) + 1 < self.class_objects[i]["class_object"].Attributes["y"]:
                 self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y + 1
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
         if event.key() == Qt.Key_Right:
             if int(self.class_objects[i]["class_object"].current_x) + 1 < self.class_objects[i]["class_object"].Attributes["x"]:
                 self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x + 1
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
         if event.key() == Qt.Key_Down:
             if int(self.class_objects[i]["class_object"].current_y) - 1 >= 0:
                 self.class_objects[i]["class_object"].current_y = self.class_objects[i]["class_object"].current_y - 1
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
         if event.key() == Qt.Key_Left:
             if int(self.class_objects[i]["class_object"].current_x) - 1 >= 0:
                 self.class_objects[i]["class_object"].current_x = self.class_objects[i]["class_object"].current_x - 1
-        click(self,self.class_objects[i])
-        self.change_canvas()
-        update_pixel_info(self, self.class_objects[i])
+                click(self,self.class_objects[i])
+                self.change_canvas()
+                update_pixel_info(self, self.class_objects[i])
+        if event.key() == Qt.Key_Q:
+            self.frame_scale.setSliderPosition(int(self.frame_scale.value()-1))
+            change_frame(self)
+        if event.key() == Qt.Key_E:
+            self.frame_scale.setSliderPosition(int(self.frame_scale.value()+1))
+            change_frame(self)
+        if event.key() == Qt.Key_A:
+            self.wl_scale.setSliderPosition(int(self.wl_scale.value()-1))
+            change_wl(self)
+        if event.key() == Qt.Key_D:
+            self.wl_scale.setSliderPosition(int(self.wl_scale.value()+1))
+            change_wl(self)
+        if event.key() == Qt.Key_Z:
+            self.optical_depth_scale.setSliderPosition(int(self.optical_depth_scale.value()-1))
+            change_optical_depth(self)
+        if event.key() == Qt.Key_C:
+            self.optical_depth_scale.setSliderPosition(int(self.optical_depth_scale.value()+1))
+            change_optical_depth(self)
+
 
 
     def colour_table_options(self):
