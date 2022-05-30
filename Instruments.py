@@ -29,6 +29,10 @@ class SIR: #files should be [t,St,y,x,wl]
         self.current_y = 0
         self.wl_min = 0
         self.wl_max = 100
+        self.x_min = 0
+        self.x_max = 0
+        self.y_min = 0
+        self.y_max = 0
         self.optical_depth_min = 0
         self.optical_depth_max = 100
     def update_binary(self,binary):

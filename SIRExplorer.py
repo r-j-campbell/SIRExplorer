@@ -1,10 +1,11 @@
 from PyQt5.QtWidgets import *
 from PyQt5.Qt import Qt
 import sys
+from PyQt5.QtGui import QIntValidator, QDoubleValidator
+from PyQt5.QtCore import QSettings
 from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets
 from Instruments import SIR
 from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth
-from PyQt5.QtGui import QIntValidator
 
 class SIRExplorer(QWidget):
     def __init__(self):
@@ -15,10 +16,13 @@ class SIRExplorer(QWidget):
         self.appheight = self.screenRect.height()
         self.appwidth = self.screenRect.width()
         self.setGeometry(0,0,int(self.appwidth),int(self.appheight))
+        self.settings = QSettings("SIRE", "SIRE")
+
         self.CT_flag = None
         self.preferences_flag = None
 
         self.only_int = QIntValidator()
+        self.only_double = QDoubleValidator()
 
         self.increment = 0 #zero on first launch, 1 thereafter
         self.click_increment = 0
@@ -38,10 +42,22 @@ class SIRExplorer(QWidget):
         self.binary_file_list = [None]
 
         #[CT, min, max, automatic scaling flag, display flag]
-        self.StkI_CT = ['gray', 0.9, 1.1, 1, 1]
-        self.StkQ_CT = ['gray', -0.05, 0.05, 1, 1]
-        self.StkU_CT = ['gray', -0.05, 0.05, 1, 1]
-        self.StkV_CT = ['gray', -0.05, 0.05, 1, 1]
+        if self.settings.value('StkI_CT') is not None:
+            self.StkI_CT = self.settings.value('StkI_CT')
+        else:
+            self.StkI_CT = ['gray', 0.9, 1.1, 1, 1]
+        if self.settings.value('StkQ_CT') is not None:
+            self.StkQ_CT = self.settings.value('StkQ_CT')
+        else:
+            self.StkQ_CT = ['bwr', -0.005, 0.005, 1, 1]
+        if self.settings.value('StkU_CT') is not None:
+            self.StkU_CT = self.settings.value('StkU_CT')
+        else:
+            self.StkU_CT = ['bwr', -0.005, 0.005, 1, 1]
+        if self.settings.value('StkV_CT') is not None:
+            self.StkV_CT = self.settings.value('StkV_CT')
+        else:
+            self.StkV_CT = ['bwr', -0.005, 0.005, 1, 1]
         self.T_CT = ['gray', 6500, 7500, 1, 1]
         self.G_CT = ['bwr', 0, 180, 1, 1]
         self.A_CT = ['hsv', 0, 360, 1, 1]
@@ -341,8 +357,6 @@ class SIRExplorer(QWidget):
         if event.key() == Qt.Key_C:
             self.optical_depth_scale.setSliderPosition(int(self.optical_depth_scale.value()+1))
             change_optical_depth(self)
-
-
 
     def colour_table_options(self):
         if self.CT_flag is None:

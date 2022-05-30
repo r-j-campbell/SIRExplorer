@@ -6,6 +6,7 @@ matplotlib.use("TkAgg")
 matplotlib.rc('image',interpolation='none',origin='lower')
 from PyQt5.QtWidgets import QMessageBox
 
+
 def show(sire, sir):
     if sire.increment == 0:
         create_figure1(sire)
@@ -42,10 +43,23 @@ def open_files(sire,sir):
     sir["sir"].update_syn(syn_prof)
 
     if sire.flag == False:
+        sir["sir"].x_min = 0
+        sir["sir"].x_max = sir["sir"].Attributes["x"] - 1
+        sir["sir"].y_min = 0
+        sir["sir"].y_max = sir["sir"].Attributes["y"] - 1
+        sire.x_min_entry.setEnabled(True)
+        sire.x_min_entry.setText(str(0))
+        sire.x_max_entry.setEnabled(True)
+        sire.x_max_entry.setText(str(sir["sir"].Attributes["x"] - 1))
+        sire.y_min_entry.setEnabled(True)
+        sire.y_min_entry.setText(str(0))
+        sire.y_max_entry.setEnabled(True)
+        sire.y_max_entry.setText(str(sir["sir"].Attributes["y"] - 1))
+
         sire.wl_scale.setMinimum(0)
         sire.wl_scale.setMaximum(sir["sir"].Attributes["wl"] - 1)
         sir["sir"].wl_min = 0
-        sir["sir"].wl_max = sir["sir"].Attributes["wl"] -1
+        sir["sir"].wl_max = sir["sir"].Attributes["wl"] - 1
         sire.wl_min_entry.setEnabled(True)
         sire.wl_min_entry.setText(str(0))
         sire.wl_max_entry.setEnabled(True)
@@ -130,6 +144,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax1.set_title("Stokes $I$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax1.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax1.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax1.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax1.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.Stokes_Q_checkbutton.isChecked():
         if sire.StkQ_CT[3] == 0:
@@ -147,6 +163,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax2.set_title("Stokes $Q$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax2.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax2.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax2.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax2.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.Stokes_U_checkbutton.isChecked():
         if sire.StkU_CT[3] == 0:
@@ -164,6 +182,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax3.set_title("Stokes $U$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax3.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax3.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax3.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax3.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.Stokes_V_checkbutton.isChecked():
         if sire.StkV_CT[3] == 0:
@@ -181,6 +201,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax4.set_title("Stokes $V$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax4.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax4.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax4.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax4.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.T_checkbutton.isChecked():
         if sire.T_CT[3] == 0:
@@ -198,6 +220,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax5.set_title("T [K]", fontsize=sire.fontsize_titles)
         sire.sc1.ax5.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax5.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax5.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax5.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.B_checkbutton.isChecked():
         if sire.model2_checkbutton.isChecked():
@@ -228,6 +252,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax6.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
         sire.sc1.ax6.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax6.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax6.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax6.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.V_checkbutton.isChecked():
         if sire.model2_checkbutton.isChecked():
@@ -255,6 +281,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax7.set_title("$v_\mathrm{{LOS}}$ [km/s]", fontsize=sire.fontsize_titles)
         sire.sc1.ax7.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax7.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax7.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax7.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.G_checkbutton.isChecked():
         if sire.model2_checkbutton.isChecked():
@@ -284,6 +312,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax8.set_title("$\\gamma$ [deg.]", fontsize=sire.fontsize_titles)
         sire.sc1.ax8.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax8.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax8.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax8.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.A_checkbutton.isChecked():
         if sire.model2_checkbutton.isChecked():
@@ -313,6 +343,8 @@ def update_canvas(sire,sir):
         sire.sc1.ax9.set_title("$\\phi$ [deg.]", fontsize=sire.fontsize_titles)
         sire.sc1.ax9.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax9.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc1.ax9.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
+        sire.sc1.ax9.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     del model1, model2, obs_prof, binary_map, mac1_file, mac2_file
 
@@ -670,6 +702,39 @@ def set_wavelength_range(sire):
         sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
 
 
+def set_xy_lim(sire):
+    i = str(sire.match)
+    if int(sire.x_min_entry.text()) >= 0 and int(sire.x_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['x'] and int(sire.y_min_entry.text()) >= 0 and int(sire.y_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['y']:
+        sire.dataset_dict[i]["sir"].x_min = int(sire.x_min_entry.text())
+        sire.dataset_dict[i]["sir"].x_max = int(sire.x_max_entry.text())
+        sire.dataset_dict[i]["sir"].y_min = int(sire.y_min_entry.text())
+        sire.dataset_dict[i]["sir"].y_max = int(sire.y_max_entry.text())
+        sire.change_canvas()
+        click(sire, sire.dataset_dict[i])
+        update_pixel_info(sire, sire.dataset_dict[i])
+    else:
+        msg = QMessageBox()
+        msg.setText("Selected range out of bounds.")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec()
+        sire.x_min_entry.setText(str(sire.dataset_dict[i]["sir"].x_min))
+        sire.x_max_entry.setText(str(sire.dataset_dict[i]["sir"].x_max))
+        sire.y_min_entry.setText(str(sire.dataset_dict[i]["sir"].y_min))
+        sire.y_max_entry.setText(str(sire.dataset_dict[i]["sir"].y_max))
+
+def reset_xy_lim(sire):
+    i = str(sire.match)
+    sire.dataset_dict[i]["sir"].x_min = 0
+    sire.dataset_dict[i]["sir"].x_max = int(sire.dataset_dict[i]["sir"].Attributes['x'])
+    sire.dataset_dict[i]["sir"].y_min = 0
+    sire.dataset_dict[i]["sir"].y_max = int(sire.dataset_dict[i]["sir"].Attributes['y'])
+    sire.x_min_entry.setText(str(sire.dataset_dict[i]["sir"].x_min))
+    sire.x_max_entry.setText(str(sire.dataset_dict[i]["sir"].x_max))
+    sire.y_min_entry.setText(str(sire.dataset_dict[i]["sir"].y_min))
+    sire.y_max_entry.setText(str(sire.dataset_dict[i]["sir"].y_max))
+    sire.change_canvas()
+    click(sire, sire.dataset_dict[i])
+    update_pixel_info(sire, sire.dataset_dict[i])
 
 def set_optical_depth_range(sire):
     i = str(sire.match)
