@@ -638,6 +638,11 @@ def save_CT_settings(sire):
     sire.settings.setValue('StkQ_CT',sire.StkQ_CT)
     sire.settings.setValue('StkU_CT',sire.StkU_CT)
     sire.settings.setValue('StkV_CT',sire.StkV_CT)
+    sire.settings.setValue('T_CT',sire.T_CT)
+    sire.settings.setValue('B_CT',sire.B_CT)
+    sire.settings.setValue('V_CT',sire.V_CT)
+    sire.settings.setValue('G_CT',sire.G_CT)
+    sire.settings.setValue('A_CT',sire.A_CT)
 
 def update_and_set(self,sire):
     sire.StkI_CT[0] = self.CT_StkI.currentText()
@@ -712,29 +717,47 @@ def preferences_layouts(self,sire):
 
     self.preferences_layout.addWidget(self.fontsize_label,0,0)
     self.preferences_layout.addWidget(self.fontsize_btn,0,1)
-
     self.preferences_layout.addWidget(self.fontsize_titles_map_label,1,0)
     self.preferences_layout.addWidget(self.fontsize_titles_map_entry,1,1)
-
     self.preferences_layout.addWidget(self.fontsize_axislabels_map_label,2,0)
     self.preferences_layout.addWidget(self.fontsize_axislabels_map_entry,2,1)
-
     self.preferences_layout.addWidget(self.fontsize_ticklabels_map_label,3,0)
     self.preferences_layout.addWidget(self.fontsize_ticklabels_map_entry,3,1)
+
+    self.preferences_layout.addWidget(self.plotting_label,4,0)
+    self.preferences_layout.addWidget(self.plotting_btn,4,1)
+    self.preferences_layout.addWidget(self.line_widths_label,5,0)
+    self.preferences_layout.addWidget(self.line_widths_entry,5,1)
 
     self.setLayout(self.preferences_layout)
 
 def preferences_widgets(self,sire):
     self.fontsize_label = QLabel("Font sizes")
     self.fontsize_label.setStyleSheet("font-weight: bold")
-    self.fontsize_titles_map_label = QLabel("Titles: ")
-    self.fontsize_titles_map_entry = QLineEdit(self)
-    self.fontsize_axislabels_map_label = QLabel("Axis labels: ")
-    self.fontsize_axislabels_map_entry = QLineEdit(self)
-    self.fontsize_ticklabels_map_label = QLabel("Tick labels: ")
-    self.fontsize_ticklabels_map_entry = QLineEdit(self)
     self.fontsize_btn = QPushButton("Set font sizes")
     self.fontsize_btn.clicked.connect(lambda: set_font_sizes(self,sire))
+    self.fontsize_titles_map_label = QLabel("Titles: ")
+    self.fontsize_titles_map_entry = QLineEdit(self)
+    self.fontsize_titles_map_entry.setValidator(sire.only_int)
+    self.fontsize_axislabels_map_label = QLabel("Axis labels: ")
+    self.fontsize_axislabels_map_entry = QLineEdit(self)
+    self.fontsize_axislabels_map_entry.setValidator(sire.only_int)
+    self.fontsize_ticklabels_map_label = QLabel("Tick labels: ")
+    self.fontsize_ticklabels_map_entry = QLineEdit(self)
+    self.fontsize_ticklabels_map_entry.setValidator(sire.only_int)
     self.fontsize_titles_map_entry.setText(str(sire.fontsize_titles))
     self.fontsize_axislabels_map_entry.setText(str(sire.fontsize_axislabels))
     self.fontsize_ticklabels_map_entry.setText(str(sire.fontsize_ticklabels))
+
+    self.plotting_label = QLabel("Plotting preferences")
+    self.plotting_label.setStyleSheet("font-weight: bold")
+    self.plotting_btn = QPushButton("Set plotting preferences")
+    self.plotting_btn.clicked.connect(lambda: set_plotting_preferences(self,sire))
+    self.line_widths_label = QLabel("Line widths: ")
+    self.line_widths_entry = QLineEdit(self)
+    self.line_widths_entry.setText(str(sire.line_widths))
+    self.line_widths_entry.setValidator(sire.only_double)
+
+
+
+

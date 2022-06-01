@@ -58,11 +58,28 @@ class SIRExplorer(QWidget):
             self.StkV_CT = self.settings.value('StkV_CT')
         else:
             self.StkV_CT = ['bwr', -0.005, 0.005, 1, 1]
-        self.T_CT = ['gray', 6500, 7500, 1, 1]
-        self.G_CT = ['bwr', 0, 180, 1, 1]
-        self.A_CT = ['hsv', 0, 360, 1, 1]
-        self.V_CT = ['bwr', -4, 4, 1, 1]
-        self.B_CT = ['viridis', 0, 2000, 1, 1]
+        if self.settings.value('T_CT') is not None:
+            self.T_CT = self.settings.value('T_CT')
+        else:
+            self.T_CT = ['gray', 6500, 7500, 1, 1]
+        if self.settings.value('B_CT') is not None:
+            self.B_CT = self.settings.value('B_CT')
+        else:
+            self.B_CT = ['viridis', 0, 2000, 1, 1]
+        if self.settings.value('V_CT') is not None:
+            self.V_CT = self.settings.value('V_CT')
+        else:
+            self.V_CT = ['bwr', -4, 4, 1, 1]
+        if self.settings.value('G_CT') is not None:
+            self.G_CT = self.settings.value('G_CT')
+        else:
+            self.G_CT = ['bwr', 0, 180, 1, 1]
+        if self.settings.value('A_CT') is not None:
+            self.A_CT = self.settings.value('A_CT')
+        else:
+            self.A_CT = ['hsv', 0, 360, 1, 1]
+
+
         self.CT_options = ['hsv', 'gray', 'gray_r', 'viridis','bwr', 'bwr_r','hot', 'plasma', 'inferno', 'magma', 'cividis',
                             'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
                             'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
@@ -80,7 +97,7 @@ class SIRExplorer(QWidget):
         self.fontsize_titles = 7
         self.fontsize_axislabels = 7
         self.fontsize_ticklabels = 7
-        self.linewidth = 1
+        self.line_widths = 1
 
         self.UI()
         self.show()
@@ -304,14 +321,20 @@ class SIRExplorer(QWidget):
 
     def mouseclicks(self, event):
         self.setFocus()
-        i=str(self.match)
-        self.dataset_dict[i]["sir"].current_x = event.xdata
-        self.dataset_dict[i]["sir"].current_y = event.ydata
-        if self.click_increment == 0:
-            self.click_increment = 1
-        click(self,self.dataset_dict[i])
-        self.change_canvas()
-        update_pixel_info(self, self.dataset_dict[i])
+        if event.xdata is not None and event.ydata is not None:
+            i=str(self.match)
+            self.dataset_dict[i]["sir"].current_x = event.xdata
+            self.dataset_dict[i]["sir"].current_y = event.ydata
+            if self.click_increment == 0:
+                self.click_increment = 1
+            click(self,self.dataset_dict[i])
+            self.change_canvas()
+            update_pixel_info(self, self.dataset_dict[i])
+        else:
+            msg = QMessageBox()
+            msg.setText("You must click one of the maps.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
 
     def keyPressEvent(self, event):
         i=str(self.match)

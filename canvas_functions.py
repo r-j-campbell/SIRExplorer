@@ -139,8 +139,8 @@ def update_canvas(sire,sir):
         sire.caxStkI = dividerStkI.append_axes("right", size="3%", pad=0)
         sire.cbar_StkI = sire.sc1.fig1.colorbar(StkI_map, cax=sire.caxStkI, pad=0)
         sire.cbar_StkI.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax1.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax1.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax1.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax1.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax1.set_title("Stokes $I$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax1.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax1.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -158,8 +158,8 @@ def update_canvas(sire,sir):
         sire.caxStkQ = dividerStkQ.append_axes("right", size="3%", pad=0)
         sire.cbar_StkQ = sire.sc1.fig1.colorbar(StkQ_map, cax=sire.caxStkQ, pad=0)
         sire.cbar_StkQ.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax2.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax2.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax2.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax2.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax2.set_title("Stokes $Q$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax2.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax2.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -177,8 +177,8 @@ def update_canvas(sire,sir):
         sire.caxStkU = dividerStkU.append_axes("right", size="3%", pad=0)
         sire.cbar_StkU = sire.sc1.fig1.colorbar(StkU_map, cax=sire.caxStkU, pad=0)
         sire.cbar_StkU.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax3.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax3.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax3.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax3.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax3.set_title("Stokes $U$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax3.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax3.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -196,8 +196,8 @@ def update_canvas(sire,sir):
         sire.caxStkV = dividerStkV.append_axes("right", size="3%", pad=0)
         sire.cbar_StkV = sire.sc1.fig1.colorbar(StkV_map, cax=sire.caxStkV, pad=0)
         sire.cbar_StkV.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax4.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax4.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax4.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax4.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax4.set_title("Stokes $V$ [$I_c$]", fontsize=sire.fontsize_titles)
         sire.sc1.ax4.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax4.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -215,8 +215,8 @@ def update_canvas(sire,sir):
         sire.caxT = dividerT.append_axes("right", size="3%", pad=0)
         sire.cbar_T = sire.sc1.fig1.colorbar(T_map, cax=sire.caxT, pad=0)
         sire.cbar_T.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax5.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax5.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax5.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax5.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax5.set_title("T [K]", fontsize=sire.fontsize_titles)
         sire.sc1.ax5.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax5.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -248,8 +248,8 @@ def update_canvas(sire,sir):
         sire.caxB = dividerB.append_axes("right", size="3%", pad=0)
         sire.cbar_B = sire.sc1.fig1.colorbar(B_map, cax=sire.caxB, pad=0)
         sire.cbar_B.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax6.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax6.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax6.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax6.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax6.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax6.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax6.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
@@ -276,8 +276,8 @@ def update_canvas(sire,sir):
         sire.caxV = dividerV.append_axes("right", size="3%", pad=0)
         sire.cbar_V = sire.sc1.fig1.colorbar(V_map, cax=sire.caxV, pad=0)
         sire.cbar_V.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax7.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax7.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax7.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax7.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax7.set_title("$v_\mathrm{{LOS}}$ [km/s]", fontsize=sire.fontsize_titles)
         sire.sc1.ax7.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax7.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -307,8 +307,8 @@ def update_canvas(sire,sir):
         sire.caxG = dividerG.append_axes("right", size="3%", pad=0)
         sire.cbar_G = sire.sc1.fig1.colorbar(G_map, cax=sire.caxG, pad=0)
         sire.cbar_G.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax8.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax8.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax8.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax8.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax8.set_title("$\\gamma$ [deg.]", fontsize=sire.fontsize_titles)
         sire.sc1.ax8.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax8.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -338,8 +338,8 @@ def update_canvas(sire,sir):
         sire.caxA = dividerA.append_axes("right", size="3%", pad=0)
         sire.cbar_A = sire.sc1.fig1.colorbar(A_map, cax=sire.caxA, pad=0)
         sire.cbar_A.ax.tick_params(labelsize=sire.fontsize_ticklabels)
-        sire.sc1.ax9.axvline(current_x, color='red', linestyle=':', linewidth=sire.linewidth)
-        sire.sc1.ax9.axhline(current_y, color='red', linestyle=':', linewidth=sire.linewidth)
+        sire.sc1.ax9.axvline(current_x, color='red', linestyle=':', linewidth=sire.line_widths)
+        sire.sc1.ax9.axhline(current_y, color='red', linestyle=':', linewidth=sire.line_widths)
         sire.sc1.ax9.set_title("$\\phi$ [deg.]", fontsize=sire.fontsize_titles)
         sire.sc1.ax9.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax9.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
@@ -367,64 +367,64 @@ def click(sire, sir):
         sire.sc3.ax4.clear()
 
     # Stokes plots
-    sire.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=sire.linewidth)
-    sire.sc2.ax1.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.linewidth)
-    sire.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Syn', linewidth=sire.linewidth)
+    sire.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=sire.line_widths)
+    sire.sc2.ax1.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
+    sire.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Syn', linewidth=sire.line_widths)
     sire.sc2.ax1.legend(frameon=False, fontsize=sire.fontsize_axislabels)
     sire.sc2.ax1.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=sire.linewidth)
-    sire.sc2.ax2.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.linewidth)
-    sire.sc2.ax2.plot(syn_prof[1, :, int(current_y), int(current_x)], linewidth=sire.linewidth)
+    sire.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax2.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
+    sire.sc2.ax2.plot(syn_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
     sire.sc2.ax2.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax3.plot(obs_prof[2, :, int(current_y), int(current_x)], linewidth=sire.linewidth)
-    sire.sc2.ax3.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.linewidth)
-    sire.sc2.ax3.plot(syn_prof[2, :, int(current_y), int(current_x)], linewidth=sire.linewidth)
+    sire.sc2.ax3.plot(obs_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax3.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
+    sire.sc2.ax3.plot(syn_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
     sire.sc2.ax3.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax4.plot(obs_prof[3, :, int(current_y), int(current_x)], linewidth=sire.linewidth)
-    sire.sc2.ax4.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.linewidth)
-    sire.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=sire.linewidth)
+    sire.sc2.ax4.plot(obs_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax4.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
+    sire.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
     sire.sc2.ax4.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
 
     # Model parameter plots
     sire.sc3.ax1.plot(model1[0, :, int(current_y), int(current_x)], model1[1, :, int(current_y), int(current_x)], label="mod 1",
-        linestyle='solid',color='red', linewidth=sire.linewidth)
+        linestyle='solid',color='red', linewidth=sire.line_widths)
     sire.sc3.ax1.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
-        linestyle=':', color='gray', linewidth=sire.linewidth)
+        linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax1.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax2.plot(model1[0, :, int(current_y), int(current_x)], model1[4, :, int(current_y), int(current_x)],
-        linestyle='solid', color='red', linewidth=sire.linewidth)
+        linestyle='solid', color='red', linewidth=sire.line_widths)
     sire.sc3.ax2.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
-        linestyle=':', color='gray', linewidth=sire.linewidth)
+        linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax2.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax3.plot(model1[0, :, int(current_y), int(current_x)], model1[5, :, int(current_y), int(current_x)] / (100 * 1000),
-        linestyle='solid', color='red', linewidth=sire.linewidth)
+        linestyle='solid', color='red', linewidth=sire.line_widths)
     sire.sc3.ax3.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
-        linestyle=':', color='gray', linewidth=sire.linewidth)
+        linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax3.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[6, :, int(current_y), int(current_x)],
-        linestyle='solid', color='red', linewidth=sire.linewidth)  # inclination
+        linestyle='solid', color='red', linewidth=sire.line_widths)  # inclination
     sire.sc3.ax4.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
-        linestyle=':', color='gray', linewidth=sire.linewidth)
+        linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[7, :, int(current_y), int(current_x)],
-        linestyle=':', color='red', linewidth=sire.linewidth)  # azimuth
+        linestyle=':', color='red', linewidth=sire.line_widths)  # azimuth
     sire.sc3.ax4.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     if sire.model2_checkbutton.isChecked():
         model2 = sir["sir"].model2
         sire.sc3.ax1.plot(model2[0, :, int(current_y), int(current_x)], model2[1, :, int(current_y), int(current_x)],
-            label="mod 2", linestyle='solid', color='blue', linewidth=sire.linewidth)
+            label="mod 2", linestyle='solid', color='blue', linewidth=sire.line_widths)
         sire.sc3.ax1.legend(frameon=False, fontsize=sire.fontsize_axislabels)
         sire.sc3.ax2.plot(model2[0, :, int(current_y), int(current_x)], model2[4, :, int(current_y), int(current_x)],
-            linestyle='solid', color='blue', linewidth=sire.linewidth)
+            linestyle='solid', color='blue', linewidth=sire.line_widths)
         sire.sc3.ax3.plot(model2[0, :, int(current_y), int(current_x)], model2[5, :, int(current_y), int(current_x)] / (100 * 1000),
-            linestyle='solid', color='blue', linewidth=sire.linewidth)
+            linestyle='solid', color='blue', linewidth=sire.line_widths)
         sire.sc3.ax4.plot(model2[0, :, int(current_y), int(current_x)], model2[6, :, int(current_y), int(current_x)],
-            linestyle='solid', color='blue', linewidth=sire.linewidth)  # inclination
+            linestyle='solid', color='blue', linewidth=sire.line_widths)  # inclination
         sire.sc3.ax4.plot(model2[0, :, int(current_y), int(current_x)], model2[7, :, int(current_y), int(current_x)],
-            linestyle=':', color='blue', linewidth=sire.linewidth)  # azimuth
+            linestyle=':', color='blue', linewidth=sire.line_widths)  # azimuth
         del model2
 
     sire.sc3.ax1.set_title("T [K]", fontsize=sire.fontsize_titles)
@@ -681,25 +681,17 @@ def clear_maps_and_remove_cbars(sire):
 
 def set_wavelength_range(sire):
     i = str(sire.match)
-    try:
-        if int(sire.wl_min_entry.text()) >= 0 and int(sire.wl_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['wl']:
-            sire.dataset_dict[i]["sir"].wl_min = int(sire.wl_min_entry.text())
-            sire.dataset_dict[i]["sir"].wl_max = int(sire.wl_max_entry.text())
-            click(sire, sire.dataset_dict[i])
-        else:
-            msg = QMessageBox()
-            msg.setText("Selected range out of bounds.")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec()
-            sire.wl_min_entry.setText(str(sire.dataset_dict[i]["sir"].wl_min))
-            sire.wl_max_entry.setText(str(sire.dataset_dict[i]["sir"].wl_max))
-    except ValueError:
+    if int(sire.wl_min_entry.text()) >= 0 and int(sire.wl_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['wl']:
+        sire.dataset_dict[i]["sir"].wl_min = int(sire.wl_min_entry.text())
+        sire.dataset_dict[i]["sir"].wl_max = int(sire.wl_max_entry.text())
+        click(sire, sire.dataset_dict[i])
+    else:
         msg = QMessageBox()
-        msg.setText("Value error. You must enter an integer as the index.")
+        msg.setText("Selected range out of bounds.")
         msg.setStandardButtons(QMessageBox.Ok)
         msg.exec()
-        sire.optical_depth_min_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_min))
-        sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
+        sire.wl_min_entry.setText(str(sire.dataset_dict[i]["sir"].wl_min))
+        sire.wl_max_entry.setText(str(sire.dataset_dict[i]["sir"].wl_max))
 
 
 def set_xy_lim(sire):
@@ -738,25 +730,17 @@ def reset_xy_lim(sire):
 
 def set_optical_depth_range(sire):
     i = str(sire.match)
-    try:
-        if int(sire.optical_depth_min_entry.text()) >= 0 and int(sire.optical_depth_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['optical_depth']:
-            sire.dataset_dict[i]["sir"].optical_depth_min = int(sire.optical_depth_min_entry.text())
-            sire.dataset_dict[i]["sir"].optical_depth_max = int(sire.optical_depth_max_entry.text())
-            click(sire, sire.dataset_dict[i])
-        else:
-            msg = QMessageBox()
-            msg.setText("Selected range out of bounds.")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec()
-            sire.optical_depth_min_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_min))
-            sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
-    except ValueError:
-            msg = QMessageBox()
-            msg.setText("Value error. You must enter an integer as the index.")
-            msg.setStandardButtons(QMessageBox.Ok)
-            msg.exec()
-            sire.optical_depth_min_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_min))
-            sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
+    if int(sire.optical_depth_min_entry.text()) >= 0 and int(sire.optical_depth_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['optical_depth']:
+        sire.dataset_dict[i]["sir"].optical_depth_min = int(sire.optical_depth_min_entry.text())
+        sire.dataset_dict[i]["sir"].optical_depth_max = int(sire.optical_depth_max_entry.text())
+        click(sire, sire.dataset_dict[i])
+    else:
+        msg = QMessageBox()
+        msg.setText("Selected range out of bounds.")
+        msg.setStandardButtons(QMessageBox.Ok)
+        msg.exec()
+        sire.optical_depth_min_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_min))
+        sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
 
 
 def change_frame(sire):
@@ -833,15 +817,9 @@ def update_pixel_info(sire, sir):
     sire.pixel_values.setText("X: %s Y: %s Z: %s [cm] OD: %s" %(str(int(sir["sir"].current_x)), str(int(sir["sir"].current_y)), str(Z), str(OD)))
 
 def set_font_sizes(self,sire):
-    try:
-        sire.fontsize_titles = int(self.fontsize_titles_map_entry.text())
-        sire.fontsize_axislabels = int(self.fontsize_axislabels_map_entry.text())
-        sire.fontsize_ticklabels = int(self.fontsize_ticklabels_map_entry.text())
-    except ValueError:
-        msg = QMessageBox()
-        msg.setText("Value error. You must enter an integer as the font size.")
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec()
-        self.fontsize_titles_map_entry.setText(str(sire.fontsize_titles))
-        self.fontsize_axislabels_map_entry.setText(str(sire.fontsize_axislabels))
-        self.fontsize_ticklabels_map_entry.setText(str(sire.fontsize_ticklabels))
+    sire.fontsize_titles = int(self.fontsize_titles_map_entry.text())
+    sire.fontsize_axislabels = int(self.fontsize_axislabels_map_entry.text())
+    sire.fontsize_ticklabels = int(self.fontsize_ticklabels_map_entry.text())
+
+def set_plotting_preferences(self,sire):
+    sire.line_widths = float(self.line_widths_entry.text())
