@@ -7,7 +7,7 @@ matplotlib.rc('image',interpolation='none',origin='lower')
 from PyQt5.QtWidgets import QMessageBox
 
 
-def show(sire, sir):
+def show(sire, sir): #clears maps (or creates figures if increment=0) then calls update_canvas to change the maps
     if sire.increment == 0:
         create_figure1(sire)
         create_figure2(sire)
@@ -20,7 +20,7 @@ def show(sire, sir):
     sire.sc1.fig1.canvas.draw()
 
 
-def open_files(sire,sir):
+def open_files(sire,sir): #loads files
     model1 = pyfits.open(sir["model_file"])[0].data
     obs_prof = pyfits.open(sir["obs_prof_file"])[0].data
     syn_prof = pyfits.open(sir["syn_prof_file"])[0].data
@@ -119,7 +119,7 @@ def open_files(sire,sir):
         sir["sir"].update_mac2(mac2_file)
 
 
-def update_canvas(sire,sir):
+def update_canvas(sire,sir): #changes the maps and updates the relevant dictionary
     model1 = sir["sir"].model1
     model2 = sir["sir"].model2
     obs_prof = sir["sir"].obs
@@ -349,7 +349,7 @@ def update_canvas(sire,sir):
     del model1, model2, obs_prof, binary_map, mac1_file, mac2_file
 
 
-def click(sire, sir):
+def click(sire, sir): #changes the plots and updates the relevant dictionary
     current_x = sir["sir"].current_x
     current_y = sir["sir"].current_y
     model1 = sir["sir"].model1
@@ -450,7 +450,7 @@ def click(sire, sir):
     del model1, obs_prof, syn_prof
 
 
-def create_figure1(sire):
+def create_figure1(sire): #creates figure for maps
     index=1
     total=0
     if sire.Stokes_checkbutton.isChecked():
@@ -536,7 +536,7 @@ def clear_fig1(sire):
         print("error!! dataset not found...")
 
 
-def create_figure2(sire):
+def create_figure2(sire): #creates figure for Stokes plots
     index=1
     total=0
     if sire.pI_checkbutton.isChecked():
@@ -581,7 +581,7 @@ def clear_fig2(sire):
         print("error!! dataset not found...")
 
 
-def create_figure3(sire):
+def create_figure3(sire): #creates figure for model plots
     index=1
     total=0
     if sire.mT_checkbutton.isChecked():
@@ -814,7 +814,7 @@ def update_pixel_info(sire, sir):
 
     Z = round(sir["sir"].model1[8, sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)], 3)
     OD = round(sir["sir"].model1[0, sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)], 3)
-    sire.pixel_values.setText("X: %s Y: %s Z: %s [cm] OD: %s" %(str(int(sir["sir"].current_x)), str(int(sir["sir"].current_y)), str(Z), str(OD)))
+    sire.pixel_values.setText("X: %s Y: %s Z: %s [km] OD: %s" %(str(int(sir["sir"].current_x)), str(int(sir["sir"].current_y)), str(Z), str(OD)))
 
 def set_font_sizes(self,sire):
     sire.fontsize_titles = int(self.fontsize_titles_map_entry.text())

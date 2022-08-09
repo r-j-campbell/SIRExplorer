@@ -21,9 +21,9 @@ def layouts(sire):
     sire.tab3 = QWidget()
     sire.tab4 = QWidget()
     sire.tabs.addTab(sire.tab1,"Files")
-    sire.tabs.addTab(sire.tab2,"Map options")
-    sire.tabs.addTab(sire.tab3,"Plot options")
-    sire.tabs.addTab(sire.tab4,"Pixel info")
+    sire.tabs.addTab(sire.tab2,"Maps")
+    sire.tabs.addTab(sire.tab3,"Plots")
+    sire.tabs.addTab(sire.tab4,"Information")
     sire.left_layout.addWidget(sire.tabs)
     #tab1
     sire.tab1_layout = QVBoxLayout()
@@ -202,7 +202,7 @@ def widgets(sire):
     sire.display_btn = QPushButton("Display")
     sire.display_btn.clicked.connect(lambda checked: sire.change_canvas())
 
-    sire.preferences_btn = QPushButton("Preferences")
+    sire.preferences_btn = QPushButton("Global Preferences")
     sire.preferences_btn.clicked.connect(lambda checked: sire.preferences())
 
     #-------tab1-------#
@@ -344,7 +344,7 @@ def widgets(sire):
     sire.G_label = QLabel("inclin. [deg.]")
     sire.A_label = QLabel("azi. [deg.]")
     sire.mic_label = QLabel("mic vel [cm/s]")
-    sire.mac_label = QLabel("mac vel [cm/s]")
+    sire.mac_label = QLabel("mac vel [km/s]")
     sire.mod1_label = QLabel("Mod 1")
     sire.mod1_label.setStyleSheet("background-color: white")
     sire.mod1_ff_value = QLabel("N/A")

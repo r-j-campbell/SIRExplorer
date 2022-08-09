@@ -6,6 +6,7 @@ from PyQt5.QtCore import QSettings
 from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets
 from Instruments import SIR
 from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth
+import os
 
 class SIRExplorer(QWidget):
     def __init__(self):
@@ -41,11 +42,11 @@ class SIRExplorer(QWidget):
         self.chi2_file_list = [None]
         self.binary_file_list = [None]
 
-        #[CT, min, max, automatic scaling flag, display flag]
+        #load settings for maps or set to default values if no settings saved
         if self.settings.value('StkI_CT') is not None:
             self.StkI_CT = self.settings.value('StkI_CT')
         else:
-            self.StkI_CT = ['gray', 0.9, 1.1, 1, 1]
+            self.StkI_CT = ['gray', 0.9, 1.1, 1, 1] #[cmap, vmin, vmax, automatic scaling flag, display flag]
         if self.settings.value('StkQ_CT') is not None:
             self.StkQ_CT = self.settings.value('StkQ_CT')
         else:
@@ -215,71 +216,113 @@ class SIRExplorer(QWidget):
 
     def autofill(self):
         value = str(self.select_folder.currentText())+"/mod1.fits"
-        if value not in self.model1_file_list:
-            self.model1_file_list.append(value)
-            self.select_model1.addItem(value)
-        index = self.select_model1.findText(value)
-        if index >= 0:
-            self.select_model1.setCurrentIndex(index)
-        del value
+        if os.path.exists(value):
+            if value not in self.model1_file_list:
+                self.model1_file_list.append(value)
+                self.select_model1.addItem(value)
+            index = self.select_model1.findText(value)
+            if index >= 0:
+                self.select_model1.setCurrentIndex(index)
+            del value
+        else:
+            msg = QMessageBox()
+            msg.setText("Primary model file does not exist in selected folder.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
 
         value = str(self.select_folder.currentText())+"/obs_prof.fits"
-        if value not in self.obs_prof_file_list:
-            self.obs_prof_file_list.append(value)
-            self.select_obs_prof.addItem(value)
-        index = self.select_obs_prof.findText(value)
-        if index >= 0:
-            self.select_obs_prof.setCurrentIndex(index)
-        del value
+        if os.path.exists(value):
+            if value not in self.obs_prof_file_list:
+                self.obs_prof_file_list.append(value)
+                self.select_obs_prof.addItem(value)
+            index = self.select_obs_prof.findText(value)
+            if index >= 0:
+                self.select_obs_prof.setCurrentIndex(index)
+            del value
+        else:
+            msg = QMessageBox()
+            msg.setText("Observed profiles file does not exist in selected folder.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
 
         value = str(self.select_folder.currentText())+"/syn_prof.fits"
-        if value not in self.syn_prof_file_list:
-            self.syn_prof_file_list.append(value)
-            self.select_syn_prof.addItem(value)
-        index = self.select_syn_prof.findText(value)
-        if index >= 0:
-            self.select_syn_prof.setCurrentIndex(index)
-        del value
+        if os.path.exists(value):
+            if value not in self.syn_prof_file_list:
+                self.syn_prof_file_list.append(value)
+                self.select_syn_prof.addItem(value)
+            index = self.select_syn_prof.findText(value)
+            if index >= 0:
+                self.select_syn_prof.setCurrentIndex(index)
+            del value
+        else:
+            msg = QMessageBox()
+            msg.setText("Synthetic profiles file does not exist in selected folder.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
 
         if self.model2_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/mod2.fits"
-            if value not in self.model2_file_list:
-                self.model2_file_list.append(value)
-                self.select_model2.addItem(value)
-            index = self.select_model2.findText(value)
-            if index >= 0:
-                self.select_model2.setCurrentIndex(index)
-            del value
+            if os.path.exists(value):
+                if value not in self.model2_file_list:
+                    self.model2_file_list.append(value)
+                    self.select_model2.addItem(value)
+                index = self.select_model2.findText(value)
+                if index >= 0:
+                    self.select_model2.setCurrentIndex(index)
+                del value
+            else:
+                msg = QMessageBox()
+                msg.setText("Secondary model file does not exist in selected folder.")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
 
         if self.mac1_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/mac1.fits"
-            if value not in self.mac1_file_list:
-                self.mac1_file_list.append(value)
-                self.select_mac1.addItem(value)
-            index = self.select_mac1.findText(value)
-            if index >= 0:
-                self.select_mac1.setCurrentIndex(index)
-            del value
+            if os.path.exists(value):
+                if value not in self.mac1_file_list:
+                    self.mac1_file_list.append(value)
+                    self.select_mac1.addItem(value)
+                index = self.select_mac1.findText(value)
+                if index >= 0:
+                    self.select_mac1.setCurrentIndex(index)
+                del value
+            else:
+                msg = QMessageBox()
+                msg.setText("Primary macroturbulence file does not exist in selected folder.")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
 
         if self.mac2_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/mac2.fits"
-            if value not in self.mac2_file_list:
-                self.mac2_file_list.append(value)
-                self.select_mac2.addItem(value)
-            index = self.select_mac2.findText(value)
-            if index >= 0:
-                self.select_mac2.setCurrentIndex(index)
-            del value
+            if os.path.exists(value):
+                if value not in self.mac2_file_list:
+                    self.mac2_file_list.append(value)
+                    self.select_mac2.addItem(value)
+                index = self.select_mac2.findText(value)
+                if index >= 0:
+                    self.select_mac2.setCurrentIndex(index)
+                del value
+            else:
+                msg = QMessageBox()
+                msg.setText("Secondary macroturbulence file does not exist in selected folder.")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
 
         if self.binary_checkbutton.isChecked():
             value = str(self.select_folder.currentText())+"/binary.fits"
-            if value not in self.binary_file_list:
-                self.binary_file_list.append(value)
-                self.select_binary.addItem(value)
-            index = self.select_binary.findText(value)
-            if index >= 0:
-                self.select_binary.setCurrentIndex(index)
-            del value
+            if os.path.exists(value):
+                if value not in self.binary_file_list:
+                    self.binary_file_list.append(value)
+                    self.select_binary.addItem(value)
+                index = self.select_binary.findText(value)
+                if index >= 0:
+                    self.select_binary.setCurrentIndex(index)
+                del value
+            else:
+                msg = QMessageBox()
+                msg.setText("Binary file does not exist in selected folder.")
+                msg.setStandardButtons(QMessageBox.Ok)
+                msg.exec()
 
     def get_all_values(self,nested_dictionary,i,match): #searches nested dictionary for datasets that are already loaded
         for key, value in nested_dictionary.items():
@@ -292,7 +335,7 @@ class SIRExplorer(QWidget):
                     self.match = i-1
                     return
 
-    def change_canvas(self):
+    def change_canvas(self): #changes the map figure
         self.flag=False
         self.get_all_values(self.dataset_dict,0,self.select_model1.currentText())
         if self.flag == True: #if match is found
@@ -319,7 +362,7 @@ class SIRExplorer(QWidget):
                 self.click_increment=1
             self.increment=1
 
-    def mouseclicks(self, event):
+    def mouseclicks(self, event): #called when user clicks one of the maps
         self.setFocus()
         if event.xdata is not None and event.ydata is not None:
             i=str(self.match)
@@ -336,50 +379,53 @@ class SIRExplorer(QWidget):
             msg.setStandardButtons(QMessageBox.Ok)
             msg.exec()
 
-    def keyPressEvent(self, event):
-        i=str(self.match)
-        if event.key() == Qt.Key_Up:
-            if int(self.dataset_dict[i]["sir"].current_y) + 1 < self.dataset_dict[i]["sir"].Attributes["y"]:
-                self.dataset_dict[i]["sir"].current_y = self.dataset_dict[i]["sir"].current_y + 1
-                click(self,self.dataset_dict[i])
-                self.change_canvas()
-                update_pixel_info(self, self.dataset_dict[i])
-        if event.key() == Qt.Key_Right:
-            if int(self.dataset_dict[i]["sir"].current_x) + 1 < self.dataset_dict[i]["sir"].Attributes["x"]:
-                self.dataset_dict[i]["sir"].current_x = self.dataset_dict[i]["sir"].current_x + 1
-                click(self,self.dataset_dict[i])
-                self.change_canvas()
-                update_pixel_info(self, self.dataset_dict[i])
-        if event.key() == Qt.Key_Down:
-            if int(self.dataset_dict[i]["sir"].current_y) - 1 >= 0:
-                self.dataset_dict[i]["sir"].current_y = self.dataset_dict[i]["sir"].current_y - 1
-                click(self,self.dataset_dict[i])
-                self.change_canvas()
-                update_pixel_info(self, self.dataset_dict[i])
-        if event.key() == Qt.Key_Left:
-            if int(self.dataset_dict[i]["sir"].current_x) - 1 >= 0:
-                self.dataset_dict[i]["sir"].current_x = self.dataset_dict[i]["sir"].current_x - 1
-                click(self,self.dataset_dict[i])
-                self.change_canvas()
-                update_pixel_info(self, self.dataset_dict[i])
-        if event.key() == Qt.Key_Q:
-            self.frame_scale.setSliderPosition(int(self.frame_scale.value()-1))
-            change_frame(self)
-        if event.key() == Qt.Key_E:
-            self.frame_scale.setSliderPosition(int(self.frame_scale.value()+1))
-            change_frame(self)
-        if event.key() == Qt.Key_A:
-            self.wl_scale.setSliderPosition(int(self.wl_scale.value()-1))
-            change_wl(self)
-        if event.key() == Qt.Key_D:
-            self.wl_scale.setSliderPosition(int(self.wl_scale.value()+1))
-            change_wl(self)
-        if event.key() == Qt.Key_Z:
-            self.optical_depth_scale.setSliderPosition(int(self.optical_depth_scale.value()-1))
-            change_optical_depth(self)
-        if event.key() == Qt.Key_C:
-            self.optical_depth_scale.setSliderPosition(int(self.optical_depth_scale.value()+1))
-            change_optical_depth(self)
+    def keyPressEvent(self, event): #called when user presses up, down, left, right, Q, E, A, D, Z or C keys
+        if self.increment == 1:
+            i=str(self.match)
+            if event.key() == Qt.Key_Up:
+                if int(self.dataset_dict[i]["sir"].current_y) + 1 < self.dataset_dict[i]["sir"].Attributes["y"]:
+                    self.dataset_dict[i]["sir"].current_y = self.dataset_dict[i]["sir"].current_y + 1
+                    click(self,self.dataset_dict[i])
+                    self.change_canvas()
+                    update_pixel_info(self, self.dataset_dict[i])
+            if event.key() == Qt.Key_Right:
+                if int(self.dataset_dict[i]["sir"].current_x) + 1 < self.dataset_dict[i]["sir"].Attributes["x"]:
+                    self.dataset_dict[i]["sir"].current_x = self.dataset_dict[i]["sir"].current_x + 1
+                    click(self,self.dataset_dict[i])
+                    self.change_canvas()
+                    update_pixel_info(self, self.dataset_dict[i])
+            if event.key() == Qt.Key_Down:
+                if int(self.dataset_dict[i]["sir"].current_y) - 1 >= 0:
+                    self.dataset_dict[i]["sir"].current_y = self.dataset_dict[i]["sir"].current_y - 1
+                    click(self,self.dataset_dict[i])
+                    self.change_canvas()
+                    update_pixel_info(self, self.dataset_dict[i])
+            if event.key() == Qt.Key_Left:
+                if int(self.dataset_dict[i]["sir"].current_x) - 1 >= 0:
+                    self.dataset_dict[i]["sir"].current_x = self.dataset_dict[i]["sir"].current_x - 1
+                    click(self,self.dataset_dict[i])
+                    self.change_canvas()
+                    update_pixel_info(self, self.dataset_dict[i])
+            if event.key() == Qt.Key_Q:
+                self.frame_scale.setSliderPosition(int(self.frame_scale.value()-1))
+                change_frame(self)
+            if event.key() == Qt.Key_E:
+                self.frame_scale.setSliderPosition(int(self.frame_scale.value()+1))
+                change_frame(self)
+            if event.key() == Qt.Key_A:
+                self.wl_scale.setSliderPosition(int(self.wl_scale.value()-1))
+                change_wl(self)
+            if event.key() == Qt.Key_D:
+                self.wl_scale.setSliderPosition(int(self.wl_scale.value()+1))
+                change_wl(self)
+            if event.key() == Qt.Key_Z:
+                self.optical_depth_scale.setSliderPosition(int(self.optical_depth_scale.value()-1))
+                change_optical_depth(self)
+            if event.key() == Qt.Key_C:
+                self.optical_depth_scale.setSliderPosition(int(self.optical_depth_scale.value()+1))
+                change_optical_depth(self)
+        else:
+            pass
 
     def colour_table_options(self):
         if self.CT_flag is None:
