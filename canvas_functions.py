@@ -26,11 +26,16 @@ def open_files(sire,sir): #loads files
     syn_prof = pyfits.open(sir["syn_prof_file"])[0].data
     model1 = np.squeeze(model1)
     obs_prof = np.squeeze(obs_prof)
+    if model1.ndim == 4:
+        sire.frame_scale.setMinimum(0)
+        sire.frame_scale.setMaximum(1)
+        sire.frame_scale.setEnabled(False)
     if model1.ndim == 5:  # executed only if there are multiple frames of data
         sir["sir"].Attributes["t"] = model1.shape[0]
         model1 = model1[sir["sir"].current_frame_index, :, :, :, :]
         obs_prof = obs_prof[sir["sir"].current_frame_index, :, :, :, :]
         syn_prof = syn_prof[sir["sir"].current_frame_index, :, :, :, :]
+        sire.frame_scale.setEnabled(True)
         if sire.flag == False:
             sire.frame_scale.setMinimum(0)
             sire.frame_scale.setMaximum(sir['sir'].Attributes["t"] - 1)
