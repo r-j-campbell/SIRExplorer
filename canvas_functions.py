@@ -18,6 +18,11 @@ def show(sire, sir): #clears maps (or creates figures if increment=0) then calls
         open_files(sire,sir)
     update_canvas(sire,sir)
     sire.sc1.fig1.canvas.draw()
+    if sir["sir"].Attributes["t"] > 0:
+        sire.frame_scale.setEnabled(True)
+    else:
+        sire.frame_scale.setEnabled(False)
+        sire.frame_scale.setValue(0)
 
 
 def open_files(sire,sir): #loads files
@@ -29,13 +34,11 @@ def open_files(sire,sir): #loads files
     if model1.ndim == 4:
         sire.frame_scale.setMinimum(0)
         sire.frame_scale.setMaximum(1)
-        sire.frame_scale.setEnabled(False)
     if model1.ndim == 5:  # executed only if there are multiple frames of data
         sir["sir"].Attributes["t"] = model1.shape[0]
         model1 = model1[sir["sir"].current_frame_index, :, :, :, :]
         obs_prof = obs_prof[sir["sir"].current_frame_index, :, :, :, :]
         syn_prof = syn_prof[sir["sir"].current_frame_index, :, :, :, :]
-        sire.frame_scale.setEnabled(True)
         if sire.flag == False:
             sire.frame_scale.setMinimum(0)
             sire.frame_scale.setMaximum(sir['sir'].Attributes["t"] - 1)
