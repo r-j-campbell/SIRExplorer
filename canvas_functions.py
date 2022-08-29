@@ -823,6 +823,14 @@ def update_pixel_info(sire, sir):
     Z = round(sir["sir"].model1[8, sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)], 3)
     OD = round(sir["sir"].model1[0, sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)], 3)
     sire.pixel_values.setText("X: %s Y: %s Z: %s [km] OD: %s" %(str(int(sir["sir"].current_x)), str(int(sir["sir"].current_y)), str(Z), str(OD)))
+    sire.obs_StkI_value.setText("Stokes I: %s" %(sir["sir"].obs[0, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
+    sire.obs_StkQ_value.setText("Stokes Q: %s" %(sir["sir"].obs[1, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
+    sire.obs_StkU_value.setText("Stokes U: %s" %(sir["sir"].obs[2, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
+    sire.obs_StkV_value.setText("Stokes V: %s" %(sir["sir"].obs[3, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
+    sire.syn_StkI_value.setText("Stokes I: %s" %(sir["sir"].syn[0, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
+    sire.syn_StkQ_value.setText("Stokes Q: %s" %(sir["sir"].syn[1, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
+    sire.syn_StkU_value.setText("Stokes U: %s" %(sir["sir"].syn[2, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
+    sire.syn_StkV_value.setText("Stokes V: %s" %(sir["sir"].syn[3, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
 
 def set_font_sizes(self,sire):
     sire.fontsize_titles = int(self.fontsize_titles_map_entry.text())
