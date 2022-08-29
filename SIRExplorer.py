@@ -11,6 +11,7 @@ import os
 class SIRExplorer(QWidget):
     def __init__(self):
         super().__init__()
+        QSettings().clear()
         self.setWindowTitle("SIR Explorer: PyQt version")
         self.desktop = QApplication.desktop()
         self.screenRect = self.desktop.screenGeometry()
@@ -46,41 +47,50 @@ class SIRExplorer(QWidget):
         if self.settings.value('StkI_CT') is not None:
             self.StkI_CT = self.settings.value('StkI_CT')
         else:
-            self.StkI_CT = ['gray', 0.9, 1.1, 1, 1] #[cmap, vmin, vmax, automatic scaling flag, display flag]
+            self.StkI_CT = ['gray', 0.9, 1.1, 1, 1, 'dashed', 'red'] #[cmap, vmin, vmax, automatic scaling flag, display flag, linestyle, linecolour]
         if self.settings.value('StkQ_CT') is not None:
             self.StkQ_CT = self.settings.value('StkQ_CT')
         else:
-            self.StkQ_CT = ['bwr', -0.005, 0.005, 1, 1]
+            self.StkQ_CT = ['bwr', -0.005, 0.005, 1, 1, 'dashed', 'red']
         if self.settings.value('StkU_CT') is not None:
             self.StkU_CT = self.settings.value('StkU_CT')
         else:
-            self.StkU_CT = ['bwr', -0.005, 0.005, 1, 1]
+            self.StkU_CT = ['bwr', -0.005, 0.005, 1, 1, 'dashed', 'red']
         if self.settings.value('StkV_CT') is not None:
             self.StkV_CT = self.settings.value('StkV_CT')
         else:
-            self.StkV_CT = ['bwr', -0.005, 0.005, 1, 1]
+            self.StkV_CT = ['bwr', -0.005, 0.005, 1, 1, 'dashed', 'red']
         if self.settings.value('T_CT') is not None:
             self.T_CT = self.settings.value('T_CT')
         else:
-            self.T_CT = ['gray', 6500, 7500, 1, 1]
+            self.T_CT = ['gray', 6500, 7500, 1, 1, 'dashed', 'red']
         if self.settings.value('B_CT') is not None:
             self.B_CT = self.settings.value('B_CT')
         else:
-            self.B_CT = ['viridis', 0, 2000, 1, 1]
+            self.B_CT = ['viridis', 0, 2000, 1, 1, 'dashed', 'red']
         if self.settings.value('V_CT') is not None:
             self.V_CT = self.settings.value('V_CT')
         else:
-            self.V_CT = ['bwr', -4, 4, 1, 1]
+            self.V_CT = ['bwr', -4, 4, 1, 1, 'dashed', 'red']
         if self.settings.value('G_CT') is not None:
             self.G_CT = self.settings.value('G_CT')
         else:
-            self.G_CT = ['bwr', 0, 180, 1, 1]
+            self.G_CT = ['bwr', 0, 180, 1, 1, 'dashed', 'cyan']
         if self.settings.value('A_CT') is not None:
             self.A_CT = self.settings.value('A_CT')
         else:
-            self.A_CT = ['hsv', 0, 360, 1, 1]
-
-
+            self.A_CT = ['hsv', 0, 360, 1, 1, 'dashed', 'red']
+        #uncomment below to reset Qsettings to default
+        # self.StkI_CT = ['gray', 0.9, 1.1, 1, 1, 'dashed', 'red']
+        # self.StkQ_CT = ['bwr', -0.005, 0.005, 1, 1, 'dashed', 'red']
+        # self.StkU_CT = ['bwr', -0.005, 0.005, 1, 1, 'dashed', 'red']
+        # self.StkV_CT = ['bwr', -0.005, 0.005, 1, 1, 'dashed', 'red']
+        # self.T_CT = ['gray', 6500, 7500, 1, 1, 'dashed', 'red']
+        # self.B_CT = ['viridis', 0, 2000, 1, 1, 'dashed', 'red']
+        # self.V_CT = ['bwr', -4, 4, 1, 1, 'dashed', 'red']
+        # self.G_CT = ['bwr', 0, 180, 1, 1, 'dashed', 'cyan']
+        # self.A_CT = ['hsv', 0, 360, 1, 1, 'dashed', 'red']
+        # print(self.V_CT)
         self.CT_options = ['hsv', 'gray', 'gray_r', 'viridis','bwr', 'bwr_r','hot', 'plasma', 'inferno', 'magma', 'cividis',
                             'Greys', 'Purples', 'Blues', 'Greens', 'Oranges', 'Reds',
                             'YlOrBr', 'YlOrRd', 'OrRd', 'PuRd', 'RdPu', 'BuPu',
@@ -99,6 +109,8 @@ class SIRExplorer(QWidget):
         self.fontsize_axislabels = 7
         self.fontsize_ticklabels = 7
         self.line_widths = 1
+        self.line_styles = ['solid', 'dotted', 'dashed', 'dashdot']
+        self.line_colours = ['black', 'gray', 'blue', 'red', 'green', 'white', 'yellow', 'purple', 'orange', 'magenta', 'cyan']
 
         self.UI()
         self.show()
