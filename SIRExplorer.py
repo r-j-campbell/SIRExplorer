@@ -3,7 +3,7 @@ from PyQt5.Qt import Qt
 import sys
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtCore import QSettings
-from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets
+from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets, sfa_layouts, sfa_widgets
 from Instruments import SIR
 from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth
 import os
@@ -22,6 +22,7 @@ class SIRExplorer(QWidget):
 
         self.CT_flag = None
         self.preferences_flag = None
+        self.sfa_flag = None
 
         self.only_int = QIntValidator()
         self.only_double = QDoubleValidator()
@@ -486,6 +487,14 @@ class SIRExplorer(QWidget):
             self.preferences_flag.close()
             self.preferences_flag = None
 
+    def sfa(self):
+        if self.sfa_flag is None:
+            self.sfa_flag = StrongFieldApproximation(self)
+            self.sfa_flag.show()
+        else:
+            self.sfa_flag.close()
+            self.sfa_flag = None
+
 class ColourTables(QWidget):
     def __init__(self,sire):
         super().__init__()
@@ -497,6 +506,12 @@ class Preferences(QWidget):
         super().__init__()
         preferences_widgets(self,sire)
         preferences_layouts(self,sire)
+
+class StrongFieldApproximation(QWidget):
+    def __init__(self,sire):
+        super().__init__()
+        sfa_widgets(self,sire)
+        sfa_layouts(self,sire)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

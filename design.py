@@ -4,7 +4,7 @@ import matplotlib
 matplotlib.use('Qt5Agg')
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
-
+import numpy as np
 from canvas_functions import *
 
 def layouts(sire):
@@ -105,6 +105,7 @@ def layouts(sire):
     sire.tab3_optical_depth_min_layout.addWidget(sire.optical_depth_max_label)
     sire.tab3_optical_depth_min_layout.addWidget(sire.optical_depth_max_entry)
     sire.tab3_layout.addWidget(sire.optical_depth_range_btn)
+    sire.tab3_layout.addWidget(sire.sfa_btn)
     sire.tab3_layout.addStretch(1)
     sire.tab3.setLayout(sire.tab3_layout)
 
@@ -344,6 +345,8 @@ def widgets(sire):
     sire.optical_depth_max_entry.setValidator(sire.only_int)
     sire.optical_depth_range_btn = QPushButton("Set optical depth range")
     sire.optical_depth_range_btn.clicked.connect(lambda: set_optical_depth_range(sire))
+    sire.sfa_btn = QPushButton("SFA calculator")
+    sire.sfa_btn.clicked.connect(lambda checked: sire.sfa())
     #-------tab4-------#
     sire.parameter_label = QLabel("Parameter")
     sire.parameter_label.setStyleSheet("background-color: white")
@@ -862,6 +865,52 @@ def preferences_widgets(self,sire):
     self.line_widths_entry.setText(str(sire.line_widths))
     self.line_widths_entry.setValidator(sire.only_double)
 
+def sfa_layouts(self,sire):
+    self.sfa_layout = QGridLayout() #row,col
+    self.sfa_layout.addWidget(self.sfa_label,0,0)
+    self.sfa_layout.addWidget(self.dispersion_label,1,0)
+    self.sfa_layout.addWidget(self.gfactor_label,2,0)
+    self.sfa_layout.addWidget(self.rest_wl_label,3,0)
+    self.sfa_layout.addWidget(self.w1_label,4,0)
+    self.sfa_layout.addWidget(self.w2_label,5,0)
 
+    self.sfa_layout.addWidget(self.dispersion_entry,1,1)
+    self.sfa_layout.addWidget(self.gfactor_entry,2,1)
+    self.sfa_layout.addWidget(self.rest_wl_entry,3,1)
+    self.sfa_layout.addWidget(self.w1_entry,4,1)
+    self.sfa_layout.addWidget(self.w2_entry,5,1)
 
+    self.sfa_layout.addWidget(self.calculate_sfa_btn,6,0)
+    self.sfa_layout.addWidget(self.B_SFA_label,6,1)
 
+    self.setLayout(self.sfa_layout)
+def sfa_widgets(self,sire):
+    self.sfa_label = QLabel("Strong field approximation calculator")
+    self.dispersion_label = QLabel("Dispersion [Angstroms]")
+    self.gfactor_label = QLabel("Effective Lande g-factor")
+    self.rest_wl_label = QLabel("Rest wavelength [Angstroms]")
+    self.w1_label = QLabel("Position of blue lobe [pixels]")
+    self.w2_label = QLabel("Position of red lobe [pixels]")
+
+    self.dispersion_entry = QLineEdit(self)
+    self.dispersion_entry.setValidator(sire.only_double)
+    self.gfactor_entry = QLineEdit(self)
+    self.gfactor_entry.setValidator(sire.only_double)
+    self.rest_wl_entry = QLineEdit(self)
+    self.rest_wl_entry.setValidator(sire.only_double)
+    self.w1_entry = QLineEdit(self)
+    self.w1_entry.setValidator(sire.only_double)
+    self.w2_entry = QLineEdit(self)
+    self.w2_entry.setValidator(sire.only_double)
+
+    self.calculate_sfa_btn = QPushButton("Calculate")
+    self.calculate_sfa_btn.clicked.connect(lambda: calculate_sfa(self))
+    self.B_SFA_label = QLabel("")
+
+def calculate_sfa(self):
+    wl_0 = float(self.rest_wl_entry.text())
+    disp = float(self.dispersion_entry.text())
+    diff = float(self.w2_entry.text()) - float(self.w1_entry.text())
+    g = float(self.gfactor_entry.text())
+    B_SFA = str(np.round(((diff*disp)/((2*4.67E-13)*(wl_0**2)*g)),3))
+    self.B_SFA_label.setText(B_SFA+"[G]")
