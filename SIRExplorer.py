@@ -347,32 +347,63 @@ class SIRExplorer(QWidget):
                     self.match = i-1
                     return
 
+    def display_validation(self):
+        missing_files = []
+        if not os.path.exists(str(self.select_model1.currentText())):
+            missing_files.append("Primary models")
+        if not os.path.exists(str(self.select_obs_prof.currentText())):
+            missing_files.append("Observed profiles")
+        if not os.path.exists(str(self.select_syn_prof.currentText())):
+            missing_files.append("Synthetic profiles")
+        if not os.path.exists(str(self.select_model2.currentText())) and self.model2_checkbutton.isChecked():
+            missing_files.append("Secondary models")
+        if not os.path.exists(str(self.select_mac1.currentText())) and self.mac1_checkbutton.isChecked():
+            missing_files.append("Primary macroturbulence")
+        if not os.path.exists(str(self.select_mac2.currentText())) and self.mac2_checkbutton.isChecked():
+            missing_files.append("Secondary macroturbulence")
+        if not os.path.exists(str(self.select_binary.currentText())) and self.binary_checkbutton.isChecked():
+            missing_files.append("Binary map")
+
+        if len(missing_files) > 0:
+            msg = QMessageBox()
+            missing_message = ""
+            for m in range(0,len(missing_files)):
+                missing_message+=missing_files[m]+"\n"
+            msg.setText("The following files do not exist:\n"+missing_message)
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
+            return False
+        return True
+
     def change_canvas(self): #changes the map figure
-        self.flag=False
-        self.get_all_values(self.dataset_dict,0,self.select_model1.currentText())
-        if self.flag == True: #if match is found
-            i=str(self.match)
-            show(self,self.dataset_dict[i])
-        elif self.flag == False: #if match is not found
-            sir = SIR()
-            j=str(len(self.dataset_dict))
-            self.match = j
-            self.dataset_dict[j] = {'model_file': self.select_model1.currentText(),
-                                    'secondary_model_file': self.select_model2.currentText(),
-                                    'obs_prof_file': self.select_obs_prof.currentText(),
-                                    'syn_prof_file': self.select_syn_prof.currentText(),
-                                    'mac1_file': self.select_mac1.currentText(),
-                                    'mac2_file': self.select_mac2.currentText(),
-                                    'binary_file': self.select_binary.currentText(),
-                                    'sir': sir
-                                     }
-            show(self,self.dataset_dict[j])
-        if self.increment == 0:
-            click(self,self.dataset_dict[j])
-            update_pixel_info(self, self.dataset_dict[j])
-            if self.click_increment == 0:
-                self.click_increment=1
-            self.increment=1
+        if self.display_validation():
+            self.flag=False
+            self.get_all_values(self.dataset_dict,0,self.select_model1.currentText())
+            if self.flag == True: #if match is found
+                i=str(self.match)
+                show(self,self.dataset_dict[i])
+            elif self.flag == False: #if match is not found
+                sir = SIR()
+                j=str(len(self.dataset_dict))
+                self.match = j
+                self.dataset_dict[j] = {'model_file': self.select_model1.currentText(),
+                                        'secondary_model_file': self.select_model2.currentText(),
+                                        'obs_prof_file': self.select_obs_prof.currentText(),
+                                        'syn_prof_file': self.select_syn_prof.currentText(),
+                                        'mac1_file': self.select_mac1.currentText(),
+                                        'mac2_file': self.select_mac2.currentText(),
+                                        'binary_file': self.select_binary.currentText(),
+                                        'sir': sir
+                                         }
+                show(self,self.dataset_dict[j])
+            if self.increment == 0:
+                click(self,self.dataset_dict[j])
+                update_pixel_info(self, self.dataset_dict[j])
+                if self.click_increment == 0:
+                    self.click_increment=1
+                self.increment=1
+        else:
+            pass
 
     def mouseclicks(self, event): #called when user clicks one of the maps
         self.setFocus()
