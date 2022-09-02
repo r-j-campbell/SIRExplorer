@@ -53,6 +53,7 @@ def layouts(sire):
     #tab2
     sire.tab2_layout = QVBoxLayout()
     sire.tab2_layout.addWidget(sire.clear_map_btn)
+    sire.tab2_layout.addWidget(sire.select_map_mode)
     sire.tab2_layout.addWidget(sire.Stokes_checkbutton)
     sire.tab2_layout.addWidget(sire.Stokes_Q_checkbutton)
     sire.tab2_layout.addWidget(sire.Stokes_U_checkbutton)
@@ -156,6 +157,7 @@ def layouts(sire):
 
     #display
     sire.left_layout.addWidget(sire.display_btn)
+    sire.left_layout.addWidget(sire.reload_btn)
     #preferences
     sire.left_layout.addWidget(sire.preferences_btn)
 
@@ -213,6 +215,10 @@ def widgets(sire):
     sire.display_btn = QPushButton("Display")
     sire.display_btn.clicked.connect(lambda checked: sire.change_canvas())
 
+    sire.reload_btn = QPushButton("Reload")
+    sire.reload_btn.clicked.connect(lambda checked: sire.reload())
+    sire.reload_btn.setEnabled(False)
+
     sire.preferences_btn = QPushButton("Global Preferences")
     sire.preferences_btn.clicked.connect(lambda checked: sire.preferences())
 
@@ -226,17 +232,6 @@ def widgets(sire):
     sire.mac1_checkbutton = QCheckBox("Include primary macroturbulence", sire)
     sire.mac2_checkbutton = QCheckBox("Include secondary macroturbulence", sire)
     sire.binary_checkbutton = QCheckBox("Include binary map", sire)
-
-    sire.clear_map_btn = QPushButton("Update maps")
-    sire.clear_map_btn.clicked.connect(lambda checked: clear_fig1(sire))
-
-    sire.colour_table_options_btn = QPushButton("Colour table options")
-    sire.colour_table_options_btn.clicked.connect(lambda checked: sire.colour_table_options())
-
-    sire.clear_profiles_btn = QPushButton("Update profiles axes")
-    sire.clear_profiles_btn.clicked.connect(lambda checked: clear_fig2(sire))
-    sire.clear_models_btn = QPushButton("Update models axes")
-    sire.clear_models_btn.clicked.connect(lambda checked: clear_fig3(sire))
 
     sire.autofill_btn = QPushButton("Autofill")
     sire.autofill_btn.clicked.connect(lambda checked: sire.autofill())
@@ -263,6 +258,12 @@ def widgets(sire):
     sire.binary_btn.clicked.connect(lambda checked: sire.get_binary())
     sire.select_binary = QComboBox(sire)
     #-------tab2-------#
+    sire.clear_map_btn = QPushButton("Update maps")
+    sire.clear_map_btn.clicked.connect(lambda checked: clear_fig1(sire))
+
+    sire.select_map_mode = QComboBox(sire)
+    sire.select_map_mode.addItems(sire.map_modes)
+      #  combo.setCurrentIndex(index)
     sire.Stokes_checkbutton = QCheckBox("Show observed Stokes I", sire)
     sire.Stokes_checkbutton.setChecked(True)
     sire.Stokes_Q_checkbutton = QCheckBox("Show observed Stokes Q", sire)
@@ -305,7 +306,15 @@ def widgets(sire):
     sire.reset_x_lim_btn = QPushButton("Reset x and y limits")
     sire.reset_x_lim_btn.clicked.connect(lambda: reset_xy_lim(sire))
 
+    sire.colour_table_options_btn = QPushButton("Colour table options")
+    sire.colour_table_options_btn.clicked.connect(lambda checked: sire.colour_table_options())
+
     #-------tab3-------#
+    sire.clear_profiles_btn = QPushButton("Update profiles axes")
+    sire.clear_profiles_btn.clicked.connect(lambda checked: clear_fig2(sire))
+    sire.clear_models_btn = QPushButton("Update models axes")
+    sire.clear_models_btn.clicked.connect(lambda checked: clear_fig3(sire))
+
     sire.pI_checkbutton = QCheckBox("Show Stokes I", sire)
     sire.pI_checkbutton.setChecked(True)
     sire.pQ_checkbutton = QCheckBox("Show Stokes Q", sire)

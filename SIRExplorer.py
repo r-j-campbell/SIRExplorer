@@ -5,7 +5,7 @@ from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtCore import QSettings
 from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets, sfa_layouts, sfa_widgets
 from Instruments import SIR
-from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth
+from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth, create_figure1,clear_fig1
 import os
 
 class SIRExplorer(QWidget):
@@ -20,10 +20,6 @@ class SIRExplorer(QWidget):
         self.setGeometry(0,0,int(self.appwidth),int(self.appheight))
         self.settings = QSettings("SIRE", "SIRE")
 
-        self.CT_flag = None
-        self.preferences_flag = None
-        self.sfa_flag = None
-
         self.only_int = QIntValidator()
         self.only_double = QDoubleValidator()
 
@@ -32,6 +28,7 @@ class SIRExplorer(QWidget):
         self.flag = None
         self.match = 0 #zero when no match is found, index of dataset_dict otherwise
         self.frame_changed_flag = 0 #1 when framescale released, otherwise 0
+        self.reload_flag = False #set to 1 when dataset_dict to be overwritten
 
         self.dataset_dict = {0: {"file": "first dummy value"}}
         self.folder_list = [None]
@@ -43,6 +40,11 @@ class SIRExplorer(QWidget):
         self.mac2_file_list = [None]
         self.chi2_file_list = [None]
         self.binary_file_list = [None]
+
+        self.map_modes = ["2 models (1 magnetic, 2 non-magnetic)", "2 models (both magnetic)"]
+        self.CT_flag = None
+        self.preferences_flag = None
+        self.sfa_flag = None
 
         #load settings for maps or set to default values if no settings saved
         if self.settings.value('StkI_CT') is not None:
@@ -376,13 +378,36 @@ class SIRExplorer(QWidget):
             return False
         return True
 
+    def reload(self):
+        self.reload_flag = True
+        self.sc1.fig1.clf()
+        create_figure1(self)
+        self.change_canvas()
+        self.reload_flag = False
+
     def change_canvas(self): #changes the map figure
         if self.display_validation():
             self.flag=False
             self.get_all_values(self.dataset_dict,0,self.select_model1.currentText())
             if self.flag == True: #if match is found
                 i=str(self.match)
-                show(self,self.dataset_dict[i])
+                sir = SIR()
+                if self.reload_flag == True:
+                    self.flag = False
+                    self.dataset_dict[i] = {'model_file': self.select_model1.currentText(),
+                                        'secondary_model_file': self.select_model2.currentText(),
+                                        'obs_prof_file': self.select_obs_prof.currentText(),
+                                        'syn_prof_file': self.select_syn_prof.currentText(),
+                                        'mac1_file': self.select_mac1.currentText(),
+                                        'mac2_file': self.select_mac2.currentText(),
+                                        'binary_file': self.select_binary.currentText(),
+                                        'sir': sir
+                                         }
+                    show(self,self.dataset_dict[i])
+                    click(self,self.dataset_dict[i])
+                    update_pixel_info(self, self.dataset_dict[i])
+                else:
+                    show(self,self.dataset_dict[i])
             elif self.flag == False: #if match is not found
                 sir = SIR()
                 j=str(len(self.dataset_dict))
