@@ -1,6 +1,6 @@
 import numpy as np
 
-class SIR: #files should be [t,St,y,x,wl]
+class SIR:
     def __init__(self):
         self.Attributes = {
             'wavelength': 0000, #rest wavelength, Angstroms
@@ -12,6 +12,10 @@ class SIR: #files should be [t,St,y,x,wl]
             'optical_depth':100, #num optical depth points
             'pxscalex': 0.1, #arcsec/pixel
             'pxscaley': 0.1,
+            'model2_flag': False,
+            'mac1_flag': False,
+            'mac2_flag': False,
+            'binary_flag': False
 
         }
         self.obs = np.empty([int(self.Attributes['S']+2), int(self.Attributes['wl']), int(self.Attributes['y']), int(self.Attributes['x'])])
@@ -51,4 +55,3 @@ class SIR: #files should be [t,St,y,x,wl]
         self.obs=obs
     def update_syn(self,syn):
         self.syn=syn
-

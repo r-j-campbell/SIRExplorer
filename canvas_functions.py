@@ -7,23 +7,67 @@ matplotlib.rc('image',interpolation='none',origin='lower')
 from PyQt5.QtWidgets import QMessageBox
 
 
-def show(sire, sir): #clears maps (or creates figures if increment=0) then calls update_canvas to change the maps
+def show(sire, sir):#clears maps (or creates figures if increment=0) then calls update_canvas to change the maps
     if sire.increment == 0:
         create_figure1(sire)
         create_figure2(sire)
         create_figure3(sire)
-        sire.reload_btn.setEnabled(True)
+        activate_widgets(sire)
     if sire.increment == 1:
         clear_maps_and_remove_cbars(sire)
-    if sire.flag == False or sire.frame_changed_flag == 1:
-        open_files(sire,sir)
-    update_canvas(sire,sir)
-    sire.sc1.fig1.canvas.draw()
+    if not sire.flag or sire.frame_changed_flag == 1:
+        open_files(sire, sir)
     if sir["sir"].Attributes["t"] > 0:
         sire.frame_scale.setEnabled(True)
     else:
         sire.frame_scale.setEnabled(False)
         sire.frame_scale.setValue(0)
+    if not sir["sir"].Attributes["model2_flag"]:
+        sire.select_map_mode.setEnabled(False)
+    else:
+        sire.select_map_mode.setEnabled(True)
+    update_canvas(sire, sir)
+    sire.sc1.fig1.canvas.draw()
+
+
+def activate_widgets(sire):
+    sire.reload_btn.setEnabled(True)
+    sire.clear_map_btn.setEnabled(True)
+    sire.select_map_mode.setEnabled(True)
+    sire.Stokes_checkbutton.setEnabled(True)
+    sire.Stokes_Q_checkbutton.setEnabled(True)
+    sire.Stokes_U_checkbutton.setEnabled(True)
+    sire.Stokes_V_checkbutton.setEnabled(True)
+    sire.T_checkbutton.setEnabled(True)
+    sire.B_checkbutton.setEnabled(True)
+    sire.V_checkbutton.setEnabled(True)
+    sire.G_checkbutton.setEnabled(True)
+    sire.A_checkbutton.setEnabled(True)
+    sire.x_min_entry.setEnabled(True)
+    sire.x_max_entry.setEnabled(True)
+    sire.y_min_entry.setEnabled(True)
+    sire.y_max_entry.setEnabled(True)
+    sire.set_x_lim_btn.setEnabled(True)
+    sire.reset_x_lim_btn.setEnabled(True)
+    sire.colour_table_options_btn.setEnabled(True)
+    sire.clear_profiles_btn.setEnabled(True)
+    sire.clear_models_btn.setEnabled(True)
+    sire.pI_checkbutton.setEnabled(True)
+    sire.pQ_checkbutton.setEnabled(True)
+    sire.pU_checkbutton.setEnabled(True)
+    sire.pV_checkbutton.setEnabled(True)
+    sire.mT_checkbutton.setEnabled(True)
+    sire.mB_checkbutton.setEnabled(True)
+    sire.mV_checkbutton.setEnabled(True)
+    sire.mG_checkbutton.setEnabled(True)
+    sire.wl_min_entry.setEnabled(True)
+    sire.wl_max_entry.setEnabled(True)
+    sire.wl_range_btn.setEnabled(True)
+    sire.optical_depth_min_entry.setEnabled(True)
+    sire.optical_depth_max_entry.setEnabled(True)
+    sire.optical_depth_range_btn.setEnabled(True)
+    sire.sfa_btn.setEnabled(True)
+
 
 def open_files(sire,sir): #loads files
     model1 = pyfits.open(sir["model_file"])[0].data
@@ -39,7 +83,7 @@ def open_files(sire,sir): #loads files
         model1 = model1[sir["sir"].current_frame_index, :, :, :, :]
         obs_prof = obs_prof[sir["sir"].current_frame_index, :, :, :, :]
         syn_prof = syn_prof[sir["sir"].current_frame_index, :, :, :, :]
-        if sire.flag == False:
+        if not sire.flag:
             sire.frame_scale.setMinimum(0)
             sire.frame_scale.setMaximum(sir['sir'].Attributes["t"] - 1)
     sir["sir"].Attributes["optical_depth"] = model1.shape[1]
@@ -50,36 +94,28 @@ def open_files(sire,sir): #loads files
     sir["sir"].update_obs(obs_prof)
     sir["sir"].update_syn(syn_prof)
 
-    if sire.flag == False:
+    if not sire.flag:
         sir["sir"].x_min = 0
         sir["sir"].x_max = sir["sir"].Attributes["x"] - 1
         sir["sir"].y_min = 0
         sir["sir"].y_max = sir["sir"].Attributes["y"] - 1
-        sire.x_min_entry.setEnabled(True)
         sire.x_min_entry.setText(str(0))
-        sire.x_max_entry.setEnabled(True)
         sire.x_max_entry.setText(str(sir["sir"].Attributes["x"] - 1))
-        sire.y_min_entry.setEnabled(True)
         sire.y_min_entry.setText(str(0))
-        sire.y_max_entry.setEnabled(True)
         sire.y_max_entry.setText(str(sir["sir"].Attributes["y"] - 1))
 
         sire.wl_scale.setMinimum(0)
         sire.wl_scale.setMaximum(sir["sir"].Attributes["wl"] - 1)
         sir["sir"].wl_min = 0
         sir["sir"].wl_max = sir["sir"].Attributes["wl"] - 1
-        sire.wl_min_entry.setEnabled(True)
         sire.wl_min_entry.setText(str(0))
-        sire.wl_max_entry.setEnabled(True)
         sire.wl_max_entry.setText(str(sir["sir"].Attributes["wl"] - 1))
 
         sire.optical_depth_scale.setMinimum(0)
         sire.optical_depth_scale.setMaximum(sir["sir"].Attributes["optical_depth"] - 1)
         sir["sir"].optical_depth_min = 0
         sir["sir"].optical_depth_max = sir["sir"].Attributes["optical_depth"] - 1
-        sire.optical_depth_min_entry.setEnabled(True)
         sire.optical_depth_min_entry.setText(str(0))
-        sire.optical_depth_max_entry.setEnabled(True)
         sire.optical_depth_max_entry.setText(str(sir["sir"].Attributes["optical_depth"] - 1))
 
     if sire.binary_checkbutton.isChecked():
@@ -88,6 +124,7 @@ def open_files(sire,sir): #loads files
         if binary_map.ndim == 3:  # executed only if there are multiple frames of data
             binary_map = binary_map[sir["sir"].current_frame_index, :, :]
         sir["sir"].update_binary(binary_map)
+        sir["sir"].Attributes["binary_flag"] = True
     else:
         binary_map = np.ones([sir["sir"].Attributes["y"], sir["sir"].Attributes["x"]])
         sir["sir"].update_binary(binary_map)
@@ -104,15 +141,21 @@ def open_files(sire,sir): #loads files
             mac1_file = mac1_file[sir["sir"].current_frame_index, :, :, :]
             mac2_file = mac2_file[sir["sir"].current_frame_index, :, :, :]
         sir["sir"].update_model2(model2)
+        sir["sir"].Attributes["model2_flag"] = True
         sir["sir"].update_mac1(mac1_file)
+        sir["sir"].Attributes["mac1_flag"] = True
         sir["sir"].update_mac2(mac2_file)
-    elif sire.model2_checkbutton.isChecked() == False and sire.mac1_checkbutton.isChecked():
+        sir["sir"].Attributes["mac2_flag"] = True
+
+    elif not sire.model2_checkbutton.isChecked() and sire.mac1_checkbutton.isChecked():
         mac1_file = pyfits.open(sir["mac1_file"])[0].data
         mac1_file = np.squeeze(mac1_file)
         if mac1_file.ndim == 4:  # executed only if there are multiple frames of data
             mac1_file = mac1_file[sir["sir"].current_frame_index, :, :, :]
         sir["sir"].updatemac1(mac1_file)
-    elif sire.model2_checkbutton.isChecked() and sire.mac1_checkbutton.isChecked() and sire.mac2_checkbutton.isChecked() == False:
+        sir["sir"].Attributes["mac1_flag"] = True
+
+    elif sire.model2_checkbutton.isChecked() and sire.mac1_checkbutton.isChecked() and not sire.mac2_checkbutton.isChecked():
         model2 = pyfits.open(sir["secondary_model_file"])[0].data
         model2 = np.squeeze(model2)
         mac1_file = pyfits.open(sir["mac1_file"])[0].data
@@ -121,10 +164,14 @@ def open_files(sire,sir): #loads files
             mac1_file = mac1_file[sir["sir"].current_frame_index, :, :, :]
             model2 = model2[sir["sir"].current_frame_index, :, :, :, :]
         sir["sir"].update_model2(model2)
+        sir["sir"].Attributes["model2_flag"] = True
         sir["sir"].update_mac1(mac1_file)
+        sir["sir"].Attributes["mac1_flag"] = True
         mac2_file = np.empty((3, model1.shape[2], model1.shape[3]))  # create dummy mac2 file
         mac2_file[1, :, :] = np.subtract(np.ones((model1.shape[2], model1.shape[3])), mac1_file[1, :, :])  # update dummy mac2 file filling factor as (1 - mac1) when mac2 not provided
         sir["sir"].update_mac2(mac2_file)
+        sir["sir"].Attributes["mac2_flag"] = False
+
 
 def update_canvas(sire,sir): #changes the maps and updates the relevant dictionary
     model1 = sir["sir"].model1
@@ -220,7 +267,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax4.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.T_checkbutton.isChecked():
-        if sire.model2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
+        if sir["sir"].Attributes["model2_flag"] == True and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
             combined_T = (model2[1, sir["sir"].current_optical_depth_index, :, :] * mac2_file[1, :, :]) + (model1[1, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :])
             if sire.V_CT[3] == 0:
                 T_map = sire.sc1.ax5.imshow(combined_T, origin='lower', cmap=sire.T_CT[0], vmin=sire.T_CT[1], vmax=sire.T_CT[2])
@@ -241,7 +288,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.cbar_T.ax.tick_params(labelsize=sire.fontsize_ticklabels)
         sire.sc1.ax5.axvline(current_x, color=sire.T_CT[6], linestyle=sire.T_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax5.axhline(current_y, color=sire.T_CT[6], linestyle=sire.T_CT[5], linewidth=sire.line_widths)
-        if sire.model2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)":
+        if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (both magnetic)":
             sire.sc1.ax5.set_title("T (mod 1) [K]", fontsize=sire.fontsize_titles)
         else:
             sire.sc1.ax5.set_title("T [K]", fontsize=sire.fontsize_titles)
@@ -251,7 +298,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax5.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.B_checkbutton.isChecked():
-        if sire.model2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
+        if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
             if sire.B_CT[3] == 0:
                 B_map = sire.sc1.ax6.imshow(
                     model1[4, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :] * binary_map, origin='lower',
@@ -269,8 +316,8 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             elif sire.B_CT[3] == 1:
                 B_map = sire.sc1.ax6.imshow(
                     model1[4, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
-                    cmap=sire.B_CT[0], interpolation='none')
-            if sire.model2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)":
+                    cmap=sire.B_CT[0])
+            if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (both magnetic)":
                 sire.sc1.ax6.set_title("B (mod 1) [G]", fontsize=sire.fontsize_titles)
             else:
                 sire.sc1.ax6.set_title("B [G]", fontsize=sire.fontsize_titles)
@@ -286,7 +333,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax6.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.V_checkbutton.isChecked():
-        if sire.model2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
+        if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
             combined_V = (model2[5, sir["sir"].current_optical_depth_index, :, :] * mac2_file[1, :, :]) + (model1[5, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :])
             if sire.V_CT[3] == 0:
                 V_map = sire.sc1.ax7.imshow((combined_V / (100 * 1000)), origin='lower', cmap=sire.V_CT[0], vmin=sire.V_CT[1], vmax=sire.V_CT[2])
@@ -365,7 +412,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax9.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     #mod 2 - only when selected in map mode
-    if sire.model2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)":
+    if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (both magnetic)":
         if sire.T_checkbutton.isChecked():
             if sire.T_CT[3] == 0:
                 T_map2 = sire.sc1.ax10.imshow(
@@ -473,6 +520,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
 
     del model1, model2, obs_prof, binary_map, mac1_file, mac2_file
 
+
 def click(sire, sir): #changes the plots and updates the relevant dictionary
     current_x = sir["sir"].current_x
     current_y = sir["sir"].current_y
@@ -536,7 +584,7 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
         linestyle=':', color='red', linewidth=sire.line_widths)  # azimuth
     sire.sc3.ax4.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
-    if sire.model2_checkbutton.isChecked():
+    if sir["sir"].Attributes["model2_flag"]:
         model2 = sir["sir"].model2
         sire.sc3.ax1.plot(model2[0, :, int(current_y), int(current_x)], model2[1, :, int(current_y), int(current_x)],
             label="mod 2", linestyle='solid', color='blue', linewidth=sire.line_widths)
@@ -572,6 +620,7 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
     sire.sc3.fig3.canvas.draw()
 
     del model1, obs_prof, syn_prof
+
 
 def create_figure1(sire): #creates figure for maps
     index=1
@@ -675,19 +724,21 @@ def create_figure1(sire): #creates figure for maps
         sire.sc1.ax14.set_facecolor('xkcd:black')
         index+=1
 
+
 def clear_fig1(sire):
     sire.sc1.fig1.clf()
     create_figure1(sire)
     sire.flag=False
     sire.get_all_values(sire.dataset_dict,0,sire.select_model1.currentText())
-    if sire.flag == True:
-        i=str(sire.match)
-        if sire.click_increment == 1:
+    if sire.flag:
+        i = str(sire.match)
+        if sire.increment == 1:
             sire.change_canvas()
         else:
             print("you have to load something first")
     else:
         print("error!! dataset not found...")
+
 
 def create_figure2(sire): #creates figure for Stokes plots
     index=1
@@ -718,13 +769,14 @@ def create_figure2(sire): #creates figure for Stokes plots
         sire.sc2.ax4.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         index+=1
 
+
 def clear_fig2(sire):
     sire.sc2.fig2.clf()
     create_figure2(sire)
     sire.flag=False
     sire.get_all_values(sire.dataset_dict,0,sire.select_model1.currentText())
-    if sire.flag == True:
-        i=str(sire.match)
+    if sire.flag:
+        i = str(sire.match)
         if sire.click_increment == 1:
             click(sire,sire.dataset_dict[i])
         else:
@@ -732,9 +784,10 @@ def clear_fig2(sire):
     else:
         print("error!! dataset not found...")
 
+
 def create_figure3(sire): #creates figure for model plots
-    index=1
-    total=0
+    index = 1
+    total = 0
     if sire.mT_checkbutton.isChecked():
         total+=1
     if sire.mB_checkbutton.isChecked():
@@ -766,19 +819,21 @@ def create_figure3(sire): #creates figure for model plots
         sire.sc3.ax4.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         index+=1
 
+
 def clear_fig3(sire):
     sire.sc3.fig3.clf()
     create_figure3(sire)
     sire.flag=False
     sire.get_all_values(sire.dataset_dict,0,sire.select_model1.currentText())
-    if sire.flag == True:
-        i=str(sire.match)
+    if sire.flag:
+        i = str(sire.match)
         if sire.click_increment == 1:
             click(sire,sire.dataset_dict[i])
         else:
             print("you have to load something first")
     else:
         print("error!! dataset not found...")
+
 
 def clear_maps_and_remove_cbars(sire):
     try:
@@ -855,6 +910,7 @@ def clear_maps_and_remove_cbars(sire):
     except:
         pass
 
+
 def set_wavelength_range(sire):
     i = str(sire.match)
     if int(sire.wl_min_entry.text()) >= 0 and int(sire.wl_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['wl']:
@@ -869,39 +925,48 @@ def set_wavelength_range(sire):
         sire.wl_min_entry.setText(str(sire.dataset_dict[i]["sir"].wl_min))
         sire.wl_max_entry.setText(str(sire.dataset_dict[i]["sir"].wl_max))
 
+
 def set_xy_lim(sire):
-    i = str(sire.match)
-    if int(sire.x_min_entry.text()) >= 0 and int(sire.x_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['x'] and int(sire.y_min_entry.text()) >= 0 and int(sire.y_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['y']:
-        sire.dataset_dict[i]["sir"].x_min = int(sire.x_min_entry.text())
-        sire.dataset_dict[i]["sir"].x_max = int(sire.x_max_entry.text())
-        sire.dataset_dict[i]["sir"].y_min = int(sire.y_min_entry.text())
-        sire.dataset_dict[i]["sir"].y_max = int(sire.y_max_entry.text())
-        sire.change_canvas()
-        click(sire, sire.dataset_dict[i])
-        update_pixel_info(sire, sire.dataset_dict[i])
+    if sire.increment == 1:
+        i = str(sire.match)
+        if int(sire.x_min_entry.text()) >= 0 and int(sire.x_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['x'] and int(sire.y_min_entry.text()) >= 0 and int(sire.y_max_entry.text()) < sire.dataset_dict[i]["sir"].Attributes['y']:
+            sire.dataset_dict[i]["sir"].x_min = int(sire.x_min_entry.text())
+            sire.dataset_dict[i]["sir"].x_max = int(sire.x_max_entry.text())
+            sire.dataset_dict[i]["sir"].y_min = int(sire.y_min_entry.text())
+            sire.dataset_dict[i]["sir"].y_max = int(sire.y_max_entry.text())
+            sire.change_canvas()
+            click(sire, sire.dataset_dict[i])
+            update_pixel_info(sire, sire.dataset_dict[i])
+        else:
+            msg = QMessageBox()
+            msg.setText("Selected range out of bounds.")
+            msg.setStandardButtons(QMessageBox.Ok)
+            msg.exec()
+            sire.x_min_entry.setText(str(sire.dataset_dict[i]["sir"].x_min))
+            sire.x_max_entry.setText(str(sire.dataset_dict[i]["sir"].x_max))
+            sire.y_min_entry.setText(str(sire.dataset_dict[i]["sir"].y_min))
+            sire.y_max_entry.setText(str(sire.dataset_dict[i]["sir"].y_max))
     else:
-        msg = QMessageBox()
-        msg.setText("Selected range out of bounds.")
-        msg.setStandardButtons(QMessageBox.Ok)
-        msg.exec()
+        pass
+
+
+def reset_xy_lim(sire):
+    if sire.increment == 1:
+        i = str(sire.match)
+        sire.dataset_dict[i]["sir"].x_min = 0
+        sire.dataset_dict[i]["sir"].x_max = int(sire.dataset_dict[i]["sir"].Attributes['x']) - 1
+        sire.dataset_dict[i]["sir"].y_min = 0
+        sire.dataset_dict[i]["sir"].y_max = int(sire.dataset_dict[i]["sir"].Attributes['y']) - 1
         sire.x_min_entry.setText(str(sire.dataset_dict[i]["sir"].x_min))
         sire.x_max_entry.setText(str(sire.dataset_dict[i]["sir"].x_max))
         sire.y_min_entry.setText(str(sire.dataset_dict[i]["sir"].y_min))
         sire.y_max_entry.setText(str(sire.dataset_dict[i]["sir"].y_max))
+        sire.change_canvas()
+        click(sire, sire.dataset_dict[i])
+        update_pixel_info(sire, sire.dataset_dict[i])
+    else:
+        pass
 
-def reset_xy_lim(sire):
-    i = str(sire.match)
-    sire.dataset_dict[i]["sir"].x_min = 0
-    sire.dataset_dict[i]["sir"].x_max = int(sire.dataset_dict[i]["sir"].Attributes['x'])
-    sire.dataset_dict[i]["sir"].y_min = 0
-    sire.dataset_dict[i]["sir"].y_max = int(sire.dataset_dict[i]["sir"].Attributes['y'])
-    sire.x_min_entry.setText(str(sire.dataset_dict[i]["sir"].x_min))
-    sire.x_max_entry.setText(str(sire.dataset_dict[i]["sir"].x_max))
-    sire.y_min_entry.setText(str(sire.dataset_dict[i]["sir"].y_min))
-    sire.y_max_entry.setText(str(sire.dataset_dict[i]["sir"].y_max))
-    sire.change_canvas()
-    click(sire, sire.dataset_dict[i])
-    update_pixel_info(sire, sire.dataset_dict[i])
 
 def set_optical_depth_range(sire):
     i = str(sire.match)
@@ -917,6 +982,7 @@ def set_optical_depth_range(sire):
         sire.optical_depth_min_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_min))
         sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
 
+
 def change_frame(sire):
     if sire.increment == 1:
         sire.frame_changed_flag=1
@@ -927,6 +993,7 @@ def change_frame(sire):
         update_pixel_info(sire, sire.dataset_dict[i])
         sire.frame_changed_flag=0
 
+
 def change_wl(sire):
     if sire.increment == 1:
         i = str(sire.match)
@@ -934,6 +1001,7 @@ def change_wl(sire):
         sire.change_canvas()
         click(sire, sire.dataset_dict[i])
         update_pixel_info(sire, sire.dataset_dict[i])
+
 
 def change_optical_depth(sire):
     if sire.increment == 1:
@@ -944,6 +1012,7 @@ def change_optical_depth(sire):
         click(sire, sire.dataset_dict[i])
         update_pixel_info(sire, sire.dataset_dict[i])
 
+
 def update_pixel_info(sire, sir):
     T1 = sir["sir"].model1[1,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
     G1 = sir["sir"].model1[6,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
@@ -951,12 +1020,13 @@ def update_pixel_info(sire, sir):
     A1 = sir["sir"].model1[7,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
     V1 = sir["sir"].model1[5,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]/(100*1000)
     mic1 = sir["sir"].model1[3,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
-    if sire.mac1_checkbutton.isChecked():
+    if sir["sir"].Attributes["mac1_flag"]:
         ff1 = sir["sir"].mac1[1, int(sir["sir"].current_y), int(sir["sir"].current_x)]
         mac1 = sir["sir"].mac1[0, int(sir["sir"].current_y), int(sir["sir"].current_x)]
         sire.mod1_mac_value.setText(str(round(mac1,3)))
     else:
         ff1 = 1
+        sire.mod1_mac_value.setText("N/A")
     sire.mod1_ff_value.setText(str(round(ff1,3)))
     sire.mod1_T_value.setText(str(round(T1,3)))
     sire.mod1_B_value.setText(str(round(B1,3)))
@@ -965,16 +1035,18 @@ def update_pixel_info(sire, sir):
     sire.mod1_A_value.setText(str(round(A1,3)))
     sire.mod1_mic_value.setText(str(round(mic1,3)))
 
-    if sire.model2_checkbutton.isChecked():
+    if sir["sir"].Attributes["model2_flag"]:
         T2 = sir["sir"].model2[1,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
         G2 = sir["sir"].model2[6,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
         B2 = sir["sir"].model2[4,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
         A2 = sir["sir"].model2[7,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
         V2 = sir["sir"].model2[5,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]/(100*1000)
         mic2 = sir["sir"].model2[3,sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]
-        if sire.mac2_checkbutton.isChecked():
+        if sir["sir"].Attributes["mac2_flag"]:
             mac2 = sir["sir"].mac2[0, int(sir["sir"].current_y), int(sir["sir"].current_x)]
             sire.mod2_mac_value.setText(str(round(mac2,3)))
+        else:
+            sire.mod2_mac_value.setText("N/A")
         sire.mod2_ff_value.setText(str(round(1-ff1,3)))
         sire.mod2_T_value.setText(str(round(T2,3)))
         sire.mod2_B_value.setText(str(round(B2,3)))
@@ -982,6 +1054,14 @@ def update_pixel_info(sire, sir):
         sire.mod2_G_value.setText(str(round(G2,3)))
         sire.mod2_A_value.setText(str(round(A2,3)))
         sire.mod2_mic_value.setText(str(round(mic2,3)))
+    else:
+        sire.mod2_ff_value.setText("N/A")
+        sire.mod2_T_value.setText("N/A")
+        sire.mod2_B_value.setText("N/A")
+        sire.mod2_V_value.setText("N/A")
+        sire.mod2_G_value.setText("N/A")
+        sire.mod2_A_value.setText("N/A")
+        sire.mod2_mic_value.setText("N/A")
 
     Z = round(sir["sir"].model1[8, sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)], 3)
     OD = round(sir["sir"].model1[0, sir["sir"].current_optical_depth_index, int(sir["sir"].current_y), int(sir["sir"].current_x)], 3)
@@ -995,10 +1075,12 @@ def update_pixel_info(sire, sir):
     sire.syn_StkU_value.setText("Stokes U: %s" %(sir["sir"].syn[2, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
     sire.syn_StkV_value.setText("Stokes V: %s" %(sir["sir"].syn[3, sir["sir"].current_wl_index, int(sir["sir"].current_y), int(sir["sir"].current_x)]))
 
+
 def set_font_sizes(self,sire):
     sire.fontsize_titles = int(self.fontsize_titles_map_entry.text())
     sire.fontsize_axislabels = int(self.fontsize_axislabels_map_entry.text())
     sire.fontsize_ticklabels = int(self.fontsize_ticklabels_map_entry.text())
+
 
 def set_plotting_preferences(self,sire):
     sire.line_widths = float(self.line_widths_entry.text())

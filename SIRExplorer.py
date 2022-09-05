@@ -12,7 +12,7 @@ class SIRExplorer(QWidget):
     def __init__(self):
         super().__init__()
         QSettings().clear()
-        self.setWindowTitle("SIR Explorer: PyQt version")
+        self.setWindowTitle("SIR Explorer")
         self.desktop = QApplication.desktop()
         self.screenRect = self.desktop.screenGeometry()
         self.appheight = self.screenRect.height()
@@ -339,11 +339,11 @@ class SIRExplorer(QWidget):
                 msg.setStandardButtons(QMessageBox.Ok)
                 msg.exec()
 
-    def get_all_values(self,nested_dictionary,i,match): #searches nested dictionary for datasets that are already loaded
+    def get_all_values(self,nested_dictionary, i, match): #searches nested dictionary for datasets that are already loaded
         for key, value in nested_dictionary.items():
             if type(value) is dict:
                 i+=1
-                self.get_all_values(value,i,match)
+                self.get_all_values(value, i, match)
             else:
                 if value == match:
                     self.flag=True
@@ -387,12 +387,12 @@ class SIRExplorer(QWidget):
 
     def change_canvas(self): #changes the map figure
         if self.display_validation():
-            self.flag=False
+            self.flag = False
             self.get_all_values(self.dataset_dict,0,self.select_model1.currentText())
-            if self.flag == True: #if match is found
+            if self.flag: #if match is found
                 i=str(self.match)
                 sir = SIR()
-                if self.reload_flag == True:
+                if self.reload_flag:
                     self.flag = False
                     self.dataset_dict[i] = {'model_file': self.select_model1.currentText(),
                                         'secondary_model_file': self.select_model2.currentText(),
@@ -408,7 +408,7 @@ class SIRExplorer(QWidget):
                     update_pixel_info(self, self.dataset_dict[i])
                 else:
                     show(self,self.dataset_dict[i])
-            elif self.flag == False: #if match is not found
+            elif not self.flag: #if match is not found
                 sir = SIR()
                 j=str(len(self.dataset_dict))
                 self.match = j
@@ -426,8 +426,8 @@ class SIRExplorer(QWidget):
                 click(self,self.dataset_dict[j])
                 update_pixel_info(self, self.dataset_dict[j])
                 if self.click_increment == 0:
-                    self.click_increment=1
-                self.increment=1
+                    self.click_increment = 1
+                self.increment = 1
         else:
             pass
 
