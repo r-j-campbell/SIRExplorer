@@ -67,6 +67,7 @@ def activate_widgets(sire):
     sire.optical_depth_max_entry.setEnabled(True)
     sire.optical_depth_range_btn.setEnabled(True)
     sire.sfa_btn.setEnabled(True)
+    sire.wl_axis_scale_btn.setEnabled(True)
 
 
 def open_files(sire,sir): #loads files
@@ -557,6 +558,31 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
     sire.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
     sire.sc2.ax4.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
 
+    if sir["sir"].Attributes["wl_scale_flag"]:
+        if sir["sir"].Attributes["wl_unit"] == "Angstroms":
+            sire.sc2.ax1.set_xlabel("wavelength [$\mathrm{\\AA}$]", fontsize=sire.fontsize_axislabels)
+            sire.sc2.ax2.set_xlabel("wavelength [$\mathrm{\\AA}$]", fontsize=sire.fontsize_axislabels)
+            sire.sc2.ax3.set_xlabel("wavelength [$\mathrm{\\AA}$]", fontsize=sire.fontsize_axislabels)
+            sire.sc2.ax4.set_xlabel("wavelength [$\mathrm{\\AA}$]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["wl_unit"] == "Nanometres":
+            sire.sc2.ax1.set_xlabel("wavelength [nm]", fontsize=sire.fontsize_axislabels)
+            sire.sc2.ax2.set_xlabel("wavelength [nm]", fontsize=sire.fontsize_axislabels)
+            sire.sc2.ax3.set_xlabel("wavelength [nm]", fontsize=sire.fontsize_axislabels)
+            sire.sc2.ax4.set_xlabel("wavelength [nm]", fontsize=sire.fontsize_axislabels)
+        sire.sc2.ax1.set_xticks(sir["sir"].wl_scale_ticks)
+        sire.sc2.ax1.set_xticklabels(sir["sir"].wl_scale_tick_labels)
+        sire.sc2.ax2.set_xticks(sir["sir"].wl_scale_ticks)
+        sire.sc2.ax2.set_xticklabels(sir["sir"].wl_scale_tick_labels)
+        sire.sc2.ax3.set_xticks(sir["sir"].wl_scale_ticks)
+        sire.sc2.ax3.set_xticklabels(sir["sir"].wl_scale_tick_labels)
+        sire.sc2.ax4.set_xticks(sir["sir"].wl_scale_ticks)
+        sire.sc2.ax4.set_xticklabels(sir["sir"].wl_scale_tick_labels)
+    else:
+        sire.sc2.ax1.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc2.ax2.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc2.ax3.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
+        sire.sc2.ax4.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
+
     # Model parameter plots
     sire.sc3.ax1.plot(model1[0, :, int(current_y), int(current_x)], model1[1, :, int(current_y), int(current_x)], label="mod 1",
         linestyle='solid',color='red', linewidth=sire.line_widths)
@@ -611,10 +637,6 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
     sire.sc2.ax2.set_title("Stokes $Q$ [$I_c$]", fontsize=sire.fontsize_titles)
     sire.sc2.ax3.set_title("Stokes $U$ [$I_c$]", fontsize=sire.fontsize_titles)
     sire.sc2.ax4.set_title("Stokes $V$ [$I_c$]", fontsize=sire.fontsize_titles)
-    sire.sc2.ax1.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
-    sire.sc2.ax2.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
-    sire.sc2.ax3.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
-    sire.sc2.ax4.set_xlabel("wavelength [pix.]", fontsize=sire.fontsize_axislabels)
 
     sire.sc2.fig2.canvas.draw()
     sire.sc3.fig3.canvas.draw()
@@ -1084,3 +1106,41 @@ def set_font_sizes(self,sire):
 
 def set_plotting_preferences(self,sire):
     sire.line_widths = float(self.line_widths_entry.text())
+
+def set_wl_axis_scale(self,sire):
+    if sire.click_increment == 1:
+        sire.sc2.fig2.clf()
+        create_figure2(sire)
+        i = str(sire.match)
+        sire.dataset_dict[i]["sir"].Attributes["wl_dispersion"] = float(self.wl_dispersion_entry.text())
+        sire.dataset_dict[i]["sir"].Attributes["wl_offset"] = float(self.wl_offset_entry.text())
+        sire.dataset_dict[i]["sir"].Attributes["wl_increment"] = int(self.wl_increment_entry.text())
+        sire.dataset_dict[i]["sir"].Attributes["wl_unit"] = str(self.wl_units_combobox.currentText())
+        sire.dataset_dict[i]["sir"].Attributes["wl_scale_flag"] = True
+        wl = [] #list for actual wavelengths
+        wli = [] #list for wavelength indices
+        w=0
+        while w < sire.dataset_dict[i]["sir"].Attributes["wl"]:
+            wl.append(round(sire.dataset_dict[i]["sir"].Attributes["wl_offset"] + (sire.dataset_dict[i]["sir"].Attributes["wl_dispersion"]*w),self.wl_dcp_spinbox.value()))
+            wli.append(w)
+            w+=int(sire.dataset_dict[i]["sir"].Attributes["wl_increment"])
+        sire.dataset_dict[i]["sir"].wl_scale_tick_labels = wl
+        sire.dataset_dict[i]["sir"].wl_scale_ticks = wli
+        click(sire, sire.dataset_dict[i])
+    else:
+        print("you have to load something first")
+
+def reset_wl_axis_scale(self,sire):
+    sire.sc2.fig2.clf()
+    create_figure2(sire)
+    i = str(sire.match)
+    sire.dataset_dict[i]["sir"].Attributes["wl_scale_flag"] = False
+    click(sire, sire.dataset_dict[i])
+
+def calculate_sfa(self):
+    wl_0 = float(self.rest_wl_entry.text())
+    disp = float(self.dispersion_entry.text())
+    diff = float(self.w2_entry.text()) - float(self.w1_entry.text())
+    g = float(self.gfactor_entry.text())
+    B_SFA = str(np.round(((diff*disp)/((2*4.67E-13)*(wl_0**2)*g)),3))
+    self.B_SFA_label.setText(B_SFA+"[G]")

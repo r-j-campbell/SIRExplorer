@@ -3,7 +3,7 @@ from PyQt5.Qt import Qt
 import sys
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtCore import QSettings
-from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets, sfa_layouts, sfa_widgets
+from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets, sfa_layouts, sfa_widgets, wl_axis_scale_layouts, wl_axis_scale_widgets
 from Instruments import SIR
 from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth, create_figure1,clear_fig1
 import os
@@ -45,6 +45,7 @@ class SIRExplorer(QWidget):
         self.CT_flag = None
         self.preferences_flag = None
         self.sfa_flag = None
+        self.wl_axis_flag = None
 
         #load settings for maps or set to default values if no settings saved
         if self.settings.value('StkI_CT') is not None:
@@ -520,23 +521,37 @@ class SIRExplorer(QWidget):
             self.sfa_flag.close()
             self.sfa_flag = None
 
+    def wl_axis_scale(self):
+        if self.wl_axis_flag is None:
+            self.wl_axis_flag = WavelengthAxisScale(self)
+            self.wl_axis_flag.show()
+        else:
+            self.wl_axis_flag.close()
+            self.wl_axis_flag = None
+
 class ColourTables(QWidget):
     def __init__(self,sire):
         super().__init__()
         colour_table_widgets(self,sire)
-        colour_table_layouts(self,sire)
+        colour_table_layouts(self)
 
 class Preferences(QWidget):
     def __init__(self,sire):
         super().__init__()
         preferences_widgets(self,sire)
-        preferences_layouts(self,sire)
+        preferences_layouts(self)
 
 class StrongFieldApproximation(QWidget):
     def __init__(self,sire):
         super().__init__()
         sfa_widgets(self,sire)
-        sfa_layouts(self,sire)
+        sfa_layouts(self)
+
+class WavelengthAxisScale(QWidget):
+    def __init__(self,sire):
+        super().__init__()
+        wl_axis_scale_widgets(self,sire)
+        wl_axis_scale_layouts(self)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

@@ -3,23 +3,26 @@ import numpy as np
 class SIR:
     def __init__(self):
         self.Attributes = {
-            'wavelength': 0000, #rest wavelength, Angstroms
             'S': 4, #num Stokes pts
-            'y': 100.0, #num y pts
-            'x': 100.0, #num x pts
-            'wl': 100.0, #number of wl points
+            'y': 100, #num y pts
+            'x': 100, #num x pts
+            'wl': 100, #number of wl points
             't':0, #num frames
             'optical_depth':100, #num optical depth points
             'pxscalex': 0.1, #arcsec/pixel
             'pxscaley': 0.1,
+            'wl_dispersion': 1,
+            'wl_offset': 0,
+            'wl_increment': 1,
+            'wl_unit': "Angstroms",
             'model2_flag': False,
             'mac1_flag': False,
             'mac2_flag': False,
-            'binary_flag': False
-
+            'binary_flag': False,
+            'wl_scale_flag': False
         }
-        self.obs = np.empty([int(self.Attributes['S']+2), int(self.Attributes['wl']), int(self.Attributes['y']), int(self.Attributes['x'])])
-        self.syn = np.empty([int(self.Attributes['S']+2), int(self.Attributes['wl']), int(self.Attributes['y']), int(self.Attributes['x'])])
+        self.obs = np.empty([int(self.Attributes['S']), int(self.Attributes['wl']), int(self.Attributes['y']), int(self.Attributes['x'])])
+        self.syn = np.empty([int(self.Attributes['S']), int(self.Attributes['wl']), int(self.Attributes['y']), int(self.Attributes['x'])])
         self.model1 = np.empty([11, int(self.Attributes['optical_depth']),int(self.Attributes['y']), int(self.Attributes['x'])])
         self.model2 = np.empty([11, int(self.Attributes['optical_depth']),int(self.Attributes['y']), int(self.Attributes['x'])])
         self.mac1 = np.empty((int(self.Attributes['y']), int(self.Attributes['x'])))
@@ -39,6 +42,8 @@ class SIR:
         self.y_max = 0
         self.optical_depth_min = 0
         self.optical_depth_max = 100
+        self.wl_scale_ticks = None
+        self.wl_scale_tick_labels = None
     def update_binary(self,binary):
         self.binary=binary
     def update_chi2(self,chi2):

@@ -107,6 +107,7 @@ def layouts(sire):
     sire.tab3_optical_depth_min_layout.addWidget(sire.optical_depth_max_entry)
     sire.tab3_layout.addWidget(sire.optical_depth_range_btn)
     sire.tab3_layout.addWidget(sire.sfa_btn)
+    sire.tab3_layout.addWidget(sire.wl_axis_scale_btn)
     sire.tab3_layout.addStretch(1)
     sire.tab3.setLayout(sire.tab3_layout)
 
@@ -381,6 +382,9 @@ def widgets(sire):
     sire.sfa_btn = QPushButton("SFA calculator")
     sire.sfa_btn.clicked.connect(lambda checked: sire.sfa())
     sire.sfa_btn.setEnabled(False)
+    sire.wl_axis_scale_btn = QPushButton("Change wavelength scale")
+    sire.wl_axis_scale_btn.clicked.connect(lambda checked: sire.wl_axis_scale())
+    sire.wl_axis_scale_btn.setEnabled(False)
     #-------tab4-------#
     sire.parameter_label = QLabel("Parameter")
     sire.parameter_label.setStyleSheet("background-color: white")
@@ -466,7 +470,7 @@ class MplCanvas3(FigureCanvasQTAgg):
         super(MplCanvas3, self).__init__(self.fig3)
 
 
-def colour_table_layouts(self,sire):
+def colour_table_layouts(self):
     self.colour_table_layout = QGridLayout() #row,col
 
     self.colour_table_layout.addWidget(self.CT_empty_label,0,0)
@@ -853,7 +857,7 @@ def update_and_set(self,sire):
 
     clear_fig1(sire)
 
-def preferences_layouts(self,sire):
+def preferences_layouts(self):
     self.preferences_layout = QGridLayout() #row,col
 
     self.preferences_layout.addWidget(self.fontsize_label,0,0)
@@ -899,7 +903,7 @@ def preferences_widgets(self,sire):
     self.line_widths_entry.setText(str(sire.line_widths))
     self.line_widths_entry.setValidator(sire.only_double)
 
-def sfa_layouts(self,sire):
+def sfa_layouts(self):
     self.sfa_layout = QGridLayout() #row,col
     self.sfa_layout.addWidget(self.sfa_label,0,0)
     self.sfa_layout.addWidget(self.dispersion_label,1,0)
@@ -918,6 +922,7 @@ def sfa_layouts(self,sire):
     self.sfa_layout.addWidget(self.B_SFA_label,6,1)
 
     self.setLayout(self.sfa_layout)
+
 def sfa_widgets(self,sire):
     self.sfa_label = QLabel("Strong field approximation calculator")
     self.dispersion_label = QLabel("Dispersion [Angstroms]")
@@ -941,11 +946,46 @@ def sfa_widgets(self,sire):
     self.calculate_sfa_btn.clicked.connect(lambda: calculate_sfa(self))
     self.B_SFA_label = QLabel("")
 
-def calculate_sfa(self):
-    wl_0 = float(self.rest_wl_entry.text())
-    disp = float(self.dispersion_entry.text())
-    diff = float(self.w2_entry.text()) - float(self.w1_entry.text())
-    g = float(self.gfactor_entry.text())
-    B_SFA = str(np.round(((diff*disp)/((2*4.67E-13)*(wl_0**2)*g)),3))
-    self.B_SFA_label.setText(B_SFA+"[G]")
+def wl_axis_scale_layouts(self):
+    self.wl_axis_scale_layout = QGridLayout() #row,col
+    self.wl_axis_scale_layout.addWidget(self.wl_units_label,0,0)
+    self.wl_axis_scale_layout.addWidget(self.wl_dispersion_label,1,0)
+    self.wl_axis_scale_layout.addWidget(self.wl_offset_label,2,0)
+    self.wl_axis_scale_layout.addWidget(self.wl_increment_label,3,0)
+    self.wl_axis_scale_layout.addWidget(self.wl_dcp_label,4,0)
 
+    self.wl_axis_scale_layout.addWidget(self.wl_units_combobox,0,1)
+    self.wl_axis_scale_layout.addWidget(self.wl_dispersion_entry,1,1)
+    self.wl_axis_scale_layout.addWidget(self.wl_offset_entry,2,1)
+    self.wl_axis_scale_layout.addWidget(self.wl_increment_entry,3,1)
+    self.wl_axis_scale_layout.addWidget(self.wl_dcp_spinbox,4,1)
+
+    self.wl_axis_scale_layout.addWidget(self.set_wl_axis_scale_btn,5,0)
+    self.wl_axis_scale_layout.addWidget(self.reset_wl_axis_scale_btn,5,1)
+
+    self.setLayout(self.wl_axis_scale_layout)
+
+def wl_axis_scale_widgets(self,sire):
+    self.wl_units_label = QLabel("Wavelength units")
+    self.wl_dispersion_label = QLabel("Dispersion")
+    self.wl_offset_label = QLabel("Offset")
+    self.wl_increment_label = QLabel("Increment")
+    self.wl_dcp_label = QLabel("# decimal points")
+
+    self.wl_units_combobox = QComboBox(self)
+    self.wl_units_combobox.addItems(["Angstroms", "Nanometres"])
+    self.wl_dispersion_entry = QLineEdit(self)
+    self.wl_offset_entry = QLineEdit(self)
+    self.wl_increment_entry = QLineEdit(self)
+    self.wl_dispersion_entry.setValidator(sire.only_double)
+    self.wl_offset_entry.setValidator(sire.only_double)
+    self.wl_increment_entry.setValidator(sire.only_int)
+    self.wl_dcp_spinbox = QSpinBox()
+    self.wl_dcp_spinbox.setRange(0,6)
+    self.wl_dcp_spinbox.setValue(2)
+    self.wl_dcp_spinbox.singleStep()
+
+    self.set_wl_axis_scale_btn = QPushButton("Set values and display")
+    self.reset_wl_axis_scale_btn = QPushButton("Reset")
+    self.set_wl_axis_scale_btn.clicked.connect(lambda: set_wl_axis_scale(self,sire))
+    self.reset_wl_axis_scale_btn.clicked.connect(lambda: reset_wl_axis_scale(self,sire))
