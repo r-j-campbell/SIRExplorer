@@ -9,8 +9,11 @@ class SIR:
             'wl': 100, #number of wl points
             't':0, #num frames
             'optical_depth':100, #num optical depth points
-            'pxscalex': 0.1, #arcsec/pixel
-            'pxscaley': 0.1,
+            'x_sampling': 1, #arcsec/pixel or Mm/pixel
+            'y_sampling': 1,
+            'x_increment': 1,
+            'y_increment': 1,
+            'xy_unit': "Arcseconds",
             'wl_dispersion': 1,
             'wl_offset': 0,
             'wl_increment': 1,
@@ -19,7 +22,8 @@ class SIR:
             'mac1_flag': False,
             'mac2_flag': False,
             'binary_flag': False,
-            'wl_scale_flag': False
+            'wl_scale_flag': False,
+            'xy_scale_flag': False
         }
         self.obs = np.empty([int(self.Attributes['S']), int(self.Attributes['wl']), int(self.Attributes['y']), int(self.Attributes['x'])])
         self.syn = np.empty([int(self.Attributes['S']), int(self.Attributes['wl']), int(self.Attributes['y']), int(self.Attributes['x'])])
@@ -44,6 +48,10 @@ class SIR:
         self.optical_depth_max = 100
         self.wl_scale_ticks = None
         self.wl_scale_tick_labels = None
+        self.x_scale_ticks = None
+        self.x_scale_tick_labels = None
+        self.y_scale_ticks = None
+        self.y_scale_tick_labels = None
     def update_binary(self,binary):
         self.binary=binary
     def update_chi2(self,chi2):

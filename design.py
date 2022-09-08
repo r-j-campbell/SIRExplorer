@@ -78,6 +78,7 @@ def layouts(sire):
     sire.tab2_y_layout.addWidget(sire.y_max_entry)
     sire.tab2_layout.addWidget(sire.set_x_lim_btn)
     sire.tab2_layout.addWidget(sire.reset_x_lim_btn)
+    sire.tab2_layout.addWidget(sire.maps_axis_scales_btn)
     sire.tab2_layout.addStretch(1)
     sire.tab2.setLayout(sire.tab2_layout)
     #tab3
@@ -258,6 +259,7 @@ def widgets(sire):
     sire.binary_btn = QPushButton("Search for binary map files")
     sire.binary_btn.clicked.connect(lambda checked: sire.get_binary())
     sire.select_binary = QComboBox(sire)
+
     #-------tab2-------#
     sire.clear_map_btn = QPushButton("Update maps")
     sire.clear_map_btn.clicked.connect(lambda checked: clear_fig1(sire))
@@ -323,6 +325,10 @@ def widgets(sire):
     sire.colour_table_options_btn.clicked.connect(lambda checked: sire.colour_table_options())
     sire.colour_table_options_btn.setEnabled(False)
 
+    sire.maps_axis_scales_btn = QPushButton("Change maps axis scales")
+    sire.maps_axis_scales_btn.clicked.connect(lambda checked: sire.maps_axis_scales())
+    sire.maps_axis_scales_btn.setEnabled(False)
+
     #-------tab3-------#
     sire.clear_profiles_btn = QPushButton("Update profiles axes")
     sire.clear_profiles_btn.clicked.connect(lambda checked: clear_fig2(sire))
@@ -385,6 +391,7 @@ def widgets(sire):
     sire.wl_axis_scale_btn = QPushButton("Change wavelength scale")
     sire.wl_axis_scale_btn.clicked.connect(lambda checked: sire.wl_axis_scale())
     sire.wl_axis_scale_btn.setEnabled(False)
+
     #-------tab4-------#
     sire.parameter_label = QLabel("Parameter")
     sire.parameter_label.setStyleSheet("background-color: white")
@@ -430,6 +437,7 @@ def widgets(sire):
     sire.syn_StkQ_value = QLabel("")
     sire.syn_StkU_value = QLabel("")
     sire.syn_StkV_value = QLabel("")
+
     #-------widgets for canvas-------#
     sire.sc1 = MplCanvas1(sire, width=5, height=4, dpi=100)
     sire.sc1.fig1.canvas.mpl_connect('button_press_event', sire.mouseclicks)
@@ -969,7 +977,7 @@ def wl_axis_scale_widgets(self,sire):
     self.wl_units_label = QLabel("Wavelength units")
     self.wl_dispersion_label = QLabel("Dispersion")
     self.wl_offset_label = QLabel("Offset")
-    self.wl_increment_label = QLabel("Increment")
+    self.wl_increment_label = QLabel("Increment [pix]")
     self.wl_dcp_label = QLabel("# decimal points")
 
     self.wl_units_combobox = QComboBox(self)
@@ -988,4 +996,53 @@ def wl_axis_scale_widgets(self,sire):
     self.set_wl_axis_scale_btn = QPushButton("Set values and display")
     self.reset_wl_axis_scale_btn = QPushButton("Reset")
     self.set_wl_axis_scale_btn.clicked.connect(lambda: set_wl_axis_scale(self,sire))
-    self.reset_wl_axis_scale_btn.clicked.connect(lambda: reset_wl_axis_scale(self,sire))
+    self.reset_wl_axis_scale_btn.clicked.connect(lambda: reset_wl_axis_scale(sire))
+
+def maps_axis_scales_layouts(self):
+    self.maps_axis_scales_layout = QGridLayout() #row,col
+    self.maps_axis_scales_layout.addWidget(self.maps_units_label,0,0)
+    self.maps_axis_scales_layout.addWidget(self.maps_sampling_x_label,1,0)
+    self.maps_axis_scales_layout.addWidget(self.maps_sampling_y_label,2,0)
+    self.maps_axis_scales_layout.addWidget(self.maps_increment_x_label,3,0)
+    self.maps_axis_scales_layout.addWidget(self.maps_increment_y_label,4,0)
+    self.maps_axis_scales_layout.addWidget(self.xy_dcp_label,5,0)
+
+    self.maps_axis_scales_layout.addWidget(self.maps_units_combobox,0,1)
+    self.maps_axis_scales_layout.addWidget(self.maps_sampling_x_entry,1,1)
+    self.maps_axis_scales_layout.addWidget(self.maps_sampling_y_entry,2,1)
+    self.maps_axis_scales_layout.addWidget(self.maps_increment_x_entry,3,1)
+    self.maps_axis_scales_layout.addWidget(self.maps_increment_y_entry,4,1)
+    self.maps_axis_scales_layout.addWidget(self.xy_dcp_spinbox,5,1)
+
+    self.maps_axis_scales_layout.addWidget(self.set_maps_axis_scales_btn,6,0)
+    self.maps_axis_scales_layout.addWidget(self.reset_maps_axis_scales_btn,6,1)
+
+    self.setLayout(self.maps_axis_scales_layout)
+
+def maps_axis_scales_widgets(self,sire):
+    self.maps_units_label = QLabel("Units")
+    self.maps_sampling_x_label = QLabel("Spatial sampling in X")
+    self.maps_sampling_y_label = QLabel("Spatial sampling in Y")
+    self.maps_increment_x_label = QLabel("Increment in X [pix]")
+    self.maps_increment_y_label = QLabel("Increment in Y [pix]")
+    self.xy_dcp_label = QLabel("# decimal points")
+
+    self.maps_units_combobox = QComboBox(self)
+    self.maps_units_combobox.addItems(["Arcseconds", "Mm"])
+    self.maps_sampling_x_entry = QLineEdit(self)
+    self.maps_sampling_x_entry.setValidator(sire.only_double)
+    self.maps_sampling_y_entry = QLineEdit(self)
+    self.maps_sampling_y_entry.setValidator(sire.only_double)
+    self.maps_increment_x_entry = QLineEdit(self)
+    self.maps_increment_x_entry.setValidator(sire.only_double)
+    self.maps_increment_y_entry = QLineEdit(self)
+    self.maps_increment_y_entry.setValidator(sire.only_double)
+    self.xy_dcp_spinbox = QSpinBox()
+    self.xy_dcp_spinbox.setRange(0,6)
+    self.xy_dcp_spinbox.setValue(2)
+    self.xy_dcp_spinbox.singleStep()
+
+    self.set_maps_axis_scales_btn = QPushButton("Set values and display")
+    self.reset_maps_axis_scales_btn = QPushButton("Reset")
+    self.set_maps_axis_scales_btn.clicked.connect(lambda: set_maps_axis_scales(self,sire))
+    self.reset_maps_axis_scales_btn.clicked.connect(lambda: reset_maps_axis_scales(sire))

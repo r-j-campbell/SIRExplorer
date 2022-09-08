@@ -68,6 +68,7 @@ def activate_widgets(sire):
     sire.optical_depth_range_btn.setEnabled(True)
     sire.sfa_btn.setEnabled(True)
     sire.wl_axis_scale_btn.setEnabled(True)
+    sire.maps_axis_scales_btn.setEnabled(True)
 
 
 def open_files(sire,sir): #loads files
@@ -199,8 +200,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax1.axvline(current_x, color=sire.StkI_CT[6], linestyle=sire.StkI_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax1.axhline(current_y, color=sire.StkI_CT[6], linestyle=sire.StkI_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax1.set_title("Stokes $I$ [$I_c$]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax1.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax1.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax1.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax1.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax1.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax1.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax1.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax1.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax1.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax1.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax1.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax1.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax1.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax1.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax1.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax1.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -220,8 +236,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax2.axvline(current_x, color=sire.StkQ_CT[6], linestyle=sire.StkQ_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax2.axhline(current_y, color=sire.StkQ_CT[6], linestyle=sire.StkQ_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax2.set_title("Stokes $Q$ [$I_c$]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax2.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax2.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax2.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax2.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax2.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax2.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax2.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax2.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax2.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax2.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax2.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax2.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax2.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax2.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax2.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax2.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -241,8 +272,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax3.axvline(current_x, color=sire.StkU_CT[6], linestyle=sire.StkU_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax3.axhline(current_y, color=sire.StkU_CT[6], linestyle=sire.StkU_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax3.set_title("Stokes $U$ [$I_c$]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax3.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax3.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax3.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax3.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax3.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax3.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax3.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax3.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax3.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax3.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax3.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax3.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax3.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax3.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax3.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax3.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -262,8 +308,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax4.axvline(current_x, color=sire.StkV_CT[6], linestyle=sire.StkV_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax4.axhline(current_y, color=sire.StkV_CT[6], linestyle=sire.StkV_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax4.set_title("Stokes $V$ [$I_c$]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax4.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax4.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax4.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax4.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax4.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax4.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax4.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax4.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax4.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax4.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax4.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax4.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax4.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax4.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax4.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax4.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -293,8 +354,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax5.set_title("T (mod 1) [K]", fontsize=sire.fontsize_titles)
         else:
             sire.sc1.ax5.set_title("T [K]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax5.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax5.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax5.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax5.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax5.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax5.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax5.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax5.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax5.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax5.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax5.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax5.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax5.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax5.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax5.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax5.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -328,8 +404,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.cbar_B.ax.tick_params(labelsize=sire.fontsize_ticklabels)
         sire.sc1.ax6.axvline(current_x, color=sire.B_CT[6], linestyle=sire.B_CT[5], linewidth=sire.line_widths)
         sire.sc1.ax6.axhline(current_y, color=sire.B_CT[6], linestyle=sire.B_CT[5], linewidth=sire.line_widths)
-        sire.sc1.ax6.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax6.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax6.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax6.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax6.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax6.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax6.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax6.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax6.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax6.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax6.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax6.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax6.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax6.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax6.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax6.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -359,8 +450,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax7.set_title("$v_\mathrm{{LOS}}$ (mod 1) [km/s]", fontsize=sire.fontsize_titles)
         else:
             sire.sc1.ax7.set_title("$v_\mathrm{{LOS}}$ [km/s]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax7.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax7.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax7.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax7.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax7.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax7.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax7.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax7.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax7.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax7.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax7.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax7.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax7.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax7.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax7.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax7.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -383,8 +489,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax8.set_title("$\\gamma$ (mod 1) [deg.]", fontsize=sire.fontsize_titles)
         else:
             sire.sc1.ax8.set_title("$\\gamma$ [deg.]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax8.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax8.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax8.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax8.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax8.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax8.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax8.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax8.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax8.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax8.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax8.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax8.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax8.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax8.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax8.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax8.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -407,8 +528,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax9.set_title("$\\phi$ (mod 1) [deg.]", fontsize=sire.fontsize_titles)
         else:
             sire.sc1.ax9.set_title("$\\phi$ [deg.]", fontsize=sire.fontsize_titles)
-        sire.sc1.ax9.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-        sire.sc1.ax9.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        if not sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax9.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+            sire.sc1.ax9.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+        elif sir["sir"].Attributes["xy_scale_flag"]:
+            sire.sc1.ax9.set_xticks(sir["sir"].x_scale_ticks)
+            sire.sc1.ax9.set_xticklabels(sir["sir"].x_scale_tick_labels)
+            sire.sc1.ax9.set_yticks(sir["sir"].y_scale_ticks)
+            sire.sc1.ax9.set_yticklabels(sir["sir"].y_scale_tick_labels)
+            if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                sire.sc1.ax9.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax9.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                sire.sc1.ax9.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax9.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_unit"] == "km":
+                sire.sc1.ax9.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax9.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
         sire.sc1.ax9.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
         sire.sc1.ax9.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -430,8 +566,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax10.axvline(current_x, color=sire.T_CT[6], linestyle=sire.T_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax10.axhline(current_y, color=sire.T_CT[6], linestyle=sire.T_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax10.set_title("T (mod 2) [K]", fontsize=sire.fontsize_titles)
-            sire.sc1.ax10.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-            sire.sc1.ax10.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            if not sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax10.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax10.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax10.set_xticks(sir["sir"].x_scale_ticks)
+                sire.sc1.ax10.set_xticklabels(sir["sir"].x_scale_tick_labels)
+                sire.sc1.ax10.set_yticks(sir["sir"].y_scale_ticks)
+                sire.sc1.ax10.set_yticklabels(sir["sir"].y_scale_tick_labels)
+                if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                    sire.sc1.ax10.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax10.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                    sire.sc1.ax10.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax10.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "km":
+                    sire.sc1.ax10.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax10.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
             sire.sc1.ax10.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax10.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -451,8 +602,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax11.axvline(current_x, color=sire.B_CT[6], linestyle=sire.B_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax11.axhline(current_y, color=sire.B_CT[6], linestyle=sire.B_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax11.set_title("B (mod 2) [G]", fontsize=sire.fontsize_titles)
-            sire.sc1.ax11.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-            sire.sc1.ax11.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            if not sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax11.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax11.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax11.set_xticks(sir["sir"].x_scale_ticks)
+                sire.sc1.ax11.set_xticklabels(sir["sir"].x_scale_tick_labels)
+                sire.sc1.ax11.set_yticks(sir["sir"].y_scale_ticks)
+                sire.sc1.ax11.set_yticklabels(sir["sir"].y_scale_tick_labels)
+                if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                    sire.sc1.ax11.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax11.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                    sire.sc1.ax11.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax11.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "km":
+                    sire.sc1.ax11.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax11.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
             sire.sc1.ax11.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax11.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -472,8 +638,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax12.axvline(current_x, color=sire.V_CT[6], linestyle=sire.V_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax12.axhline(current_y, color=sire.V_CT[6], linestyle=sire.V_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax12.set_title("$v_\mathrm{{LOS}}$ (mod 2) [km/s]", fontsize=sire.fontsize_titles)
-            sire.sc1.ax12.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-            sire.sc1.ax12.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            if not sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax12.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax12.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax12.set_xticks(sir["sir"].x_scale_ticks)
+                sire.sc1.ax12.set_xticklabels(sir["sir"].x_scale_tick_labels)
+                sire.sc1.ax12.set_yticks(sir["sir"].y_scale_ticks)
+                sire.sc1.ax12.set_yticklabels(sir["sir"].y_scale_tick_labels)
+                if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                    sire.sc1.ax12.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax12.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                    sire.sc1.ax12.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax12.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "km":
+                    sire.sc1.ax12.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax12.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
             sire.sc1.ax12.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax12.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -493,8 +674,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax13.axvline(current_x, color=sire.G_CT[6], linestyle=sire.G_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax13.axhline(current_y, color=sire.G_CT[6], linestyle=sire.G_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax13.set_title("$\\gamma$ (mod 2) [deg.]", fontsize=sire.fontsize_titles)
-            sire.sc1.ax13.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-            sire.sc1.ax13.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            if not sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax13.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax13.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax13.set_xticks(sir["sir"].x_scale_ticks)
+                sire.sc1.ax13.set_xticklabels(sir["sir"].x_scale_tick_labels)
+                sire.sc1.ax13.set_yticks(sir["sir"].y_scale_ticks)
+                sire.sc1.ax13.set_yticklabels(sir["sir"].y_scale_tick_labels)
+                if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                    sire.sc1.ax13.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax13.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                    sire.sc1.ax13.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax13.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "km":
+                    sire.sc1.ax13.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax13.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
             sire.sc1.ax13.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax13.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -514,8 +710,23 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax14.axvline(current_x, color=sire.A_CT[6], linestyle=sire.A_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax14.axhline(current_y, color=sire.A_CT[6], linestyle=sire.A_CT[5], linewidth=sire.line_widths)
             sire.sc1.ax14.set_title("$\\phi$ (mod 2) [deg.]", fontsize=sire.fontsize_titles)
-            sire.sc1.ax14.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
-            sire.sc1.ax14.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            if not sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax14.set_xlabel("X [pix.]", fontsize=sire.fontsize_axislabels)
+                sire.sc1.ax14.set_ylabel("Y [pix.]", fontsize=sire.fontsize_axislabels)
+            elif sir["sir"].Attributes["xy_scale_flag"]:
+                sire.sc1.ax14.set_xticks(sir["sir"].x_scale_ticks)
+                sire.sc1.ax14.set_xticklabels(sir["sir"].x_scale_tick_labels)
+                sire.sc1.ax14.set_yticks(sir["sir"].y_scale_ticks)
+                sire.sc1.ax14.set_yticklabels(sir["sir"].y_scale_tick_labels)
+                if sir["sir"].Attributes["xy_unit"] == "Arcseconds":
+                    sire.sc1.ax14.set_xlabel("X [arcsec.]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax14.set_ylabel("Y [arcsec.]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "Mm":
+                    sire.sc1.ax14.set_xlabel("X [Mm]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax14.set_ylabel("Y [Mm]", fontsize=sire.fontsize_axislabels)
+                elif sir["sir"].Attributes["xy_unit"] == "km":
+                    sire.sc1.ax14.set_xlabel("X [km]", fontsize=sire.fontsize_axislabels)
+                    sire.sc1.ax14.set_ylabel("Y [km]", fontsize=sire.fontsize_axislabels)
             sire.sc1.ax14.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax14.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
@@ -540,22 +751,22 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
         sire.sc3.ax4.clear()
 
     # Stokes plots
-    sire.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=sire.line_widths)
+    sire.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=sire.line_widths, color='red')
     sire.sc2.ax1.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Syn', linewidth=sire.line_widths)
+    sire.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Syn', linewidth=sire.line_widths, color='blue')
     sire.sc2.ax1.legend(frameon=False, fontsize=sire.fontsize_axislabels)
     sire.sc2.ax1.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='red')
     sire.sc2.ax2.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax2.plot(syn_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax2.plot(syn_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='blue')
     sire.sc2.ax2.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax3.plot(obs_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax3.plot(obs_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='red')
     sire.sc2.ax3.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax3.plot(syn_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax3.plot(syn_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='blue')
     sire.sc2.ax3.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax4.plot(obs_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax4.plot(obs_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='red')
     sire.sc2.ax4.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths)
+    sire.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='blue')
     sire.sc2.ax4.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
 
     if sir["sir"].Attributes["wl_scale_flag"]:
@@ -1130,7 +1341,7 @@ def set_wl_axis_scale(self,sire):
     else:
         print("you have to load something first")
 
-def reset_wl_axis_scale(self,sire):
+def reset_wl_axis_scale(sire):
     sire.sc2.fig2.clf()
     create_figure2(sire)
     i = str(sire.match)
@@ -1144,3 +1355,43 @@ def calculate_sfa(self):
     g = float(self.gfactor_entry.text())
     B_SFA = str(np.round(((diff*disp)/((2*4.67E-13)*(wl_0**2)*g)),3))
     self.B_SFA_label.setText(B_SFA+"[G]")
+
+def set_maps_axis_scales(self,sire):
+    if sire.click_increment == 1:
+        sire.sc1.fig1.clf()
+        create_figure1(sire)
+        i = str(sire.match)
+        sire.dataset_dict[i]["sir"].Attributes["x_sampling"] = float(self.maps_sampling_x_entry.text())
+        sire.dataset_dict[i]["sir"].Attributes["y_sampling"] = float(self.maps_sampling_y_entry.text())
+        sire.dataset_dict[i]["sir"].Attributes["x_increment"] = int(self.maps_increment_x_entry.text())
+        sire.dataset_dict[i]["sir"].Attributes["y_increment"] = int(self.maps_increment_y_entry.text())
+        sire.dataset_dict[i]["sir"].Attributes["xy_unit"] = str(self.maps_units_combobox.currentText())
+        sire.dataset_dict[i]["sir"].Attributes["xy_scale_flag"] = True
+        x = [] #list for X values in physical units
+        xi = [] #list for X indices
+        xx=0
+        while xx < sire.dataset_dict[i]["sir"].Attributes["x"]:
+            x.append(round(sire.dataset_dict[i]["sir"].Attributes["x_sampling"]*xx, self.xy_dcp_spinbox.value()))
+            xi.append(xx)
+            xx+=int(sire.dataset_dict[i]["sir"].Attributes["x_increment"])
+        sire.dataset_dict[i]["sir"].x_scale_tick_labels = x
+        sire.dataset_dict[i]["sir"].x_scale_ticks = xi
+        y = [] #list for Y values in physical units
+        yi = [] #list for Y indices
+        yy=0
+        while yy < sire.dataset_dict[i]["sir"].Attributes["y"]:
+            y.append(round(sire.dataset_dict[i]["sir"].Attributes["y_sampling"]*yy, self.xy_dcp_spinbox.value()))
+            yi.append(yy)
+            yy+=int(sire.dataset_dict[i]["sir"].Attributes["y_increment"])
+        sire.dataset_dict[i]["sir"].y_scale_tick_labels = y
+        sire.dataset_dict[i]["sir"].y_scale_ticks = yi
+        sire.change_canvas()
+    else:
+        print("you have to load something first")
+
+def reset_maps_axis_scales(sire):
+    sire.sc1.fig1.clf()
+    create_figure1(sire)
+    i = str(sire.match)
+    sire.dataset_dict[i]["sir"].Attributes["xy_scale_flag"] = False
+    sire.change_canvas()

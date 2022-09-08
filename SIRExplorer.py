@@ -3,9 +3,9 @@ from PyQt5.Qt import Qt
 import sys
 from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtCore import QSettings
-from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets, sfa_layouts, sfa_widgets, wl_axis_scale_layouts, wl_axis_scale_widgets
+from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets, sfa_layouts, sfa_widgets, wl_axis_scale_layouts, wl_axis_scale_widgets, maps_axis_scales_widgets, maps_axis_scales_layouts
 from Instruments import SIR
-from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth, create_figure1,clear_fig1
+from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth, create_figure1
 import os
 
 class SIRExplorer(QWidget):
@@ -46,6 +46,7 @@ class SIRExplorer(QWidget):
         self.preferences_flag = None
         self.sfa_flag = None
         self.wl_axis_flag = None
+        self.maps_axis_flag = None
 
         #load settings for maps or set to default values if no settings saved
         if self.settings.value('StkI_CT') is not None:
@@ -529,6 +530,14 @@ class SIRExplorer(QWidget):
             self.wl_axis_flag.close()
             self.wl_axis_flag = None
 
+    def maps_axis_scales(self):
+        if self.maps_axis_flag is None:
+            self.maps_axis_flag = MapsAxisScales(self)
+            self.maps_axis_flag.show()
+        else:
+            self.maps_axis_flag.close()
+            self.maps_axis_flag = None
+
 class ColourTables(QWidget):
     def __init__(self,sire):
         super().__init__()
@@ -552,6 +561,12 @@ class WavelengthAxisScale(QWidget):
         super().__init__()
         wl_axis_scale_widgets(self,sire)
         wl_axis_scale_layouts(self)
+
+class MapsAxisScales(QWidget):
+    def __init__(self,sire):
+        super().__init__()
+        maps_axis_scales_widgets(self,sire)
+        maps_axis_scales_layouts(self)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
