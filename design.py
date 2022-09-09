@@ -882,6 +882,15 @@ def preferences_layouts(self):
     self.preferences_layout.addWidget(self.line_widths_label,5,0)
     self.preferences_layout.addWidget(self.line_widths_entry,5,1)
 
+    self.preferences_layout.addWidget(self.primary_line_colour_label,6,0)
+    self.preferences_layout.addWidget(self.primary_line_colour_combobox,6,1)
+    self.preferences_layout.addWidget(self.secondary_line_colour_label,7,0)
+    self.preferences_layout.addWidget(self.secondary_line_colour_combobox,7,1)
+    self.preferences_layout.addWidget(self.primary_line_style_label,8,0)
+    self.preferences_layout.addWidget(self.primary_line_style_combobox,8,1)
+    self.preferences_layout.addWidget(self.secondary_line_style_label,9,0)
+    self.preferences_layout.addWidget(self.secondary_line_style_combobox,9,1)
+
     self.setLayout(self.preferences_layout)
 
 def preferences_widgets(self,sire):
@@ -911,6 +920,31 @@ def preferences_widgets(self,sire):
     self.line_widths_entry.setText(str(sire.line_widths))
     self.line_widths_entry.setValidator(sire.only_double)
 
+    self.primary_line_colour_label = QLabel("Primary line colour: ")
+    self.primary_line_colour_combobox = QComboBox(self)
+    self.primary_line_colour_combobox.addItems(sire.line_colours)
+    index = self.primary_line_colour_combobox.findText(sire.primary_line_colour, Qt.MatchFixedString) #-1 if no match
+    if index >= 0:
+        self.primary_line_colour_combobox.setCurrentIndex(index)
+    self.secondary_line_colour_label = QLabel("Secondary line colour: ")
+    self.secondary_line_colour_combobox = QComboBox(self)
+    self.secondary_line_colour_combobox.addItems(sire.line_colours)
+    index = self.secondary_line_colour_combobox.findText(sire.secondary_line_colour, Qt.MatchFixedString) #-1 if no match
+    if index >= 0:
+        self.secondary_line_colour_combobox.setCurrentIndex(index)
+    self.primary_line_style_label = QLabel("Primary line style: ")
+    self.primary_line_style_combobox = QComboBox(self)
+    self.primary_line_style_combobox.addItems(sire.line_styles)
+    index = self.primary_line_style_combobox.findText(sire.primary_line_style, Qt.MatchFixedString) #-1 if no match
+    if index >= 0:
+        self.primary_line_style_combobox.setCurrentIndex(index)
+    self.secondary_line_style_label = QLabel("Secondary line style: ")
+    self.secondary_line_style_combobox = QComboBox(self)
+    self.secondary_line_style_combobox.addItems(sire.line_styles)
+    index = self.secondary_line_style_combobox.findText(sire.secondary_line_style, Qt.MatchFixedString) #-1 if no match
+    if index >= 0:
+        self.secondary_line_style_combobox.setCurrentIndex(index)
+
 def sfa_layouts(self):
     self.sfa_layout = QGridLayout() #row,col
     self.sfa_layout.addWidget(self.sfa_label,0,0)
@@ -933,6 +967,7 @@ def sfa_layouts(self):
 
 def sfa_widgets(self,sire):
     self.sfa_label = QLabel("Strong field approximation calculator")
+    self.sfa_label.setStyleSheet("font-weight: bold")
     self.dispersion_label = QLabel("Dispersion [Angstroms]")
     self.gfactor_label = QLabel("Effective Lande g-factor")
     self.rest_wl_label = QLabel("Rest wavelength [Angstroms]")

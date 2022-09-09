@@ -751,22 +751,22 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
         sire.sc3.ax4.clear()
 
     # Stokes plots
-    sire.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=sire.line_widths, color='red')
+    sire.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=sire.line_widths, color=sire.primary_line_colour, linestyle=sire.primary_line_style)
     sire.sc2.ax1.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Syn', linewidth=sire.line_widths, color='blue')
+    sire.sc2.ax1.plot(syn_prof[0, :, int(current_y), int(current_x)], label='Syn', linewidth=sire.line_widths, color=sire.secondary_line_colour, linestyle=sire.secondary_line_style)
     sire.sc2.ax1.legend(frameon=False, fontsize=sire.fontsize_axislabels)
     sire.sc2.ax1.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='red')
+    sire.sc2.ax2.plot(obs_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color=sire.primary_line_colour, linestyle=sire.primary_line_style)
     sire.sc2.ax2.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax2.plot(syn_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='blue')
+    sire.sc2.ax2.plot(syn_prof[1, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color=sire.secondary_line_colour, linestyle=sire.secondary_line_style)
     sire.sc2.ax2.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax3.plot(obs_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='red')
+    sire.sc2.ax3.plot(obs_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color=sire.primary_line_colour, linestyle=sire.primary_line_style)
     sire.sc2.ax3.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax3.plot(syn_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='blue')
+    sire.sc2.ax3.plot(syn_prof[2, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color=sire.secondary_line_colour, linestyle=sire.secondary_line_style)
     sire.sc2.ax3.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
-    sire.sc2.ax4.plot(obs_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='red')
+    sire.sc2.ax4.plot(obs_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color=sire.primary_line_colour, linestyle=sire.primary_line_style)
     sire.sc2.ax4.axvline(sir["sir"].current_wl_index, linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color='blue')
+    sire.sc2.ax4.plot(syn_prof[3, :, int(current_y), int(current_x)], linewidth=sire.line_widths, color=sire.secondary_line_colour, linestyle=sire.secondary_line_style)
     sire.sc2.ax4.set_xlim(sir["sir"].wl_min, sir["sir"].wl_max)
 
     if sir["sir"].Attributes["wl_scale_flag"]:
@@ -796,44 +796,44 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
 
     # Model parameter plots
     sire.sc3.ax1.plot(model1[0, :, int(current_y), int(current_x)], model1[1, :, int(current_y), int(current_x)], label="mod 1",
-        linestyle='solid',color='red', linewidth=sire.line_widths)
+        linestyle='solid',color=sire.primary_line_colour, linewidth=sire.line_widths)
     sire.sc3.ax1.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax1.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax2.plot(model1[0, :, int(current_y), int(current_x)], model1[4, :, int(current_y), int(current_x)],
-        linestyle='solid', color='red', linewidth=sire.line_widths)
+        linestyle='solid', color=sire.primary_line_colour, linewidth=sire.line_widths)
     sire.sc3.ax2.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax2.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax3.plot(model1[0, :, int(current_y), int(current_x)], model1[5, :, int(current_y), int(current_x)] / (100 * 1000),
-        linestyle='solid', color='red', linewidth=sire.line_widths)
+        linestyle='solid', color=sire.primary_line_colour, linewidth=sire.line_widths)
     sire.sc3.ax3.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax3.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[6, :, int(current_y), int(current_x)],
-        linestyle='solid', color='red', linewidth=sire.line_widths)  # inclination
+        linestyle='solid', color=sire.primary_line_colour, linewidth=sire.line_widths)  # inclination
     sire.sc3.ax4.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[7, :, int(current_y), int(current_x)],
-        linestyle=':', color='red', linewidth=sire.line_widths)  # azimuth
+        linestyle=':', color=sire.primary_line_colour, linewidth=sire.line_widths)  # azimuth
     sire.sc3.ax4.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     if sir["sir"].Attributes["model2_flag"]:
         model2 = sir["sir"].model2
         sire.sc3.ax1.plot(model2[0, :, int(current_y), int(current_x)], model2[1, :, int(current_y), int(current_x)],
-            label="mod 2", linestyle='solid', color='blue', linewidth=sire.line_widths)
+            label="mod 2", linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)
         sire.sc3.ax1.legend(frameon=False, fontsize=sire.fontsize_axislabels)
         sire.sc3.ax2.plot(model2[0, :, int(current_y), int(current_x)], model2[4, :, int(current_y), int(current_x)],
-            linestyle='solid', color='blue', linewidth=sire.line_widths)
+            linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)
         sire.sc3.ax3.plot(model2[0, :, int(current_y), int(current_x)], model2[5, :, int(current_y), int(current_x)] / (100 * 1000),
-            linestyle='solid', color='blue', linewidth=sire.line_widths)
+            linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)
         sire.sc3.ax4.plot(model2[0, :, int(current_y), int(current_x)], model2[6, :, int(current_y), int(current_x)],
-            linestyle='solid', color='blue', linewidth=sire.line_widths)  # inclination
+            linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)  # inclination
         sire.sc3.ax4.plot(model2[0, :, int(current_y), int(current_x)], model2[7, :, int(current_y), int(current_x)],
-            linestyle=':', color='blue', linewidth=sire.line_widths)  # azimuth
+            linestyle=':', color=sire.secondary_line_colour, linewidth=sire.line_widths)  # azimuth
         del model2
 
     sire.sc3.ax1.set_title("T [K]", fontsize=sire.fontsize_titles)
@@ -1317,6 +1317,10 @@ def set_font_sizes(self,sire):
 
 def set_plotting_preferences(self,sire):
     sire.line_widths = float(self.line_widths_entry.text())
+    sire.primary_line_colour = str(self.primary_line_colour_combobox.currentText())
+    sire.secondary_line_colour = str(self.secondary_line_colour_combobox.currentText())
+    sire.primary_line_style = str(self.primary_line_style_combobox.currentText())
+    sire.secondary_line_style = str(self.secondary_line_style_combobox.currentText())
 
 def set_wl_axis_scale(self,sire):
     if sire.click_increment == 1:
