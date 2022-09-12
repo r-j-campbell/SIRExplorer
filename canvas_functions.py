@@ -60,6 +60,7 @@ def activate_widgets(sire):
     sire.mB_checkbutton.setEnabled(True)
     sire.mV_checkbutton.setEnabled(True)
     sire.mG_checkbutton.setEnabled(True)
+    sire.mA_checkbutton.setEnabled(True)
     sire.wl_min_entry.setEnabled(True)
     sire.wl_max_entry.setEnabled(True)
     sire.wl_range_btn.setEnabled(True)
@@ -796,54 +797,60 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
 
     # Model parameter plots
     sire.sc3.ax1.plot(model1[0, :, int(current_y), int(current_x)], model1[1, :, int(current_y), int(current_x)], label="mod 1",
-        linestyle='solid',color=sire.primary_line_colour, linewidth=sire.line_widths)
+        linestyle=sire.primary_line_style,color=sire.primary_line_colour, linewidth=sire.line_widths)
     sire.sc3.ax1.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax1.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax2.plot(model1[0, :, int(current_y), int(current_x)], model1[4, :, int(current_y), int(current_x)],
-        linestyle='solid', color=sire.primary_line_colour, linewidth=sire.line_widths)
+        linestyle=sire.primary_line_style, color=sire.primary_line_colour, linewidth=sire.line_widths)
     sire.sc3.ax2.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax2.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax3.plot(model1[0, :, int(current_y), int(current_x)], model1[5, :, int(current_y), int(current_x)] / (100 * 1000),
-        linestyle='solid', color=sire.primary_line_colour, linewidth=sire.line_widths)
+        linestyle=sire.primary_line_style, color=sire.primary_line_colour, linewidth=sire.line_widths)
     sire.sc3.ax3.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
     sire.sc3.ax3.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     sire.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[6, :, int(current_y), int(current_x)],
-        linestyle='solid', color=sire.primary_line_colour, linewidth=sire.line_widths)  # inclination
+        linestyle=sire.primary_line_style, color=sire.primary_line_colour, linewidth=sire.line_widths)  # inclination
     sire.sc3.ax4.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
         linestyle=':', color='gray', linewidth=sire.line_widths)
-    sire.sc3.ax4.plot(model1[0, :, int(current_y), int(current_x)], model1[7, :, int(current_y), int(current_x)],
-        linestyle=':', color=sire.primary_line_colour, linewidth=sire.line_widths)  # azimuth
     sire.sc3.ax4.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
+
+    sire.sc3.ax5.plot(model1[0, :, int(current_y), int(current_x)], model1[7, :, int(current_y), int(current_x)],
+        linestyle=sire.primary_line_style, color=sire.primary_line_colour, linewidth=sire.line_widths)  # azimuth
+    sire.sc3.ax5.axvline(model1[0, sir["sir"].current_optical_depth_index, int(current_y), int(current_x)],
+        linestyle=':', color='gray', linewidth=sire.line_widths)
+    sire.sc3.ax5.set_xlim(model1[0, sir["sir"].optical_depth_min, int(current_y), int(current_x)], model1[0, sir["sir"].optical_depth_max, int(current_y), int(current_x)])
 
     if sir["sir"].Attributes["model2_flag"]:
         model2 = sir["sir"].model2
         sire.sc3.ax1.plot(model2[0, :, int(current_y), int(current_x)], model2[1, :, int(current_y), int(current_x)],
-            label="mod 2", linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)
+            label="mod 2", linestyle=sire.secondary_line_style, color=sire.secondary_line_colour, linewidth=sire.line_widths)
         sire.sc3.ax1.legend(frameon=False, fontsize=sire.fontsize_axislabels)
         sire.sc3.ax2.plot(model2[0, :, int(current_y), int(current_x)], model2[4, :, int(current_y), int(current_x)],
-            linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)
+            linestyle=sire.secondary_line_style, color=sire.secondary_line_colour, linewidth=sire.line_widths)
         sire.sc3.ax3.plot(model2[0, :, int(current_y), int(current_x)], model2[5, :, int(current_y), int(current_x)] / (100 * 1000),
-            linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)
+            linestyle=sire.secondary_line_style, color=sire.secondary_line_colour, linewidth=sire.line_widths)
         sire.sc3.ax4.plot(model2[0, :, int(current_y), int(current_x)], model2[6, :, int(current_y), int(current_x)],
-            linestyle='solid', color=sire.secondary_line_colour, linewidth=sire.line_widths)  # inclination
-        sire.sc3.ax4.plot(model2[0, :, int(current_y), int(current_x)], model2[7, :, int(current_y), int(current_x)],
-            linestyle=':', color=sire.secondary_line_colour, linewidth=sire.line_widths)  # azimuth
+            linestyle=sire.secondary_line_style, color=sire.secondary_line_colour, linewidth=sire.line_widths)  # inclination
+        sire.sc3.ax5.plot(model2[0, :, int(current_y), int(current_x)], model2[7, :, int(current_y), int(current_x)],
+            linestyle=sire.secondary_line_style, color=sire.secondary_line_colour, linewidth=sire.line_widths)  # azimuth
         del model2
 
     sire.sc3.ax1.set_title("T [K]", fontsize=sire.fontsize_titles)
     sire.sc3.ax2.set_title("B [G]", fontsize=sire.fontsize_titles)
     sire.sc3.ax3.set_title("$v_\mathrm{{LOS}}$ [km/s]", fontsize=sire.fontsize_titles)
-    sire.sc3.ax4.set_title("$\\gamma$ (solid), $\\phi$ (dashed) [deg.]", fontsize=sire.fontsize_titles)
+    sire.sc3.ax4.set_title("$\\gamma$ [$^\\circ$]", fontsize=sire.fontsize_titles)
+    sire.sc3.ax5.set_title("$\\phi$ [$^\\circ$]", fontsize=sire.fontsize_titles)
     sire.sc3.ax1.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
     sire.sc3.ax2.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
     sire.sc3.ax3.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
     sire.sc3.ax4.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
+    sire.sc3.ax5.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
     sire.sc2.ax1.set_title("Stokes $I$ [$I_c$]", fontsize=sire.fontsize_titles)
     sire.sc2.ax2.set_title("Stokes $Q$ [$I_c$]", fontsize=sire.fontsize_titles)
     sire.sc2.ax3.set_title("Stokes $U$ [$I_c$]", fontsize=sire.fontsize_titles)
@@ -1029,12 +1036,17 @@ def create_figure3(sire): #creates figure for model plots
         total+=1
     if sire.mG_checkbutton.isChecked():
         total+=1
+    if sire.mA_checkbutton.isChecked():
+        total+=1
     if total <= 2:
         rows = 1
         columns = total
-    else:
+    elif total <= 4:
         rows = 2
         columns = 2
+    else:
+        rows = 2
+        columns = 3
     if sire.mT_checkbutton.isChecked():
         sire.sc3.ax1 = sire.sc3.fig3.add_subplot(columns,rows,index)
         sire.sc3.ax1.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
@@ -1050,6 +1062,10 @@ def create_figure3(sire): #creates figure for model plots
     if sire.mG_checkbutton.isChecked():
         sire.sc3.ax4 = sire.sc3.fig3.add_subplot(columns,rows,index)
         sire.sc3.ax4.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
+        index+=1
+    if sire.mA_checkbutton.isChecked():
+        sire.sc3.ax5 = sire.sc3.fig3.add_subplot(columns,rows,index)
+        sire.sc3.ax5.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         index+=1
 
 
