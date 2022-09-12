@@ -750,6 +750,7 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
         sire.sc3.ax2.clear()
         sire.sc3.ax3.clear()
         sire.sc3.ax4.clear()
+        sire.sc3.ax5.clear()
 
     # Stokes plots
     sire.sc2.ax1.plot(obs_prof[0, :, int(current_y), int(current_x)], label='Obs', linewidth=sire.line_widths, color=sire.primary_line_colour, linestyle=sire.primary_line_style)
