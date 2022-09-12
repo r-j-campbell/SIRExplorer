@@ -64,9 +64,11 @@ def activate_widgets(sire):
     sire.wl_min_entry.setEnabled(True)
     sire.wl_max_entry.setEnabled(True)
     sire.wl_range_btn.setEnabled(True)
+    sire.reset_wl_range_btn.setEnabled(True)
     sire.optical_depth_min_entry.setEnabled(True)
     sire.optical_depth_max_entry.setEnabled(True)
     sire.optical_depth_range_btn.setEnabled(True)
+    sire.reset_optical_depth_range_btn.setEnabled(True)
     sire.sfa_btn.setEnabled(True)
     sire.wl_axis_scale_btn.setEnabled(True)
     sire.maps_axis_scales_btn.setEnabled(True)
@@ -1176,6 +1178,15 @@ def set_wavelength_range(sire):
         sire.wl_max_entry.setText(str(sire.dataset_dict[i]["sir"].wl_max))
 
 
+def reset_wavelength_range(sire):
+    i = str(sire.match)
+    sire.dataset_dict[i]["sir"].wl_max = sire.dataset_dict[i]["sir"].Attributes['wl'] -1
+    sire.dataset_dict[i]["sir"].wl_min = 0
+    click(sire, sire.dataset_dict[i])
+    sire.wl_min_entry.setText(str(sire.dataset_dict[i]["sir"].wl_min))
+    sire.wl_max_entry.setText(str(sire.dataset_dict[i]["sir"].wl_max))
+
+
 def set_xy_lim(sire):
     if sire.increment == 1:
         i = str(sire.match)
@@ -1231,6 +1242,15 @@ def set_optical_depth_range(sire):
         msg.exec()
         sire.optical_depth_min_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_min))
         sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
+
+
+def reset_optical_depth_range(sire):
+    i = str(sire.match)
+    sire.dataset_dict[i]["sir"].optical_depth_max = sire.dataset_dict[i]["sir"].Attributes['optical_depth'] -1
+    sire.dataset_dict[i]["sir"].optical_depth_min = 0
+    click(sire, sire.dataset_dict[i])
+    sire.optical_depth_min_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_min))
+    sire.optical_depth_max_entry.setText(str(sire.dataset_dict[i]["sir"].optical_depth_max))
 
 
 def change_frame(sire):
