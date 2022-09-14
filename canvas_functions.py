@@ -8,29 +8,33 @@ from PyQt5.QtWidgets import QMessageBox
 
 
 def show(sire, sir):#clears maps (or creates figures if increment=0) then calls update_canvas to change the maps
-    if sire.increment == 0:
-        create_figure1(sire)
+    if not sire.flag or sire.frame_changed_flag == 1 or sire.reload_flag:
+        open_files(sire, sir)
+    if sire.reload_flag == True:
+        sire.sc1.fig1.clf()
+        sire.sc2.fig2.clf()
+        sire.sc3.fig3.clf()
+        create_figure1(sire,sir)
         create_figure2(sire)
         create_figure3(sire)
-        activate_widgets(sire)
+    if sire.increment == 0:
+        create_figure1(sire,sir)
+        create_figure2(sire)
+        create_figure3(sire)
+    activate_widgets(sire,sir)
     if sire.increment == 1:
         clear_maps_and_remove_cbars(sire)
-    if not sire.flag or sire.frame_changed_flag == 1:
-        open_files(sire, sir)
     if sir["sir"].Attributes["t"] > 0:
         sire.frame_scale.setEnabled(True)
     else:
         sire.frame_scale.setEnabled(False)
         sire.frame_scale.setValue(0)
-    if not sir["sir"].Attributes["model2_flag"]:
-        sire.select_map_mode.setEnabled(False)
-    else:
-        sire.select_map_mode.setEnabled(True)
     update_canvas(sire, sir)
     sire.sc1.fig1.canvas.draw()
+    activate_widgets(sire,sir)
 
 
-def activate_widgets(sire):
+def activate_widgets(sire,sir):
     sire.reload_btn.setEnabled(True)
     sire.clear_map_btn.setEnabled(True)
     sire.select_map_mode.setEnabled(True)
@@ -43,6 +47,27 @@ def activate_widgets(sire):
     sire.V_checkbutton.setEnabled(True)
     sire.G_checkbutton.setEnabled(True)
     sire.A_checkbutton.setEnabled(True)
+    if not sir["sir"].Attributes["model2_flag"]:
+        sire.select_map_mode.setEnabled(False)
+        sire.T2_checkbutton.setEnabled(False)
+        sire.B2_checkbutton.setEnabled(False)
+        sire.V2_checkbutton.setEnabled(False)
+        sire.G2_checkbutton.setEnabled(False)
+        sire.A2_checkbutton.setEnabled(False)
+    else:
+        sire.select_map_mode.setEnabled(True)
+        if sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
+            sire.T2_checkbutton.setEnabled(False)
+            sire.B2_checkbutton.setEnabled(False)
+            sire.V2_checkbutton.setEnabled(False)
+            sire.G2_checkbutton.setEnabled(False)
+            sire.A2_checkbutton.setEnabled(False)
+        elif sire.select_map_mode.currentText() == "2 models (both magnetic)":
+            sire.T2_checkbutton.setEnabled(True)
+            sire.B2_checkbutton.setEnabled(True)
+            sire.V2_checkbutton.setEnabled(True)
+            sire.G2_checkbutton.setEnabled(True)
+            sire.A2_checkbutton.setEnabled(True)
     sire.x_min_entry.setEnabled(True)
     sire.x_max_entry.setEnabled(True)
     sire.y_min_entry.setEnabled(True)
@@ -157,7 +182,7 @@ def open_files(sire,sir): #loads files
         mac1_file = np.squeeze(mac1_file)
         if mac1_file.ndim == 4:  # executed only if there are multiple frames of data
             mac1_file = mac1_file[sir["sir"].current_frame_index, :, :, :]
-        sir["sir"].updatemac1(mac1_file)
+        sir["sir"].update_mac1(mac1_file)
         sir["sir"].Attributes["mac1_flag"] = True
 
     elif sire.model2_checkbutton.isChecked() and sire.mac1_checkbutton.isChecked() and not sire.mac2_checkbutton.isChecked():
@@ -553,7 +578,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
 
     #mod 2 - only when selected in map mode
     if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (both magnetic)":
-        if sire.T_checkbutton.isChecked():
+        if sire.T2_checkbutton.isChecked():
             if sire.T_CT[3] == 0:
                 T_map2 = sire.sc1.ax10.imshow(
                     model2[1, sir["sir"].current_optical_depth_index, :, :],
@@ -589,7 +614,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax10.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax10.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
-        if sire.B_checkbutton.isChecked():
+        if sire.B2_checkbutton.isChecked():
             if sire.B_CT[3] == 0:
                 B_map2 = sire.sc1.ax11.imshow(
                     model2[4, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
@@ -625,7 +650,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax11.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax11.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
-        if sire.V_checkbutton.isChecked():
+        if sire.V2_checkbutton.isChecked():
             if sire.V_CT[3] == 0:
                 V_map2 = sire.sc1.ax12.imshow(
                     (model2[5, sir["sir"].current_optical_depth_index, :, :] / (100 * 1000)),
@@ -661,7 +686,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax12.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax12.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
-        if sire.G_checkbutton.isChecked():
+        if sire.G2_checkbutton.isChecked():
             if sire.G_CT[3] == 0:
                 G_map2 = sire.sc1.ax13.imshow(
                     model2[6, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
@@ -697,7 +722,7 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax13.set_xlim(sir["sir"].x_min, sir["sir"].x_max)
             sire.sc1.ax13.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
-        if sire.A_checkbutton.isChecked():
+        if sire.A2_checkbutton.isChecked():
             if sire.A_CT[3] == 0:
                 A_map2 = sire.sc1.ax14.imshow(
                     model2[7, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
@@ -865,7 +890,7 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
     del model1, obs_prof, syn_prof
 
 
-def create_figure1(sire): #creates figure for maps
+def create_figure1(sire,sir): #creates figure for maps
     index=1
     total=0
     if sire.Stokes_checkbutton.isChecked():
@@ -878,23 +903,23 @@ def create_figure1(sire): #creates figure for maps
         total+=1
     if sire.T_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.T2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
             total+=1
     if sire.B_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.B2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
             total+=1
     if sire.V_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.V2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
             total+=1
     if sire.G_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.G2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
             total+=1
     if sire.A_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.A2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
             total+=1
     if total >= 6:
         columns = 2
@@ -944,24 +969,24 @@ def create_figure1(sire): #creates figure for maps
         sire.sc1.ax9.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         sire.sc1.ax9.set_facecolor('xkcd:black')
         index+=1
-    if sire.T_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+    if sire.T2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.dataset_dict[str(sire.match)]["sir"].Attributes["model2_flag"]:
         sire.sc1.ax10 = sire.sc1.fig1.add_subplot(rows,columns,index)
         sire.sc1.ax10.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         index+=1
-    if sire.B_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+    if sire.B2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.dataset_dict[str(sire.match)]["sir"].Attributes["model2_flag"]:
         sire.sc1.ax11 = sire.sc1.fig1.add_subplot(rows,columns,index)
         sire.sc1.ax11.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         index+=1
-    if sire.V_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+    if sire.V2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.dataset_dict[str(sire.match)]["sir"].Attributes["model2_flag"]:
         sire.sc1.ax12 = sire.sc1.fig1.add_subplot(rows,columns,index)
         sire.sc1.ax12.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         index+=1
-    if sire.G_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+    if sire.G2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.dataset_dict[str(sire.match)]["sir"].Attributes["model2_flag"]:
         sire.sc1.ax13 = sire.sc1.fig1.add_subplot(rows,columns,index)
         sire.sc1.ax13.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         sire.sc1.ax13.set_facecolor('xkcd:black')
         index+=1
-    if sire.A_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.model2_checkbutton.isChecked():
+    if sire.A2_checkbutton.isChecked() and sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.dataset_dict[str(sire.match)]["sir"].Attributes["model2_flag"]:
         sire.sc1.ax14 = sire.sc1.fig1.add_subplot(rows,columns,index)
         sire.sc1.ax14.tick_params(axis='both', labelsize=sire.fontsize_ticklabels)
         sire.sc1.ax14.set_facecolor('xkcd:black')
@@ -969,12 +994,12 @@ def create_figure1(sire): #creates figure for maps
 
 
 def clear_fig1(sire):
-    sire.sc1.fig1.clf()
-    create_figure1(sire)
     sire.flag=False
     sire.get_all_values(sire.dataset_dict,0,sire.select_model1.currentText())
     if sire.flag:
         i = str(sire.match)
+        sire.sc1.fig1.clf()
+        create_figure1(sire,sire.dataset_dict[i])
         if sire.increment == 1:
             sire.change_canvas()
         else:
@@ -1014,14 +1039,14 @@ def create_figure2(sire): #creates figure for Stokes plots
 
 
 def clear_fig2(sire):
-    sire.sc2.fig2.clf()
-    create_figure2(sire)
     sire.flag=False
     sire.get_all_values(sire.dataset_dict,0,sire.select_model1.currentText())
     if sire.flag:
         i = str(sire.match)
         if sire.click_increment == 1:
             click(sire,sire.dataset_dict[i])
+            sire.sc2.fig2.clf()
+            create_figure2(sire)
         else:
             print("you have to load something first")
     else:
@@ -1073,13 +1098,13 @@ def create_figure3(sire): #creates figure for model plots
 
 
 def clear_fig3(sire):
-    sire.sc3.fig3.clf()
-    create_figure3(sire)
     sire.flag=False
     sire.get_all_values(sire.dataset_dict,0,sire.select_model1.currentText())
     if sire.flag:
         i = str(sire.match)
         if sire.click_increment == 1:
+            sire.sc3.fig3.clf()
+            create_figure3(sire)
             click(sire,sire.dataset_dict[i])
         else:
             print("you have to load something first")
