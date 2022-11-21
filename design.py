@@ -1101,7 +1101,7 @@ def maps_axis_scales_widgets(self,sire):
     self.xy_dcp_label = QLabel("# decimal points")
 
     self.maps_units_combobox = QComboBox(self)
-    self.maps_units_combobox.addItems(["Arcseconds", "Mm"])
+    self.maps_units_combobox.addItems(["Arcseconds", "Mm", "km"])
     self.maps_sampling_x_entry = QLineEdit(self)
     self.maps_sampling_x_entry.setValidator(sire.only_double)
     self.maps_sampling_y_entry = QLineEdit(self)

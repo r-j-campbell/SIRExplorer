@@ -903,24 +903,24 @@ def create_figure1(sire,sir): #creates figure for maps
         total+=1
     if sire.T_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.T2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
-            total+=1
+    if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.T2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
+        total+=1
     if sire.B_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.B2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
-            total+=1
+    if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.B2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
+        total+=1
     if sire.V_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.V2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
-            total+=1
+    if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.V2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
+        total+=1
     if sire.G_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.G2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
-            total+=1
+    if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.G2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
+        total+=1
     if sire.A_checkbutton.isChecked():
         total+=1
-        if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.A2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
-            total+=1
+    if sire.select_map_mode.currentText() == "2 models (both magnetic)" and sire.A2_checkbutton.isChecked() and sir["sir"].Attributes["model2_flag"]:
+        total+=1
     if total >= 6:
         columns = 2
         if total % 2 == 0:
@@ -1425,8 +1425,8 @@ def calculate_sfa(self):
 def set_maps_axis_scales(self,sire):
     if sire.click_increment == 1:
         sire.sc1.fig1.clf()
-        create_figure1(sire)
         i = str(sire.match)
+        create_figure1(sire,sire.dataset_dict[i])
         sire.dataset_dict[i]["sir"].Attributes["x_sampling"] = float(self.maps_sampling_x_entry.text())
         sire.dataset_dict[i]["sir"].Attributes["y_sampling"] = float(self.maps_sampling_y_entry.text())
         sire.dataset_dict[i]["sir"].Attributes["x_increment"] = int(self.maps_increment_x_entry.text())
@@ -1457,7 +1457,7 @@ def set_maps_axis_scales(self,sire):
 
 def reset_maps_axis_scales(sire):
     sire.sc1.fig1.clf()
-    create_figure1(sire)
     i = str(sire.match)
+    create_figure1(sire,sire.dataset_dict[i])
     sire.dataset_dict[i]["sir"].Attributes["xy_scale_flag"] = False
     sire.change_canvas()
