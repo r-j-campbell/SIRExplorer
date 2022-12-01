@@ -359,9 +359,9 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
     if sire.T_checkbutton.isChecked():
         if sir["sir"].Attributes["model2_flag"] == True and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
             combined_T = (model2[1, sir["sir"].current_optical_depth_index, :, :] * mac2_file[1, :, :]) + (model1[1, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :])
-            if sire.V_CT[3] == 0:
+            if sire.T_CT[3] == 0:
                 T_map = sire.sc1.ax5.imshow(combined_T, origin='lower', cmap=sire.T_CT[0], vmin=sire.T_CT[1], vmax=sire.T_CT[2])
-            elif sire.V_CT[3] == 1:
+            elif sire.T_CT[3] == 1:
                 T_map = sire.sc1.ax5.imshow(combined_T, origin='lower', cmap=sire.T_CT[0])
         else:
             if sire.T_CT[3] == 0:
