@@ -5,7 +5,7 @@ from PyQt5.QtGui import QIntValidator, QDoubleValidator
 from PyQt5.QtCore import QSettings
 from design import layouts, widgets, colour_table_layouts, colour_table_widgets, preferences_layouts, preferences_widgets, sfa_layouts, sfa_widgets, wl_axis_scale_layouts, wl_axis_scale_widgets, maps_axis_scales_widgets, maps_axis_scales_layouts
 from Instruments import SIR
-from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth, create_figure1, clear_fig1
+from canvas_functions import show, click, update_pixel_info, change_frame, change_wl, change_optical_depth
 import os
 
 class SIRExplorer(QWidget):

@@ -28,7 +28,9 @@ def show(sire, sir):#clears maps (or creates figures if increment=0) then calls 
         sire.frame_scale.setEnabled(True)
     else:
         sire.frame_scale.setEnabled(False)
-        sire.frame_scale.setValue(0)
+    sire.frame_scale.setValue(sir["sir"].current_frame_index)
+    sire.wl_scale.setValue(sir["sir"].current_wl_index)
+    sire.optical_depth_scale.setValue(sir["sir"].current_optical_depth_index)
     update_canvas(sire, sir)
     sire.sc1.fig1.canvas.draw()
     activate_widgets(sire,sir)
