@@ -396,11 +396,9 @@ class SIRExplorer(QWidget):
                                         'binary_file': self.select_binary.currentText(),
                                         'sir': sir
                                          }
-                    show(self,self.dataset_dict[i])
-                    click(self,self.dataset_dict[i])
-                    update_pixel_info(self, self.dataset_dict[i])
-                else:
-                    show(self,self.dataset_dict[i])
+                show(self,self.dataset_dict[i])
+                click(self,self.dataset_dict[i])
+                update_pixel_info(self, self.dataset_dict[i])
             elif not self.flag: #if match is not found
                 sir = SIR()
                 j=str(len(self.dataset_dict))
@@ -415,9 +413,9 @@ class SIRExplorer(QWidget):
                                         'sir': sir
                                          }
                 show(self,self.dataset_dict[j])
-            if self.increment == 0:
                 click(self,self.dataset_dict[j])
                 update_pixel_info(self, self.dataset_dict[j])
+            if self.increment == 0:
                 if self.click_increment == 0:
                     self.click_increment = 1
                 self.increment = 1
