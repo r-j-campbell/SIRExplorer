@@ -384,8 +384,8 @@ class SIRExplorer(QWidget):
             self.get_all_values(self.dataset_dict,0,self.select_model1.currentText())
             if self.flag: #if match is found
                 i=str(self.match)
-                sir = SIR()
                 if self.reload_flag:
+                    sir = SIR()
                     self.flag = False
                     self.dataset_dict[i] = {'model_file': self.select_model1.currentText(),
                                         'secondary_model_file': self.select_model2.currentText(),

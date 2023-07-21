@@ -876,11 +876,11 @@ def click(sire, sir): #changes the plots and updates the relevant dictionary
     sire.sc3.ax3.set_title("$v_\mathrm{{LOS}}$ [km/s]", fontsize=sire.fontsize_titles)
     sire.sc3.ax4.set_title("$\\gamma$ [$^\\circ$]", fontsize=sire.fontsize_titles)
     sire.sc3.ax5.set_title("$\\phi$ [$^\\circ$]", fontsize=sire.fontsize_titles)
-    sire.sc3.ax1.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
-    sire.sc3.ax2.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
-    sire.sc3.ax3.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
-    sire.sc3.ax4.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
-    sire.sc3.ax5.set_xlabel("log($\\tau_{5000\\AA}$)", fontsize=sire.fontsize_axislabels)
+    sire.sc3.ax1.set_xlabel("log($\\tau_{500\mathrm{nm}}$)", fontsize=sire.fontsize_axislabels)
+    sire.sc3.ax2.set_xlabel("log($\\tau_{500\mathrm{nm}}$)", fontsize=sire.fontsize_axislabels)
+    sire.sc3.ax3.set_xlabel("log($\\tau_{500\mathrm{nm}}$)", fontsize=sire.fontsize_axislabels)
+    sire.sc3.ax4.set_xlabel("log($\\tau_{500\mathrm{nm}}$)", fontsize=sire.fontsize_axislabels)
+    sire.sc3.ax5.set_xlabel("log($\\tau_{500\mathrm{nm}}$)", fontsize=sire.fontsize_axislabels)
     sire.sc2.ax1.set_title("Stokes $I$ [$I_c$]", fontsize=sire.fontsize_titles)
     sire.sc2.ax2.set_title("Stokes $Q$ [$I_c$]", fontsize=sire.fontsize_titles)
     sire.sc2.ax3.set_title("Stokes $U$ [$I_c$]", fontsize=sire.fontsize_titles)
@@ -1046,9 +1046,9 @@ def clear_fig2(sire):
     if sire.flag:
         i = str(sire.match)
         if sire.click_increment == 1:
-            click(sire,sire.dataset_dict[i])
             sire.sc2.fig2.clf()
             create_figure2(sire)
+            click(sire,sire.dataset_dict[i])
         else:
             print("you have to load something first")
     else:
