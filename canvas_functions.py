@@ -215,11 +215,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
     current_x = int(sir["sir"].current_x)
     current_y = int(sir["sir"].current_y)
     if sire.Stokes_checkbutton.isChecked():
-        if sire.StkI_CT[3] == 0:
+        if int(sire.StkI_CT[3]) == 0:
             StkI_map = sire.sc1.ax1.imshow(
                 obs_prof[0, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkI_CT[0], vmin=sire.StkI_CT[1], vmax=sire.StkI_CT[2])
-        elif sire.StkI_CT[3] == 1:
+        elif int(sire.StkI_CT[3]) == 1:
             StkI_map = sire.sc1.ax1.imshow(
                 obs_prof[0, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkI_CT[0])
@@ -251,11 +251,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax1.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.Stokes_Q_checkbutton.isChecked():
-        if sire.StkQ_CT[3] == 0:
+        if int(sire.StkQ_CT[3]) == 0:
             StkQ_map = sire.sc1.ax2.imshow(
                 obs_prof[1, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkQ_CT[0], vmin=sire.StkQ_CT[1], vmax=sire.StkQ_CT[2])
-        elif sire.StkQ_CT[3] == 1:
+        elif int(sire.StkQ_CT[3]) == 1:
             StkQ_map = sire.sc1.ax2.imshow(
                 obs_prof[1, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkQ_CT[0])
@@ -287,11 +287,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax2.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.Stokes_U_checkbutton.isChecked():
-        if sire.StkU_CT[3] == 0:
+        if int(sire.StkU_CT[3]) == 0:
             StkU_map = sire.sc1.ax3.imshow(
                 obs_prof[2, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkU_CT[0], vmin=sire.StkU_CT[1], vmax=sire.StkU_CT[2])
-        elif sire.StkU_CT[3] == 1:
+        elif int(sire.StkU_CT[3]) == 1:
             StkU_map = sire.sc1.ax3.imshow(
                 obs_prof[2, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkU_CT[0])
@@ -323,11 +323,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax3.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.Stokes_V_checkbutton.isChecked():
-        if sire.StkV_CT[3] == 0:
+        if int(sire.StkV_CT[3]) == 0:
             StkV_map = sire.sc1.ax4.imshow(
                 obs_prof[3, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkV_CT[0], vmin=sire.StkV_CT[1], vmax=sire.StkV_CT[2])
-        elif sire.StkV_CT[3] == 1:
+        elif int(sire.StkV_CT[3]) == 1:
             StkV_map = sire.sc1.ax4.imshow(
                 obs_prof[3, sir["sir"].current_wl_index, :, :], origin='lower',
                 cmap=sire.StkV_CT[0])
@@ -361,16 +361,16 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
     if sire.T_checkbutton.isChecked():
         if sir["sir"].Attributes["model2_flag"] == True and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
             combined_T = (model2[1, sir["sir"].current_optical_depth_index, :, :] * mac2_file[1, :, :]) + (model1[1, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :])
-            if sire.T_CT[3] == 0:
+            if int(sire.T_CT[3]) == 0:
                 T_map = sire.sc1.ax5.imshow(combined_T, origin='lower', cmap=sire.T_CT[0], vmin=sire.T_CT[1], vmax=sire.T_CT[2])
-            elif sire.T_CT[3] == 1:
+            elif int(sire.T_CT[3]) == 1:
                 T_map = sire.sc1.ax5.imshow(combined_T, origin='lower', cmap=sire.T_CT[0])
         else:
-            if sire.T_CT[3] == 0:
+            if int(sire.T_CT[3]) == 0:
                 T_map = sire.sc1.ax5.imshow(
                     model1[1, sir["sir"].current_optical_depth_index, :, :],
                     origin='lower', cmap=sire.T_CT[0], vmin=sire.T_CT[1], vmax=sire.T_CT[2])
-            elif sire.T_CT[3] == 1:
+            elif int(sire.T_CT[3]) == 1:
                 T_map = sire.sc1.ax5.imshow(
                     model1[1, sir["sir"].current_optical_depth_index, :, :],
                     origin='lower', cmap=sire.T_CT[0])
@@ -406,21 +406,21 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
 
     if sire.B_checkbutton.isChecked():
         if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
-            if sire.B_CT[3] == 0:
+            if int(sire.B_CT[3]) == 0:
                 B_map = sire.sc1.ax6.imshow(
                     model1[4, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :] * binary_map, origin='lower',
                     vmin=sire.B_CT[1], vmax=sire.B_CT[2], cmap=sire.B_CT[0])
-            elif sire.B_CT[3] == 1:
+            elif int(sire.B_CT[3]) == 1:
                 B_map = sire.sc1.ax6.imshow(
                     model1[4, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :] * binary_map, origin='lower',
                     cmap=sire.B_CT[0])
             sire.sc1.ax6.set_title("$\\alpha$ B [G]", fontsize=sire.fontsize_titles)
         else:
-            if sire.B_CT[3] == 0:
+            if int(sire.B_CT[3]) == 0:
                 B_map = sire.sc1.ax6.imshow(
                     model1[4, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     vmin=sire.B_CT[1], vmax=sire.B_CT[2], cmap=sire.B_CT[0])
-            elif sire.B_CT[3] == 1:
+            elif int(sire.B_CT[3]) == 1:
                 B_map = sire.sc1.ax6.imshow(
                     model1[4, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=sire.B_CT[0])
@@ -457,16 +457,16 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
     if sire.V_checkbutton.isChecked():
         if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (1 magnetic, 2 non-magnetic)":
             combined_V = (model2[5, sir["sir"].current_optical_depth_index, :, :] * mac2_file[1, :, :]) + (model1[5, sir["sir"].current_optical_depth_index, :, :] * mac1_file[1, :, :])
-            if sire.V_CT[3] == 0:
+            if int(sire.V_CT[3]) == 0:
                 V_map = sire.sc1.ax7.imshow((combined_V / (100 * 1000)), origin='lower', cmap=sire.V_CT[0], vmin=sire.V_CT[1], vmax=sire.V_CT[2])
-            elif sire.V_CT[3] == 1:
+            elif int(sire.V_CT[3]) == 1:
                 V_map = sire.sc1.ax7.imshow((combined_V / (100 * 1000)), origin='lower', cmap=sire.V_CT[0])
         else:
-            if sire.V_CT[3] == 0:
+            if int(sire.V_CT[3]) == 0:
                 V_map = sire.sc1.ax7.imshow(
                     (model1[5, sir["sir"].current_optical_depth_index, :, :] / (100 * 1000)),
                     origin='lower', cmap=sire.V_CT[0], vmin=sire.V_CT[1], vmax=sire.V_CT[2])
-            elif sire.V_CT[3] == 1:
+            elif int(sire.V_CT[3]) == 1:
                 V_map = sire.sc1.ax7.imshow(
                     (model1[5, sir["sir"].current_optical_depth_index, :, :] / (100 * 1000)),
                     origin='lower', cmap=sire.V_CT[0])
@@ -501,11 +501,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax7.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.G_checkbutton.isChecked():
-        if sire.G_CT[3] == 0:
+        if int(sire.G_CT[3]) == 0:
             G_map = sire.sc1.ax8.imshow(
                 model1[6, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                 vmin=sire.G_CT[1], vmax=sire.G_CT[2], cmap=sire.G_CT[0])
-        if sire.G_CT[3] == 1:
+        if int(sire.G_CT[3]) == 1:
             G_map = sire.sc1.ax8.imshow(
                 model1[6, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                 cmap=sire.G_CT[0])
@@ -540,11 +540,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
         sire.sc1.ax8.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
     if sire.A_checkbutton.isChecked():
-        if sire.A_CT[3] == 0:
+        if int(sire.A_CT[3]) == 0:
             A_map = sire.sc1.ax9.imshow(
                 model1[7, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                 cmap=sire.A_CT[0], vmin=sire.A_CT[1], vmax=sire.A_CT[2])
-        elif sire.A_CT[3] == 1:
+        elif int(sire.A_CT[3]) == 1:
             A_map = sire.sc1.ax9.imshow(
                 model1[7, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                 cmap=sire.A_CT[0])
@@ -581,11 +581,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
     #mod 2 - only when selected in map mode
     if sir["sir"].Attributes["model2_flag"] and sire.select_map_mode.currentText() == "2 models (both magnetic)":
         if sire.T2_checkbutton.isChecked():
-            if sire.T_CT[3] == 0:
+            if int(sire.T_CT[3]) == 0:
                 T_map2 = sire.sc1.ax10.imshow(
                     model2[1, sir["sir"].current_optical_depth_index, :, :],
                     origin='lower', cmap=sire.T_CT[0], vmin=sire.T_CT[1], vmax=sire.T_CT[2])
-            elif sire.T_CT[3] == 1:
+            elif int(sire.T_CT[3]) == 1:
                 T_map2 = sire.sc1.ax10.imshow(
                     model2[1, sir["sir"].current_optical_depth_index, :, :],
                     origin='lower', cmap=sire.T_CT[0])
@@ -617,11 +617,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax10.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
         if sire.B2_checkbutton.isChecked():
-            if sire.B_CT[3] == 0:
+            if int(sire.B_CT[3]) == 0:
                 B_map2 = sire.sc1.ax11.imshow(
                     model2[4, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     vmin=sire.B_CT[1], vmax=sire.B_CT[2], cmap=sire.B_CT[0])
-            elif sire.B_CT[3] == 1:
+            elif int(sire.B_CT[3]) == 1:
                 B_map2 = sire.sc1.ax11.imshow(
                     model2[4, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=sire.B_CT[0])
@@ -653,11 +653,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax11.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
         if sire.V2_checkbutton.isChecked():
-            if sire.V_CT[3] == 0:
+            if int(sire.V_CT[3]) == 0:
                 V_map2 = sire.sc1.ax12.imshow(
                     (model2[5, sir["sir"].current_optical_depth_index, :, :] / (100 * 1000)),
                     origin='lower', cmap=sire.V_CT[0], vmin=sire.V_CT[1], vmax=sire.V_CT[2])
-            elif sire.V_CT[3] == 1:
+            elif int(sire.V_CT[3]) == 1:
                 V_map2 = sire.sc1.ax12.imshow(
                     (model2[5, sir["sir"].current_optical_depth_index, :, :] / (100 * 1000)),
                     origin='lower', cmap=sire.V_CT[0])
@@ -689,11 +689,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax12.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
         if sire.G2_checkbutton.isChecked():
-            if sire.G_CT[3] == 0:
+            if int(sire.G_CT[3]) == 0:
                 G_map2 = sire.sc1.ax13.imshow(
                     model2[6, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     vmin=sire.G_CT[1], vmax=sire.G_CT[2], cmap=sire.G_CT[0])
-            if sire.G_CT[3] == 1:
+            if int(sire.G_CT[3]) == 1:
                 G_map2 = sire.sc1.ax13.imshow(
                     model2[6, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=sire.G_CT[0])
@@ -725,11 +725,11 @@ def update_canvas(sire,sir): #changes the maps and updates the relevant dictiona
             sire.sc1.ax13.set_ylim(sir["sir"].y_min, sir["sir"].y_max)
 
         if sire.A2_checkbutton.isChecked():
-            if sire.A_CT[3] == 0:
+            if int(sire.A_CT[3]) == 0:
                 A_map2 = sire.sc1.ax14.imshow(
                     model2[7, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=sire.A_CT[0], vmin=sire.A_CT[1], vmax=sire.A_CT[2])
-            elif sire.A_CT[3] == 1:
+            elif int(sire.A_CT[3]) == 1:
                 A_map2 = sire.sc1.ax14.imshow(
                     model2[7, sir["sir"].current_optical_depth_index, :, :] * binary_map, origin='lower',
                     cmap=sire.A_CT[0])
